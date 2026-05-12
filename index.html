@@ -584,14 +584,17 @@
             object-fit: cover;
             transition: transform 0.3s;
         }
-        .prod-img-wrap .emoji-fallback {
-            font-size: 3rem;
-            transition: transform 0.3s;
+        .prod-img-wrap .img-placeholder {
+            display: none;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 100%;
+            font-size: 1rem;
+            color: var(--muted-foreground);
+            font-weight: 500;
         }
         .prod-card:hover .prod-img-wrap img {
-            transform: scale(1.08);
-        }
-        .prod-card:hover .prod-img-wrap .emoji-fallback {
             transform: scale(1.08);
         }
         .stock-badge-card {
@@ -1197,11 +1200,17 @@
             object-fit: cover;
             flex-shrink: 0;
         }
-        .cart-mini-item .mini-emoji {
-            font-size: 1.2rem;
+        .cart-mini-item .mini-placeholder {
             width: 32px;
-            text-align: center;
+            height: 32px;
+            border-radius: 4px;
+            background: var(--pink-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.55rem;
             flex-shrink: 0;
+            color: var(--muted-foreground);
         }
         .cart-mini-item .mini-info {
             flex: 1;
@@ -1237,11 +1246,17 @@
             border-radius: 4px;
             flex-shrink: 0;
         }
-        .cart-item-emoji-small {
-            font-size: 1.6rem;
+        .cart-item-placeholder-small {
             width: 36px;
-            text-align: center;
+            height: 48px;
+            background: var(--pink-light);
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             flex-shrink: 0;
+            font-size: 0.5rem;
+            color: var(--muted-foreground);
         }
         .cart-item-info {
             flex: 1;
@@ -1756,14 +1771,14 @@
             border: 1px dashed #c9a135;
         }
 
-        /* ========== LOADING STATES ========== */
+        /* ========== LOADING & ERROR STATES ========== */
         .global-loader {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(255,255,255,0.85);
+            background: rgba(255, 255, 255, 0.9);
             z-index: 9998;
             display: flex;
             align-items: center;
@@ -1783,12 +1798,90 @@
             animation: spin 0.7s linear infinite;
         }
         @keyframes spin {
-            to { transform: rotate(360deg); }
+            to {
+                transform: rotate(360deg);
+            }
         }
         .global-loader .loader-text {
             font-size: 0.72rem;
             font-weight: 600;
             color: var(--primary);
+        }
+
+        /* Error Banner */
+        .error-banner-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 9999;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+        .error-banner-overlay.show {
+            display: flex;
+        }
+        .error-banner {
+            background: #fff;
+            border-radius: 16px;
+            padding: 2rem 1.5rem;
+            max-width: 480px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25);
+            animation: fadeInUp 0.3s ease;
+        }
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .error-banner .error-icon {
+            font-size: 3rem;
+            margin-bottom: 0.6rem;
+        }
+        .error-banner h2 {
+            font-size: 1rem;
+            font-weight: 800;
+            color: var(--destructive);
+            margin-bottom: 0.4rem;
+        }
+        .error-banner p {
+            font-size: 0.7rem;
+            color: var(--muted-foreground);
+            margin-bottom: 1rem;
+            line-height: 1.5;
+        }
+        .error-banner .retry-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            background: var(--primary);
+            color: #fff;
+            padding: 0.55rem 1.6rem;
+            border-radius: 10px;
+            font-size: 0.78rem;
+            font-weight: 700;
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 4px 16px rgba(196, 30, 90, 0.22);
+            transition: all 0.2s;
+        }
+        .error-banner .retry-btn:hover {
+            background: var(--primary-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(196, 30, 90, 0.3);
+        }
+        .error-banner .retry-count {
+            font-size: 0.58rem;
+            color: var(--muted-foreground);
+            margin-top: 0.5rem;
         }
 
         .toast {
@@ -1915,9 +2008,21 @@
     </style>
 </head>
 <body>
+    <!-- Global Loader -->
     <div class="global-loader" id="globalLoader">
         <div class="spinner"></div>
         <div class="loader-text">✨ RAS Fashion লোড হচ্ছে...</div>
+    </div>
+
+    <!-- Error Banner -->
+    <div class="error-banner-overlay" id="errorBannerOverlay">
+        <div class="error-banner">
+            <div class="error-icon">⚠️</div>
+            <h2>ডেটা লোড করা সম্ভব হচ্ছে না</h2>
+            <p>নেটওয়ার্ক বা সার্ভারজনিত সমস্যার কারণে পণ্যের তথ্য লোড করা যাচ্ছে না। দয়া করে আপনার ইন্টারনেট সংযোগ পরীক্ষা করে পুনরায় চেষ্টা করুন।</p>
+            <button class="retry-btn" onclick="retryFetchProducts()"><i class="fas fa-sync-alt"></i> আবার লোড করুন</button>
+            <div class="retry-count" id="retryCountText"></div>
+        </div>
     </div>
 
     <nav class="navbar">
@@ -1955,8 +2060,8 @@
         <div class="page active" id="page-home">
             <div class="banner-slider">
                 <div class="slideshow-container" id="slideshowContainer">
-                    <img class="slideshow-image active" src="https://i.imgur.com/NmNVYO5.png" alt="ব্যানার ১" onerror="this.style.display='none';this.parentElement.style.background='linear-gradient(135deg,#ffe8f0,#fde4ef)';this.parentElement.innerHTML+='<div style=text-align:center;padding:1rem;font-size:3rem;>💄</div>'">
-                    <img class="slideshow-image" src="https://i.imgur.com/RG7cmuw.png" alt="ব্যানার ২" onerror="this.style.display='none';this.parentElement.style.background='linear-gradient(135deg,#e8f0ff,#fde4ef)';this.parentElement.innerHTML+='<div style=text-align:center;padding:1rem;font-size:3rem;>✨</div>'">
+                    <img class="slideshow-image active" src="https://i.imgur.com/NmNVYO5.png" alt="ব্যানার ১" onerror="this.style.display='none';this.parentElement.style.background='linear-gradient(135deg,#ffe8f0,#fde4ef)'">
+                    <img class="slideshow-image" src="https://i.imgur.com/RG7cmuw.png" alt="ব্যানার ২" onerror="this.style.display='none';this.parentElement.style.background='linear-gradient(135deg,#e8f0ff,#fde4ef)'">
                     <button class="banner-fashion-btn" onclick="navigate('shop')">👗 ফ্যাশন কালেকশন দেখুন</button>
                     <button class="banner-pharma-btn" onclick="goToRASPharma()">💊 ফার্মেসি কালেকশন দেখুন</button>
                     <div class="slideshow-dots" id="slideshowDots">
@@ -2073,8 +2178,12 @@
 
     <script>
         // ===== CONFIGURATION =====
-        const GOOGLE_SHEETS_API_URL = 'https://script.google.com/macros/s/AKfycbxwrUku1D64M_ZTR9Pf93r7rDjxuepv596bYXWRwL_ItymqOhYe9eAxOJbsIoZf4PvJrg/exec';
-        // ⚠️ উপরের URL টি পরিবর্তন করে আপনার Apps Script Deployment URL বসান
+        // ⚠️ নিচের URL টি পরিবর্তন করে আপনার Apps Script Deployment URL বসান
+        const GOOGLE_SHEETS_API_URL = 'https://script.google.com/macros/s/AKfycbxwrUku1D64M_ZTR9Pf93r7rDjxuepv596bYXWRwL_ItymqOhYe9eAxOJbsIoZf4PvJrg/exec'; // ← এখানে আপনার https://script.google.com/macros/s/... বসান
+
+        const MAX_RETRY_ATTEMPTS = 3;
+        const RETRY_DELAY_MS = 1500;
+        const CORS_PROXY_URL = 'https://corsproxy.io/?'; // CORS সমস্যা সমাধানের জন্য প্রোক্সি
 
         // ===== GLOBAL STATE =====
         let products = [];
@@ -2093,110 +2202,169 @@
             slideshowPlaying = true,
             slideshowIndex = 0;
         const SLIDESHOW_TOTAL = 2;
+        let fetchRetryCount = 0;
+        let productsLoaded = false;
 
         const CATEGORIES = ['Cosmetics', 'Skincare', 'Haircare', 'Fragrance', 'Jewelry', 'Clothing'];
         const CAT_LABELS = { Cosmetics: 'কসমেটিকস', Skincare: 'স্কিনকেয়ার', Haircare: 'হেয়ারকেয়ার', Fragrance: 'সুগন্ধি', Jewelry: 'জুয়েলারি', Clothing: 'পোশাক' };
         const CAT_EMOJIS = { Cosmetics: '💄', Skincare: '🧴', Haircare: '💆', Fragrance: '🌸', Jewelry: '💍', Clothing: '👗' };
 
         const BD_DATA = {
-            "ঢাকা": { districts: { "ঢাকা": ["গুলশান","মিরপুর","উত্তরা","ধানমন্ডি","মতিঝিল","সাভার","কেরানীগঞ্জ","নবাবগঞ্জ","দোহার","ধামরাই"],
-                    "গাজীপুর": ["গাজীপুর সদর","কালিয়াকৈর","কাপাসিয়া","শ্রীপুর","টঙ্গী"],
-                    "নারায়ণগঞ্জ": ["সিদ্ধিরগঞ্জ","বন্দর","ফতুল্লা","নারায়ণগঞ্জ সদর","আড়াইহাজার"],
-                    "টাঙ্গাইল": ["টাঙ্গাইল সদর","মধুপুর","নাগরপুর","দেলদুয়ার","কালিহাতী"],
-                    "কিশোরগঞ্জ": ["কিশোরগঞ্জ সদর","অষ্টগ্রাম","ইটনা","করিমগঞ্জ","ভৈরব"],
-                    "মানিকগঞ্জ": ["মানিকগঞ্জ সদর","সিঙ্গাইর","শিবালয়","হরিরামপুর","ঘিওর"],
-                    "মুন্সীগঞ্জ": ["মুন্সীগঞ্জ সদর","শ্রীনগর","টঙ্গীবাড়ী","লৌহজং","সিরাজদিখান"] } },
-            "চট্টগ্রাম": { districts: { "চট্টগ্রাম": ["কোতোয়ালী","পাহাড়তলী","বন্দর","চান্দগাঁও","ইপিজেড","সীতাকুণ্ড","মীরসরাই","পটিয়া","রাঙ্গুনিয়া","বাঁশখালী"],
-                    "কক্সবাজার": ["কক্সবাজার সদর","রামু","উখিয়া","টেকনাফ","চকরিয়া"],
-                    "কুমিল্লা": ["কুমিল্লা সদর","দেবিদ্বার","চৌদ্দগ্রাম","লাকসাম","নাঙ্গলকোট"],
-                    "ফেনী": ["ফেনী সদর","সোনাগাজী","পরশুরাম","দাগনভূঞা","ছাগলনাইয়া"],
-                    "ব্রাহ্মণবাড়িয়া": ["ব্রাহ্মণবাড়িয়া সদর","কসবা","নবীনগর","আখাউড়া","বাঞ্ছারামপুর"],
-                    "নোয়াখালী": ["নোয়াখালী সদর","বেগমগঞ্জ","চাটখিল","সোনাইমুড়ী","হাতিয়া"] } },
-            "রাজশাহী": { districts: { "রাজশাহী": ["রাজশাহী সদর","বোয়ালিয়া","পবা","গোদাগাড়ী","বাগমারা"],
-                    "বগুড়া": ["বগুড়া সদর","শেরপুর","ধুনট","গাবতলী","সোনাতলা"],
-                    "জয়পুরহাট": ["জয়পুরহাট সদর","কালাই","আক্কেলপুর","পাঁচবিবি"],
-                    "নওগাঁ": ["নওগাঁ সদর","পত্নীতলা","ধামইরহাট","মহাদেবপুর","রাণীনগর"],
-                    "নাটোর": ["নাটোর সদর","সিংড়া","বাগাতিপাড়া","লালপুর","গুরুদাসপুর"],
-                    "পাবনা": ["পাবনা সদর","ঈশ্বরদী","চাটমোহর","সাঁথিয়া","বেড়া"] } },
-            "খুলনা": { districts: { "খুলনা": ["খুলনা সদর","দৌলতপুর","সল্টানিয়া","পাইকগাছা","বটিয়াঘাটা"],
-                    "যশোর": ["যশোর সদর","ঝিকরগাছা","কেশবপুর","মণিরামপুর","অভয়নগর"],
-                    "ঝিনাইদহ": ["ঝিনাইদহ সদর","কালীগঞ্জ","কোটচাঁদপুর","মহেশপুর","শৈলকুপা"],
-                    "বাগেরহাট": ["বাগেরহাট সদর","মোল্লাহাট","ফকিরহাট","মোংলা","রামপাল"],
-                    "সাতক্ষীরা": ["সাতক্ষীরা সদর","কলারোয়া","তালা","দেবহাটা","আশাশুনি"],
-                    "কুষ্টিয়া": ["কুষ্টিয়া সদর","কুমারখালী","দৌলতপুর","মিরপুর","ভেড়ামারা"] } },
-            "সিলেট": { districts: { "সিলেট": ["সিলেট সদর","বিয়ানীবাজার","জৈন্তাপুর","গোয়াইনঘাট","কানাইঘাট"],
-                    "সুনামগঞ্জ": ["সুনামগঞ্জ সদর","দিরাই","জগন্নাথপুর","ছাতক","তাহিরপুর"],
-                    "হবিগঞ্জ": ["হবিগঞ্জ সদর","নবীগঞ্জ","বাহুবল","আজমিরীগঞ্জ","চুনারুঘাট"],
-                    "মৌলভীবাজার": ["মৌলভীবাজার সদর","কমলগঞ্জ","শ্রীমঙ্গল","বড়লেখা","রাজনগর"] } },
-            "রংপুর": { districts: { "রংপুর": ["রংপুর সদর","বদরগঞ্জ","পীরগঞ্জ","কাউনিয়া","পীরগাছা"],
-                    "দিনাজপুর": ["দিনাজপুর সদর","পার্বতীপুর","বিরামপুর","বোচাগঞ্জ","ফুলবাড়ী"],
-                    "কুড়িগ্রাম": ["কুড়িগ্রাম সদর","উলিপুর","নাগেশ্বরী","রাজারহাট","রৌমারী"],
-                    "গাইবান্ধা": ["গাইবান্ধা সদর","সুন্দরগঞ্জ","গোবিন্দগঞ্জ","পলাশবাড়ী","সাঘাটা"],
-                    "লালমনিরহাট": ["লালমনিরহাট সদর","কালিগঞ্জ","হাতীবান্ধা","আদিতমারী"],
-                    "নীলফামারী": ["নীলফামারী সদর","ডোমার","ডিমলা","জলঢাকা","কিশোরগঞ্জ"] } },
-            "বরিশাল": { districts: { "বরিশাল": ["বরিশাল সদর","বাংলাবাজার","হিজলা","মেহেন্দীগঞ্জ","বাকেরগঞ্জ"],
-                    "পটুয়াখালী": ["পটুয়াখালী সদর","কলাপাড়া","গলাচিপা","বাউফল","মির্জাগঞ্জ"],
-                    "ভোলা": ["ভোলা সদর","দৌলতখান","চরফ্যাশন","লালমোহন","মনপুরা"],
-                    "পিরোজপুর": ["পিরোজপুর সদর","নাজিরপুর","কাউখালী","মঠবাড়িয়া","ভান্ডারিয়া"],
-                    "বরগুনা": ["বরগুনা সদর","আমতলী","পাথরঘাটা","বেতাগী","বামনা"] } },
-            "ময়মনসিংহ": { districts: { "ময়মনসিংহ": ["ময়মনসিংহ সদর","ত্রিশাল","মুক্তাগাছা","গৌরীপুর","ফুলপুর"],
-                    "জামালপুর": ["জামালপুর সদর","মেলান্দহ","দেওয়ানগঞ্জ","বকশীগঞ্জ","সরিষাবাড়ী"],
-                    "শেরপুর": ["শেরপুর সদর","নালিতাবাড়ী","ঝিনাইগাতী","শ্রীবরদী","নকলা"],
-                    "নেত্রকোণা": ["নেত্রকোণা সদর","কেন্দুয়া","আটপাড়া","মদন","খালিয়াজুড়ী"] } }
+            "ঢাকা": { districts: { "ঢাকা": ["গুলশান","মিরপুর","উত্তরা","ধানমন্ডি","মতিঝিল","সাভার","কেরানীগঞ্জ","নবাবগঞ্জ","দোহার","ধামরাই"],"গাজীপুর": ["গাজীপুর সদর","কালিয়াকৈর","কাপাসিয়া","শ্রীপুর","টঙ্গী"],"নারায়ণগঞ্জ": ["সিদ্ধিরগঞ্জ","বন্দর","ফতুল্লা","নারায়ণগঞ্জ সদর","আড়াইহাজার"],"টাঙ্গাইল": ["টাঙ্গাইল সদর","মধুপুর","নাগরপুর","দেলদুয়ার","কালিহাতী"],"কিশোরগঞ্জ": ["কিশোরগঞ্জ সদর","অষ্টগ্রাম","ইটনা","করিমগঞ্জ","ভৈরব"],"মানিকগঞ্জ": ["মানিকগঞ্জ সদর","সিঙ্গাইর","শিবালয়","হরিরামপুর","ঘিওর"],"মুন্সীগঞ্জ": ["মুন্সীগঞ্জ সদর","শ্রীনগর","টঙ্গীবাড়ী","লৌহজং","সিরাজদিখান"] } },
+            "চট্টগ্রাম": { districts: { "চট্টগ্রাম": ["কোতোয়ালী","পাহাড়তলী","বন্দর","চান্দগাঁও","ইপিজেড","সীতাকুণ্ড","মীরসরাই","পটিয়া","রাঙ্গুনিয়া","বাঁশখালী"],"কক্সবাজার": ["কক্সবাজার সদর","রামু","উখিয়া","টেকনাফ","চকরিয়া"],"কুমিল্লা": ["কুমিল্লা সদর","দেবিদ্বার","চৌদ্দগ্রাম","লাকসাম","নাঙ্গলকোট"],"ফেনী": ["ফেনী সদর","সোনাগাজী","পরশুরাম","দাগনভূঞা","ছাগলনাইয়া"],"ব্রাহ্মণবাড়িয়া": ["ব্রাহ্মণবাড়িয়া সদর","কসবা","নবীনগর","আখাউড়া","বাঞ্ছারামপুর"],"নোয়াখালী": ["নোয়াখালী সদর","বেগমগঞ্জ","চাটখিল","সোনাইমুড়ী","হাতিয়া"] } },
+            "রাজশাহী": { districts: { "রাজশাহী": ["রাজশাহী সদর","বোয়ালিয়া","পবা","গোদাগাড়ী","বাগমারা"],"বগুড়া": ["বগুড়া সদর","শেরপুর","ধুনট","গাবতলী","সোনাতলা"],"জয়পুরহাট": ["জয়পুরহাট সদর","কালাই","আক্কেলপুর","পাঁচবিবি"],"নওগাঁ": ["নওগাঁ সদর","পত্নীতলা","ধামইরহাট","মহাদেবপুর","রাণীনগর"],"নাটোর": ["নাটোর সদর","সিংড়া","বাগাতিপাড়া","লালপুর","গুরুদাসপুর"],"পাবনা": ["পাবনা সদর","ঈশ্বরদী","চাটমোহর","সাঁথিয়া","বেড়া"] } },
+            "খুলনা": { districts: { "খুলনা": ["খুলনা সদর","দৌলতপুর","সল্টানিয়া","পাইকগাছা","বটিয়াঘাটা"],"যশোর": ["যশোর সদর","ঝিকরগাছা","কেশবপুর","মণিরামপুর","অভয়নগর"],"ঝিনাইদহ": ["ঝিনাইদহ সদর","কালীগঞ্জ","কোটচাঁদপুর","মহেশপুর","শৈলকুপা"],"বাগেরহাট": ["বাগেরহাট সদর","মোল্লাহাট","ফকিরহাট","মোংলা","রামপাল"],"সাতক্ষীরা": ["সাতক্ষীরা সদর","কলারোয়া","তালা","দেবহাটা","আশাশুনি"],"কুষ্টিয়া": ["কুষ্টিয়া সদর","কুমারখালী","দৌলতপুর","মিরপুর","ভেড়ামারা"] } },
+            "সিলেট": { districts: { "সিলেট": ["সিলেট সদর","বিয়ানীবাজার","জৈন্তাপুর","গোয়াইনঘাট","কানাইঘাট"],"সুনামগঞ্জ": ["সুনামগঞ্জ সদর","দিরাই","জগন্নাথপুর","ছাতক","তাহিরপুর"],"হবিগঞ্জ": ["হবিগঞ্জ সদর","নবীগঞ্জ","বাহুবল","আজমিরীগঞ্জ","চুনারুঘাট"],"মৌলভীবাজার": ["মৌলভীবাজার সদর","কমলগঞ্জ","শ্রীমঙ্গল","বড়লেখা","রাজনগর"] } },
+            "রংপুর": { districts: { "রংপুর": ["রংপুর সদর","বদরগঞ্জ","পীরগঞ্জ","কাউনিয়া","পীরগাছা"],"দিনাজপুর": ["দিনাজপুর সদর","পার্বতীপুর","বিরামপুর","বোচাগঞ্জ","ফুলবাড়ী"],"কুড়িগ্রাম": ["কুড়িগ্রাম সদর","উলিপুর","নাগেশ্বরী","রাজারহাট","রৌমারী"],"গাইবান্ধা": ["গাইবান্ধা সদর","সুন্দরগঞ্জ","গোবিন্দগঞ্জ","পলাশবাড়ী","সাঘাটা"],"লালমনিরহাট": ["লালমনিরহাট সদর","কালিগঞ্জ","হাতীবান্ধা","আদিতমারী"],"নীলফামারী": ["নীলফামারী সদর","ডোমার","ডিমলা","জলঢাকা","কিশোরগঞ্জ"] } },
+            "বরিশাল": { districts: { "বরিশাল": ["বরিশাল সদর","বাংলাবাজার","হিজলা","মেহেন্দীগঞ্জ","বাকেরগঞ্জ"],"পটুয়াখালী": ["পটুয়াখালী সদর","কলাপাড়া","গলাচিপা","বাউফল","মির্জাগঞ্জ"],"ভোলা": ["ভোলা সদর","দৌলতখান","চরফ্যাশন","লালমোহন","মনপুরা"],"পিরোজপুর": ["পিরোজপুর সদর","নাজিরপুর","কাউখালী","মঠবাড়িয়া","ভান্ডারিয়া"],"বরগুনা": ["বরগুনা সদর","আমতলী","পাথরঘাটা","বেতাগী","বামনা"] } },
+            "ময়মনসিংহ": { districts: { "ময়মনসিংহ": ["ময়মনসিংহ সদর","ত্রিশাল","মুক্তাগাছা","গৌরীপুর","ফুলপুর"],"জামালপুর": ["জামালপুর সদর","মেলান্দহ","দেওয়ানগঞ্জ","বকশীগঞ্জ","সরিষাবাড়ী"],"শেরপুর": ["শেরপুর সদর","নালিতাবাড়ী","ঝিনাইগাতী","শ্রীবরদী","নকলা"],"নেত্রকোণা": ["নেত্রকোণা সদর","কেন্দুয়া","আটপাড়া","মদন","খালিয়াজুড়ী"] } }
         };
         const ORDER_STATUS_STEPS = ['অর্ডার প্রাপ্তি', 'অর্ডার কনফার্ম', 'প্যাকেজিং', 'ডেলিভারির জন্য পাঠানো', 'ডেলিভারি সম্পন্ন'];
 
         // ===== API CALL =====
-        async function fetchProductsFromSheet() {
-            const loader = document.getElementById('globalLoader');
-            if (loader) loader.classList.remove('hidden');
+        async function tryFetchWithMethod(url, options, timeoutMs = 8000) {
+            const controller = new AbortController();
+            const timeout = setTimeout(() => controller.abort(), timeoutMs);
             try {
-                const response = await fetch(GOOGLE_SHEETS_API_URL, {
+                const response = await fetch(url, { ...options, signal: controller.signal });
+                clearTimeout(timeout);
+                if (!response.ok) throw new Error(`HTTP error ${response.status}`);
+                const data = await response.json();
+                if (data.ok && Array.isArray(data.products)) {
+                    return data.products;
+                }
+                throw new Error(data.error || 'Invalid API response structure');
+            } catch (err) {
+                clearTimeout(timeout);
+                throw err;
+            }
+        }
+
+        async function fetchProductsFromSheetSingle() {
+            // Strategy 1: GET request with query parameter
+            try {
+                const getUrl = GOOGLE_SHEETS_API_URL + '?action=getProducts&_=' + Date.now();
+                const products = await tryFetchWithMethod(getUrl, { method: 'GET' });
+                console.log('✅ Products loaded via GET');
+                return products;
+            } catch (e1) {
+                console.warn('GET attempt failed:', e1.message);
+            }
+
+            // Strategy 2: POST request with JSON body
+            try {
+                const products = await tryFetchWithMethod(GOOGLE_SHEETS_API_URL, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ action: 'getProducts' })
                 });
-                if (!response.ok) throw new Error(`HTTP error ${response.status}`);
-                const data = await response.json();
-                if (data.ok && Array.isArray(data.products)) {
-                    products = data.products.map(p => ({
-                        ...p,
-                        emoji: p.emoji || CAT_EMOJIS[p.category] || '📦',
-                        image: p.image || '',
-                        price: Number(p.price) || 0,
-                        originalPrice: p.originalPrice ? Number(p.originalPrice) : null,
-                        inStock: p.inStock === true || p.inStock === 'true' || p.inStock === 'TRUE' || p.inStock === 1,
-                        trending: p.trending === true || p.trending === 'true' || p.trending === 'TRUE' || p.trending === 1,
-                        newArrival: p.newArrival === true || p.newArrival === 'true' || p.newArrival === 'TRUE' || p.newArrival === 1,
-                        deal: p.deal === true || p.deal === 'true' || p.deal === 'TRUE' || p.deal === 1,
-                        bestseller: p.bestseller === true || p.bestseller === 'true' || p.bestseller === 'TRUE' || p.bestseller === 1,
-                        tags: Array.isArray(p.tags) ? p.tags : (typeof p.tags === 'string' ? p.tags.split(',').map(t => t.trim()).filter(Boolean) : []),
-                        specs: Array.isArray(p.specs) ? p.specs : (typeof p.specs === 'string' ? p.specs.split('|').map(s => s.trim()).filter(Boolean) : []),
-                        batch: p.batch || null
-                    }));
-                    console.log('✅ Products loaded from Google Sheets:', products.length);
-                    return products;
-                } else {
-                    throw new Error(data.error || 'Invalid API response');
-                }
-            } catch (error) {
-                console.error('❌ API Fetch Error:', error);
-                showToast('⚠️ ডেটা লোড করতে সমস্যা — demo ডেটা দেখানো হচ্ছে', 'error');
-                // Fallback demo data
-                products = getFallbackProducts();
+                console.log('✅ Products loaded via POST');
                 return products;
-            } finally {
-                if (loader) loader.classList.add('hidden');
+            } catch (e2) {
+                console.warn('POST attempt failed:', e2.message);
             }
+
+            // Strategy 3: POST with form-encoded body
+            try {
+                const formBody = 'action=getProducts';
+                const products = await tryFetchWithMethod(GOOGLE_SHEETS_API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: formBody
+                });
+                console.log('✅ Products loaded via POST form');
+                return products;
+            } catch (e3) {
+                console.warn('POST form attempt failed:', e3.message);
+            }
+
+            // Strategy 4: CORS proxy fallback (GET)
+            try {
+                const proxyUrl = CORS_PROXY_URL + encodeURIComponent(GOOGLE_SHEETS_API_URL);
+                const products = await tryFetchWithMethod(proxyUrl, { method: 'GET' });
+                console.log('✅ Products loaded via CORS proxy');
+                return products;
+            } catch (e4) {
+                console.warn('CORS proxy attempt failed:', e4.message);
+            }
+
+            throw new Error('All fetch strategies failed');
         }
 
-        function getFallbackProducts() {
-            return [
-                { id: 'p1', name: 'ভেলভেট ম্যাট লিপস্টিক', nameEn: 'Velvet Matte Lipstick', price: 350, originalPrice: 450, category: 'Cosmetics', image: '', emoji: '💄', desc: 'দীর্ঘস্থায়ী | ওয়াটারপ্রুফ', tags: ['ম্যাট ফিনিশ'], badge: 'best', inStock: true, description: '১২ ঘন্টা রঙ ধরে রাখে।', specs: ['ওজন: ৩.৫ গ্রাম'], company: 'RAS Beauty Lab', quality: 'প্রিমিয়াম কোয়ালিটি — ইউরোপীয় স্ট্যান্ডার্ড', usage: 'ঠোঁটে সরাসরি প্রয়োগ করুন। দীর্ঘস্থায়ী ম্যাট ফিনিশের জন্য বেস্ট।', trending: true, newArrival: true, deal: true, bestseller: true, batch: null },
-                { id: 'p2', name: 'রোজ গ্লো ফেস সিরাম', nameEn: 'Rose Glow Face Serum', price: 650, originalPrice: 850, category: 'Skincare', image: '', emoji: '🌹', desc: 'উজ্জ্বলতা | প্রাকৃতিক গ্লো', tags: ['হাইড্রেটিং'], badge: 'best', inStock: true, description: 'গোলাপ নির্যাসে তৈরি।', specs: ['আয়তন: ৩০ মিলি'], company: 'RAS Skin Science', quality: 'অর্গানিক ইনগ্রেডিয়েন্টস | প্যারাবেন-ফ্রি', usage: 'পরিষ্কার ত্বকে ২-৩ ফোঁটা সিরাম লাগিয়ে আস্তে ম্যাসাজ করুন। রাতে ব্যবহারে সেরা ফল।', trending: true, newArrival: true, deal: true, bestseller: true, batch: null },
-                { id: 'p7', name: 'কাজল ও আইলাইনার ডুও', nameEn: 'Kajal & Eyeliner Duo', price: 350, originalPrice: null, category: 'Cosmetics', image: '', emoji: '👁️', desc: 'স্মাজ প্রুফ', tags: [], badge: 'best', inStock: true, description: 'ওয়াটারপ্রুফ', specs: ['০.৩৫ গ্রাম'], company: 'RAS Beauty Lab', quality: 'স্মাজ-প্রুফ ও ওয়াটারপ্রুফ', usage: 'চোখের নিচে ও উপরে লাইন টানতে ব্যবহার করুন।', trending: false, newArrival: true, deal: false, bestseller: true, batch: null },
-                { id: 'p8', name: 'ভিটামিন সি ব্রাইটেনিং ক্রিম', nameEn: 'Vitamin C Brightening Cream', price: 750, originalPrice: 950, category: 'Skincare', image: '', emoji: '🍊', desc: 'অ্যান্টি-এজিং', tags: ['ভিটামিন সি'], badge: 'best', inStock: true, description: 'উজ্জ্বল ত্বক', specs: ['৫০ মিলি'], company: 'RAS Skin Science', quality: 'ভিটামিন সি ১০% | ক্লিনিকালি টেস্টেড', usage: 'দিনে একবার মুখ ও গলায় লাগান। সানস্ক্রিন সহ ব্যবহার করুন।', trending: false, newArrival: true, deal: false, bestseller: true, batch: null }
-            ];
+        function parseProducts(rawProducts) {
+            return rawProducts.map(p => ({
+                ...p,
+                emoji: null, // ইমোজি ফিল্ড ব্যবহার হবে না
+                image: p.image || '',
+                price: Number(p.price) || 0,
+                originalPrice: p.originalPrice ? Number(p.originalPrice) : null,
+                inStock: p.inStock === true || p.inStock === 'true' || p.inStock === 'TRUE' || p.inStock === 1,
+                trending: p.trending === true || p.trending === 'true' || p.trending === 'TRUE' || p.trending === 1,
+                newArrival: p.newArrival === true || p.newArrival === 'true' || p.newArrival === 'TRUE' || p.newArrival === 1,
+                deal: p.deal === true || p.deal === 'true' || p.deal === 'TRUE' || p.deal === 1,
+                bestseller: p.bestseller === true || p.bestseller === 'true' || p.bestseller === 'TRUE' || p.bestseller === 1,
+                tags: Array.isArray(p.tags) ? p.tags : (typeof p.tags === 'string' ? p.tags.split(',').map(t => t.trim()).filter(Boolean) : []),
+                specs: Array.isArray(p.specs) ? p.specs : (typeof p.specs === 'string' ? p.specs.split('|').map(s => s.trim()).filter(Boolean) : []),
+                batch: p.batch || null
+            }));
+        }
+
+        function showErrorBanner() {
+            document.getElementById('errorBannerOverlay').classList.add('show');
+            document.getElementById('retryCountText').textContent =
+                fetchRetryCount > 0 ? `(${fetchRetryCount} বার চেষ্টা করা হয়েছে)` : '';
+        }
+
+        function hideErrorBanner() {
+            document.getElementById('errorBannerOverlay').classList.remove('show');
+        }
+
+        async function retryFetchProducts() {
+            hideErrorBanner();
+            document.getElementById('globalLoader').classList.remove('hidden');
+            document.getElementById('globalLoader').querySelector('.loader-text').textContent =
+                '🔄 আবার লোড করা হচ্ছে...';
+            fetchRetryCount = 1;
+            await attemptFetchProducts();
+        }
+
+        async function attemptFetchProducts() {
+            for (let attempt = 1; attempt <= MAX_RETRY_ATTEMPTS; attempt++) {
+                try {
+                    const rawProducts = await fetchProductsFromSheetSingle();
+                    products = parseProducts(rawProducts);
+                    productsLoaded = true;
+                    fetchRetryCount = 0;
+                    hideErrorBanner();
+                    console.log(`✅ Products loaded successfully: ${products.length} items`);
+                    return;
+                } catch (error) {
+                    fetchRetryCount = attempt;
+                    console.error(`❌ Attempt ${attempt}/${MAX_RETRY_ATTEMPTS} failed:`, error.message);
+                    if (attempt < MAX_RETRY_ATTEMPTS) {
+                        document.getElementById('globalLoader').querySelector('.loader-text').textContent =
+                            `⏳ আবার চেষ্টা করা হচ্ছে (${attempt}/${MAX_RETRY_ATTEMPTS})...`;
+                        await new Promise(resolve => setTimeout(resolve, RETRY_DELAY_MS));
+                    }
+                }
+            }
+            // All attempts failed
+            productsLoaded = false;
+            products = [];
+            document.getElementById('globalLoader').classList.add('hidden');
+            showErrorBanner();
+            console.error('❌ All fetch attempts exhausted');
+        }
+
+        async function fetchProductsFromSheet() {
+            const loader = document.getElementById('globalLoader');
+            if (loader) loader.classList.remove('hidden');
+            hideErrorBanner();
+            fetchRetryCount = 0;
+            await attemptFetchProducts();
+            if (loader && productsLoaded) {
+                loader.classList.add('hidden');
+            }
         }
 
         // ===== CART & STORAGE =====
@@ -2247,8 +2415,10 @@
             return '';
         }
 
-        function getProductEmojiHTML(product) {
-            return `<span class="emoji-fallback" style="display:${product.image && product.image.trim() !== '' ? 'none' : 'flex'};align-items:center;justify-content:center;width:100%;height:100%;">${product.emoji || CAT_EMOJIS[product.category] || '📦'}</span>`;
+        function getProductPlaceholderHTML(product) {
+            const shortName = product.nameEn || product.name || 'Product';
+            const initials = shortName.split(' ').map(w => w.charAt(0)).join('').substring(0, 2).toUpperCase();
+            return `<span class="img-placeholder" style="display:${product.image && product.image.trim() !== '' ? 'none' : 'flex'};align-items:center;justify-content:center;width:100%;height:100%;font-size:1.2rem;color:var(--muted-foreground);background:var(--pink-light);font-weight:600;">${initials}</span>`;
         }
 
         function createProductCard(product, extraClass = '') {
@@ -2257,11 +2427,13 @@
             const stockLabel = product.inStock ? 'In Stock' : 'Out of Stock';
             const stockClass = product.inStock ? '' : 'out';
             const hasImage = product.image && product.image.trim() !== '';
+            const shortName = product.nameEn || product.name || 'P';
+            const initials = shortName.split(' ').map(w => w.charAt(0)).join('').substring(0, 2).toUpperCase();
             return `
             <div class="prod-card ${extraClass}" onclick="navigate('product','${product.id}')">
               <div class="prod-img-wrap">
                 ${hasImage ? `<img src="${product.image}" alt="${product.name}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">` : ''}
-                <span class="emoji-fallback" style="display:${hasImage ? 'none' : 'flex'};align-items:center;justify-content:center;width:100%;height:100%;font-size:3rem;">${product.emoji || CAT_EMOJIS[product.category] || '📦'}</span>
+                <span class="img-placeholder" style="display:${hasImage ? 'none' : 'flex'};align-items:center;justify-content:center;width:100%;height:100%;font-size:1.2rem;color:var(--muted-foreground);background:var(--pink-light);font-weight:600;">${initials}</span>
                 ${product.badge==='best'?'<span class="best-badge">⭐ সেরা</span>':''}
                 ${discount>0?`<span class="discount-badge-card">-${discount}%</span>`:''}
                 <span class="stock-badge-card ${stockClass}">${stockLabel}</span>
@@ -2273,10 +2445,14 @@
         }
 
         function renderHomeProducts() {
-            document.getElementById('trendingGrid').innerHTML = products.filter(p => p.trending).slice(0, 6).map(p => createProductCard(p)).join('') || '<p style="text-align:center;color:var(--muted-foreground);">🔜 ট্রেন্ডিং পণ্য লোড হচ্ছে...</p>';
-            document.getElementById('newArrivalsGrid').innerHTML = products.filter(p => p.newArrival).slice(0, 6).map(p => createProductCard(p)).join('') || '<p style="text-align:center;color:var(--muted-foreground);">🔜 নতুন পণ্য লোড হচ্ছে...</p>';
-            document.getElementById('dealsGrid').innerHTML = products.filter(p => p.deal).slice(0, 2).map(p => createProductCard(p, 'deal-card')).join('') || '<p style="text-align:center;color:var(--muted-foreground);">🔜 ডিল লোড হচ্ছে...</p>';
-            document.getElementById('bestGrid').innerHTML = products.filter(p => p.bestseller).slice(0, 4).map(p => createProductCard(p)).join('') || '<p style="text-align:center;color:var(--muted-foreground);">🔜 বেস্ট সেলার লোড হচ্ছে...</p>';
+            const trendingHTML = products.filter(p => p.trending).slice(0, 6).map(p => createProductCard(p)).join('');
+            document.getElementById('trendingGrid').innerHTML = trendingHTML || '<p style="text-align:center;color:var(--muted-foreground);">🔜 ট্রেন্ডিং পণ্য লোড হচ্ছে...</p>';
+            const newHTML = products.filter(p => p.newArrival).slice(0, 6).map(p => createProductCard(p)).join('');
+            document.getElementById('newArrivalsGrid').innerHTML = newHTML || '<p style="text-align:center;color:var(--muted-foreground);">🔜 নতুন পণ্য লোড হচ্ছে...</p>';
+            const dealsHTML = products.filter(p => p.deal).slice(0, 2).map(p => createProductCard(p, 'deal-card')).join('');
+            document.getElementById('dealsGrid').innerHTML = dealsHTML || '<p style="text-align:center;color:var(--muted-foreground);">🔜 ডিল লোড হচ্ছে...</p>';
+            const bestHTML = products.filter(p => p.bestseller).slice(0, 4).map(p => createProductCard(p)).join('');
+            document.getElementById('bestGrid').innerHTML = bestHTML || '<p style="text-align:center;color:var(--muted-foreground);">🔜 বেস্ট সেলার লোড হচ্ছে...</p>';
             document.getElementById('homeCatGrid').innerHTML = CATEGORIES.map(cat => `<a class="cat-item" onclick="navigateShopCategory('${cat}')"><div class="cat-icon">${CAT_EMOJIS[cat]}</div><span class="cat-label">${CAT_LABELS[cat]}</span></a>`).join('');
         }
 
@@ -2373,12 +2549,14 @@
             const discount = p.originalPrice ? Math.round((1 - p.price / p.originalPrice) * 100) : 0;
             const similar = products.filter(x => x.category === p.category && x.id !== p.id).slice(0, 4);
             const hasImage = p.image && p.image.trim() !== '';
+            const shortName = p.nameEn || p.name || 'P';
+            const initials = shortName.split(' ').map(w => w.charAt(0)).join('').substring(0, 2).toUpperCase();
             document.getElementById('productDetailContent').innerHTML = `
             <div style="display:grid;grid-template-columns:1fr;gap:0.8rem;padding:1rem 0;">
               <div style="aspect-ratio:3/4;background:var(--pink-light);border-radius:14px;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;">
                 <button class="back-btn-img" onclick="navigate('home')" title="মেন পেইজে ফিরুন"><i class="fas fa-arrow-left"></i></button>
                 ${hasImage ? `<img src="${p.image}" alt="${p.name}" style="width:100%;height:100%;object-fit:contain;" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">` : ''}
-                <span style="display:${hasImage ? 'none' : 'flex'};align-items:center;justify-content:center;font-size:5rem;width:100%;height:100%;">${p.emoji || CAT_EMOJIS[p.category] || '📦'}</span>
+                <span style="display:${hasImage ? 'none' : 'flex'};align-items:center;justify-content:center;font-size:2rem;width:100%;height:100%;color:var(--muted-foreground);background:var(--pink-light);font-weight:700;">${initials}</span>
               </div>
               <div><h1 style="font-size:0.95rem;font-weight:800;">${p.name}</h1><p style="color:var(--primary);font-weight:600;font-size:0.7rem;">${p.desc}</p>
                 <div style="font-size:1.2rem;font-weight:900;color:var(--primary);">৳${p.price.toLocaleString('bn-BD')} ${p.originalPrice?`<span style="font-size:0.7rem;text-decoration:line-through;color:var(--muted-foreground);">৳${p.originalPrice.toLocaleString('bn-BD')}</span><span style="background:var(--destructive);color:#fff;padding:0.15rem 0.4rem;border-radius:5px;font-size:0.6rem;">-${discount}%</span>`:''}</div>
@@ -2432,10 +2610,12 @@
             const delivery = subtotal > 0 ? 60 : 0;
             document.getElementById('cartItems').innerHTML = items.map(c => {
                 const hasImage = c.product.image && c.product.image.trim() !== '';
+                const shortName = c.product.nameEn || c.product.name || 'P';
+                const initials = shortName.split(' ').map(w => w.charAt(0)).join('').substring(0, 2).toUpperCase();
                 return `
             <div class="cart-item-row">
-              ${hasImage ? `<img src="${c.product.image}" alt="${c.product.name}" class="cart-item-img-small" onerror="this.style.display='none';this.nextElementSibling.style.display='block';">` : ''}
-              <span class="cart-item-emoji-small" style="display:${hasImage ? 'none' : 'block'};">${c.product.emoji}</span>
+              ${hasImage ? `<img src="${c.product.image}" alt="${c.product.name}" class="cart-item-img-small" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">` : ''}
+              <span class="cart-item-placeholder-small" style="display:${hasImage ? 'none' : 'flex'};">${initials}</span>
               <div class="cart-item-info"><div class="cart-item-name-small">${c.product.name}</div><div class="cart-item-price-small">৳${(c.product.price*c.qty).toLocaleString('bn-BD')}</div></div>
               <div class="cart-item-qty-group"><button class="cart-qty-btn" onclick="changeCartQty('${c.id}',-1)">−</button><span class="cart-qty-val">${c.qty}</span><button class="cart-qty-btn" onclick="changeCartQty('${c.id}',1)">+</button></div>
               <button class="cart-remove-btn" onclick="removeFromCart('${c.id}')"><i class="fas fa-trash-alt"></i></button>
@@ -2460,7 +2640,7 @@
             updateCartBadge();
             renderCart(); }
 
-        // ===== CHECKOUT (rest of functions remain the same) =====
+        // ===== CHECKOUT =====
         function getDeliveryCharge() {
             const divEl = document.getElementById('orderDivision');
             const div = divEl ? divEl.value : '';
@@ -2540,7 +2720,11 @@
                 <div id="promoMsg" style="font-size:0.58rem;"></div>
             </div>
             <div class="payment-methods" style="margin-top:0.4rem;"><label class="payment-method selected"><input type="radio" name="paymentMethod" value="cod" checked> 💳 ক্যাশ অন ডেলিভারি (পণ্যের মূল্য)</label></div>
-            <div class="order-summary-panel"><h4>📋 আপনার কার্ট:</h4>${items.map(c=>`<div class="cart-mini-item">${c.product.image?`<img src="${c.product.image}" class="mini-img" onerror="this.style.display='none';">`:''}<span class="mini-emoji">${c.product.emoji}</span><span class="mini-info">${c.product.name} ×${c.qty}</span><span class="mini-price">৳${(c.product.price*c.qty).toLocaleString('bn-BD')}</span></div>`).join('')}<div id="checkoutPromoDiscountRow" style="display:none;" class="summary-row"><span>প্রোমো ছাড়</span><span id="checkoutPromoDiscount">-৳0</span></div><div class="summary-row total"><span>সর্বমোট (ক্যাশ অন ডেলিভারি)</span><span id="checkoutTotal">৳${subtotal.toLocaleString('bn-BD')}</span></div></div>
+            <div class="order-summary-panel"><h4>📋 আপনার কার্ট:</h4>${items.map(c=>{
+                const hasImg = c.product.image && c.product.image.trim() !== '';
+                const initials = (c.product.nameEn || c.product.name || 'P').split(' ').map(w=>w.charAt(0)).join('').substring(0,2).toUpperCase();
+                return `<div class="cart-mini-item">${hasImg?`<img src="${c.product.image}" class="mini-img" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">`:''}<span class="mini-placeholder" style="display:${hasImg?'none':'flex'};">${initials}</span><span class="mini-info">${c.product.name} ×${c.qty}</span><span class="mini-price">৳${(c.product.price*c.qty).toLocaleString('bn-BD')}</span></div>`;
+            }).join('')}<div id="checkoutPromoDiscountRow" style="display:none;" class="summary-row"><span>প্রোমো ছাড়</span><span id="checkoutPromoDiscount">-৳0</span></div><div class="summary-row total"><span>সর্বমোট (ক্যাশ অন ডেলিভারি)</span><span id="checkoutTotal">৳${subtotal.toLocaleString('bn-BD')}</span></div></div>
             <button class="btn-primary" style="width:100%;margin-top:0.5rem;margin-bottom:3rem;font-size:0.75rem;padding:0.6rem;" onclick="placeOrder()">✅ অর্ডার নিশ্চিত করুন</button>`;
             if (savedAddr) setTimeout(() => { updateDivision();
                 setTimeout(() => { const d = document.getElementById('orderDistrict'); if (d) for (let o of d.options) if (o.value === savedAddr.district) { o.selected = true;
@@ -2614,7 +2798,7 @@
                 name,
                 phone,
                 address: address + ', ' + thana + ', ' + dist + ', ' + div,
-                items: items.map(i => ({ id: i.id, name: i.product.name, emoji: i.product.emoji, qty: i.qty, price: i.product.price })),
+                items: items.map(i => ({ id: i.id, name: i.product.name, emoji: null, qty: i.qty, price: i.product.price })),
                 total: total,
                 subtotal,
                 delivery: deliveryCharge,
@@ -2847,14 +3031,22 @@
         // ===== INITIALIZATION =====
         async function init() {
             await fetchProductsFromSheet();
-            updateCartBadge();
-            updateNavProfile();
-            renderHomeProducts();
-            renderContactInfo();
-            initSlideshow();
+            if (productsLoaded) {
+                updateCartBadge();
+                updateNavProfile();
+                renderHomeProducts();
+                renderContactInfo();
+                initSlideshow();
+            } else {
+                updateCartBadge();
+                updateNavProfile();
+                renderContactInfo();
+                // Keep empty grids - error banner will show
+                initSlideshow();
+            }
         }
 
         init();
     </script>
 </body>
-</html>
+    </html>
