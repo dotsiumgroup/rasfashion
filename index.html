@@ -2451,7 +2451,7 @@
             document.getElementById('newArrivalsGrid').innerHTML = newHTML || '<p style="text-align:center;color:var(--muted-foreground);">🔜 নতুন পণ্য লোড হচ্ছে...</p>';
             const dealsHTML = products.filter(p => p.deal).slice(0, 2).map(p => createProductCard(p, 'deal-card')).join('');
             document.getElementById('dealsGrid').innerHTML = dealsHTML || '<p style="text-align:center;color:var(--muted-foreground);">🔜 ডিল লোড হচ্ছে...</p>';
-            const bestHTML = products.filter(p => p.bestseller).slice(0, 4).map(p => createProductCard(p)).join('');
+            const bestHTML = products.map(p => createProductCard(p)).join('');
             document.getElementById('bestGrid').innerHTML = bestHTML || '<p style="text-align:center;color:var(--muted-foreground);">🔜 বেস্ট সেলার লোড হচ্ছে...</p>';
             document.getElementById('homeCatGrid').innerHTML = CATEGORIES.map(cat => `<a class="cat-item" onclick="navigateShopCategory('${cat}')"><div class="cat-icon">${CAT_EMOJIS[cat]}</div><span class="cat-label">${CAT_LABELS[cat]}</span></a>`).join('');
         }
