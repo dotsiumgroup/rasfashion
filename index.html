@@ -577,13 +577,21 @@
             justify-content: center;
             overflow: hidden;
             position: relative;
-            font-size: 3rem;
         }
-        .prod-img-wrap .emoji {
+        .prod-img-wrap img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s;
+        }
+        .prod-img-wrap .emoji-fallback {
             font-size: 3rem;
             transition: transform 0.3s;
         }
-        .prod-card:hover .prod-img-wrap .emoji {
+        .prod-card:hover .prod-img-wrap img {
+            transform: scale(1.08);
+        }
+        .prod-card:hover .prod-img-wrap .emoji-fallback {
             transform: scale(1.08);
         }
         .stock-badge-card {
@@ -1182,10 +1190,18 @@
             border-bottom: 1px solid rgba(196, 30, 90, 0.04);
             font-size: 0.62rem;
         }
+        .cart-mini-item .mini-img {
+            width: 32px;
+            height: 32px;
+            border-radius: 4px;
+            object-fit: cover;
+            flex-shrink: 0;
+        }
         .cart-mini-item .mini-emoji {
             font-size: 1.2rem;
             width: 32px;
             text-align: center;
+            flex-shrink: 0;
         }
         .cart-mini-item .mini-info {
             flex: 1;
@@ -1213,6 +1229,13 @@
         .cart-item-row:hover {
             border-color: rgba(196, 30, 90, 0.2);
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+        }
+        .cart-item-img-small {
+            width: 36px;
+            height: 48px;
+            object-fit: cover;
+            border-radius: 4px;
+            flex-shrink: 0;
         }
         .cart-item-emoji-small {
             font-size: 1.6rem;
@@ -1733,11 +1756,46 @@
             border: 1px dashed #c9a135;
         }
 
+        /* ========== LOADING STATES ========== */
+        .global-loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255,255,255,0.85);
+            z-index: 9998;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        .global-loader.hidden {
+            display: none;
+        }
+        .spinner {
+            width: 44px;
+            height: 44px;
+            border: 4px solid var(--primary-20);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 0.7s linear infinite;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        .global-loader .loader-text {
+            font-size: 0.72rem;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
         .toast {
             position: fixed;
             bottom: 3.5rem;
             right: 0.8rem;
-            z-index: 300;
+            z-index: 9999;
             background: var(--foreground);
             color: #fff;
             padding: 0.45rem 0.8rem;
@@ -1857,6 +1915,11 @@
     </style>
 </head>
 <body>
+    <div class="global-loader" id="globalLoader">
+        <div class="spinner"></div>
+        <div class="loader-text">✨ RAS Fashion লোড হচ্ছে...</div>
+    </div>
+
     <nav class="navbar">
         <div class="inner">
             <a class="nav-logo" onclick="navigate('home')"><img src="https://i.imgur.com/XfScOKb.png" alt="RAS Fashion"><span>RAS Fashion</span></a>
@@ -1893,7 +1956,7 @@
             <div class="banner-slider">
                 <div class="slideshow-container" id="slideshowContainer">
                     <img class="slideshow-image active" src="https://i.imgur.com/NmNVYO5.png" alt="ব্যানার ১" onerror="this.style.display='none';this.parentElement.style.background='linear-gradient(135deg,#ffe8f0,#fde4ef)';this.parentElement.innerHTML+='<div style=text-align:center;padding:1rem;font-size:3rem;>💄</div>'">
-                    <img class="slideshow-image" src="https://i.imgur.com/sxQzZNk.png" alt="ব্যানার ২" onerror="this.style.display='none';this.parentElement.style.background='linear-gradient(135deg,#e8f0ff,#fde4ef)';this.parentElement.innerHTML+='<div style=text-align:center;padding:1rem;font-size:3rem;>✨</div>'">
+                    <img class="slideshow-image" src="https://i.imgur.com/RG7cmuw.png" alt="ব্যানার ২" onerror="this.style.display='none';this.parentElement.style.background='linear-gradient(135deg,#e8f0ff,#fde4ef)';this.parentElement.innerHTML+='<div style=text-align:center;padding:1rem;font-size:3rem;>✨</div>'">
                     <button class="banner-fashion-btn" onclick="navigate('shop')">👗 ফ্যাশন কালেকশন দেখুন</button>
                     <button class="banner-pharma-btn" onclick="goToRASPharma()">💊 ফার্মেসি কালেকশন দেখুন</button>
                     <div class="slideshow-dots" id="slideshowDots">
@@ -2009,6 +2072,32 @@
     <div class="toast" id="toast"></div>
 
     <script>
+        // ===== CONFIGURATION =====
+        const GOOGLE_SHEETS_API_URL = 'https://script.google.com/macros/s/AKfycbxwrUku1D64M_ZTR9Pf93r7rDjxuepv596bYXWRwL_ItymqOhYe9eAxOJbsIoZf4PvJrg/exec';
+        // ⚠️ উপরের URL টি পরিবর্তন করে আপনার Apps Script Deployment URL বসান
+
+        // ===== GLOBAL STATE =====
+        let products = [];
+        let cart = JSON.parse(localStorage.getItem('ras_cart') || '[]');
+        let wishlist = JSON.parse(localStorage.getItem('ras_wish') || '[]');
+        let orders = JSON.parse(localStorage.getItem('ras_orders') || '[]');
+        let currentUser = JSON.parse(localStorage.getItem('ras_user') || 'null');
+        let currentPage = 'home',
+            currentProduct = null,
+            filterCategory = 'all',
+            sortBy = 'default',
+            searchQuery = '';
+        let pendingAction = null;
+        let appliedPromo = null;
+        let slideshowInterval = null,
+            slideshowPlaying = true,
+            slideshowIndex = 0;
+        const SLIDESHOW_TOTAL = 2;
+
+        const CATEGORIES = ['Cosmetics', 'Skincare', 'Haircare', 'Fragrance', 'Jewelry', 'Clothing'];
+        const CAT_LABELS = { Cosmetics: 'কসমেটিকস', Skincare: 'স্কিনকেয়ার', Haircare: 'হেয়ারকেয়ার', Fragrance: 'সুগন্ধি', Jewelry: 'জুয়েলারি', Clothing: 'পোশাক' };
+        const CAT_EMOJIS = { Cosmetics: '💄', Skincare: '🧴', Haircare: '💆', Fragrance: '🌸', Jewelry: '💍', Clothing: '👗' };
+
         const BD_DATA = {
             "ঢাকা": { districts: { "ঢাকা": ["গুলশান","মিরপুর","উত্তরা","ধানমন্ডি","মতিঝিল","সাভার","কেরানীগঞ্জ","নবাবগঞ্জ","দোহার","ধামরাই"],
                     "গাজীপুর": ["গাজীপুর সদর","কালিয়াকৈর","কাপাসিয়া","শ্রীপুর","টঙ্গী"],
@@ -2057,45 +2146,61 @@
         };
         const ORDER_STATUS_STEPS = ['অর্ডার প্রাপ্তি', 'অর্ডার কনফার্ম', 'প্যাকেজিং', 'ডেলিভারির জন্য পাঠানো', 'ডেলিভারি সম্পন্ন'];
 
-        const CATEGORIES = ['Cosmetics','Skincare','Haircare','Fragrance','Jewelry','Clothing'];
-        const CAT_LABELS = { Cosmetics: 'কসমেটিকস', Skincare: 'স্কিনকেয়ার', Haircare: 'হেয়ারকেয়ার', Fragrance: 'সুগন্ধি', Jewelry: 'জুয়েলারি', Clothing: 'পোশাক' };
-        const CAT_EMOJIS = { Cosmetics: '💄', Skincare: '🧴', Haircare: '💆', Fragrance: '🌸', Jewelry: '💍', Clothing: '👗' };
+        // ===== API CALL =====
+        async function fetchProductsFromSheet() {
+            const loader = document.getElementById('globalLoader');
+            if (loader) loader.classList.remove('hidden');
+            try {
+                const response = await fetch(GOOGLE_SHEETS_API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ action: 'getProducts' })
+                });
+                if (!response.ok) throw new Error(`HTTP error ${response.status}`);
+                const data = await response.json();
+                if (data.ok && Array.isArray(data.products)) {
+                    products = data.products.map(p => ({
+                        ...p,
+                        emoji: p.emoji || CAT_EMOJIS[p.category] || '📦',
+                        image: p.image || '',
+                        price: Number(p.price) || 0,
+                        originalPrice: p.originalPrice ? Number(p.originalPrice) : null,
+                        inStock: p.inStock === true || p.inStock === 'true' || p.inStock === 'TRUE' || p.inStock === 1,
+                        trending: p.trending === true || p.trending === 'true' || p.trending === 'TRUE' || p.trending === 1,
+                        newArrival: p.newArrival === true || p.newArrival === 'true' || p.newArrival === 'TRUE' || p.newArrival === 1,
+                        deal: p.deal === true || p.deal === 'true' || p.deal === 'TRUE' || p.deal === 1,
+                        bestseller: p.bestseller === true || p.bestseller === 'true' || p.bestseller === 'TRUE' || p.bestseller === 1,
+                        tags: Array.isArray(p.tags) ? p.tags : (typeof p.tags === 'string' ? p.tags.split(',').map(t => t.trim()).filter(Boolean) : []),
+                        specs: Array.isArray(p.specs) ? p.specs : (typeof p.specs === 'string' ? p.specs.split('|').map(s => s.trim()).filter(Boolean) : []),
+                        batch: p.batch || null
+                    }));
+                    console.log('✅ Products loaded from Google Sheets:', products.length);
+                    return products;
+                } else {
+                    throw new Error(data.error || 'Invalid API response');
+                }
+            } catch (error) {
+                console.error('❌ API Fetch Error:', error);
+                showToast('⚠️ ডেটা লোড করতে সমস্যা — demo ডেটা দেখানো হচ্ছে', 'error');
+                // Fallback demo data
+                products = getFallbackProducts();
+                return products;
+            } finally {
+                if (loader) loader.classList.add('hidden');
+            }
+        }
 
-        const PRODUCTS = [
-            { id: 'p1', name: 'ভেলভেট ম্যাট লিপস্টিক', nameEn: 'Velvet Matte Lipstick', price: 350, originalPrice: 450, category: 'Cosmetics', emoji: '💄', desc: 'দীর্ঘস্থায়ী | ওয়াটারপ্রুফ', tags: ['ম্যাট ফিনিশ'], badge: 'best', inStock: true, description: '১২ ঘন্টা রঙ ধরে রাখে।', specs: ['ওজন: ৩.৫ গ্রাম'], company: 'RAS Beauty Lab', quality: 'প্রিমিয়াম কোয়ালিটি — ইউরোপীয় স্ট্যান্ডার্ড', usage: 'ঠোঁটে সরাসরি প্রয়োগ করুন। দীর্ঘস্থায়ী ম্যাট ফিনিশের জন্য বেস্ট।', trending: true, newArrival: true, deal: true, bestseller: true },
-            { id: 'p2', name: 'রোজ গ্লো ফেস সিরাম', nameEn: 'Rose Glow Face Serum', price: 650, originalPrice: 850, category: 'Skincare', emoji: '🌹', desc: 'উজ্জ্বলতা | প্রাকৃতিক গ্লো', tags: ['হাইড্রেটিং'], badge: 'best', inStock: true, description: 'গোলাপ নির্যাসে তৈরি।', specs: ['আয়তন: ৩০ মিলি'], company: 'RAS Skin Science', quality: 'অর্গানিক ইনগ্রেডিয়েন্টস | প্যারাবেন-ফ্রি', usage: 'পরিষ্কার ত্বকে ২-৩ ফোঁটা সিরাম লাগিয়ে আস্তে ম্যাসাজ করুন। রাতে ব্যবহারে সেরা ফল।', trending: true, newArrival: true, deal: true, bestseller: true },
-            { id: 'p3', name: 'জেন্টল ফোম ফেস ওয়াশ', nameEn: 'Gentle Foam Face Wash', price: 380, originalPrice: null, category: 'Skincare', emoji: '🧼', desc: 'গভীর পরিষ্কার', tags: ['অয়েল কন্ট্রোল'], badge: null, inStock: true, description: 'পিএইচ ৫.৫', specs: ['১৫০ মিলি'], company: 'RAS Skin Science', quality: 'ডার্মাটোলজিস্ট টেস্টেড', usage: 'সকাল ও রাতে ব্যবহার করুন। ফোম তৈরি করে মুখে লাগিয়ে হালকা ঘষে ধুয়ে ফেলুন।', trending: true, newArrival: true, deal: false, bestseller: false },
-            { id: 'p4', name: 'সিল্ক হেয়ার অয়েল', nameEn: 'Silk Hair Oil', price: 520, originalPrice: null, category: 'Haircare', emoji: '🌿', desc: 'সিল্কি মসৃণ', tags: [], badge: null, inStock: false, description: 'ফ্রিজ কন্ট্রোল', specs: ['১০০ মিলি'], company: 'RAS Hair Care', quality: 'প্রাকৃতিক তেলের মিশ্রণ', usage: 'শ্যাম্পুর আগে বা পরে ২-৩ ফোঁটা তেল চুলে লাগান।', trending: true, newArrival: false, deal: false, bestseller: false },
-            { id: 'p5', name: 'পারফেক্ট গ্লো ফাউন্ডেশন', nameEn: 'Perfect Glow Foundation', price: 980, originalPrice: 1200, category: 'Cosmetics', emoji: '🎨', desc: 'ফুল কভারেজ', tags: ['SPF 30'], badge: 'best', inStock: false, description: 'প্রাকৃতিক ফিনিশ', specs: ['৩০ মিলি'], company: 'RAS Beauty Lab', quality: 'হাই-ডেফিনিশন ফর্মুলা | SPF 30', usage: 'ময়েশ্চারাইজারের পর ব্রাশ বা স্পঞ্জ দিয়ে ব্লেন্ড করুন।', trending: true, newArrival: false, deal: false, bestseller: true },
-            { id: 'p6', name: 'অ্যালোভেরা জেল ময়েশ্চারাইজার', nameEn: 'Aloe Vera Gel Moisturizer', price: 280, originalPrice: 320, category: 'Skincare', emoji: '🌵', desc: 'হাইড্রেটিং', tags: [], badge: null, inStock: false, description: 'প্রাকৃতিক', specs: ['২০০ মিলি'], company: 'RAS Skin Science', quality: '৯৯% অ্যালোভেরা | অর্গানিক', usage: 'প্রতিদিন সকালে ও রাতে পরিষ্কার ত্বকে ব্যবহার করুন।', trending: true, newArrival: false, deal: false, bestseller: false },
-            { id: 'p7', name: 'কাজল ও আইলাইনার ডুও', nameEn: 'Kajal & Eyeliner Duo', price: 350, originalPrice: null, category: 'Cosmetics', emoji: '👁️', desc: 'স্মাজ প্রুফ', tags: [], badge: 'best', inStock: true, description: 'ওয়াটারপ্রুফ', specs: ['০.৩৫ গ্রাম'], company: 'RAS Beauty Lab', quality: 'স্মাজ-প্রুফ ও ওয়াটারপ্রুফ', usage: 'চোখের নিচে ও উপরে লাইন টানতে ব্যবহার করুন।', trending: false, newArrival: true, deal: false, bestseller: true },
-            { id: 'p8', name: 'ভিটামিন সি ব্রাইটেনিং ক্রিম', nameEn: 'Vitamin C Brightening Cream', price: 750, originalPrice: 950, category: 'Skincare', emoji: '🍊', desc: 'অ্যান্টি-এজিং', tags: ['ভিটামিন সি'], badge: 'best', inStock: true, description: 'উজ্জ্বল ত্বক', specs: ['৫০ মিলি'], company: 'RAS Skin Science', quality: 'ভিটামিন সি ১০% | ক্লিনিকালি টেস্টেড', usage: 'দিনে একবার মুখ ও গলায় লাগান। সানস্ক্রিন সহ ব্যবহার করুন।', trending: false, newArrival: true, deal: false, bestseller: true },
-            { id: 'p9', name: 'ম্যাজিক বিবি ক্রিম এসপিএফ৫০', nameEn: 'Magic BB Cream SPF50', price: 550, originalPrice: 700, category: 'Cosmetics', emoji: '✨', desc: 'সানস্ক্রিন যুক্ত', tags: ['SPF50'], badge: null, inStock: true, description: '৬-ইন-১', specs: ['৪০ মিলি'], company: 'RAS Beauty Lab', quality: 'SPF 50 PA+++ | ৬-ইন-১ ফর্মুলা', usage: 'দিনের বেলা একা বা ফাউন্ডেশনের নিচে ব্যবহার করুন।', trending: false, newArrival: true, deal: false, bestseller: false },
-            { id: 'p10', name: 'ডিপ কন্ডিশনিং হেয়ার মাস্ক', nameEn: 'Deep Conditioning Hair Mask', price: 420, originalPrice: 550, category: 'Haircare', emoji: '🌟', desc: 'গভীর পুষ্টি', tags: [], badge: null, inStock: true, description: 'কেরাটিন', specs: ['২০০ গ্রাম'], company: 'RAS Hair Care', quality: 'কেরাটিন সমৃদ্ধ | ডিপ রিপেয়ার', usage: 'শ্যাম্পুর পর চুলে লাগিয়ে ৫-১০ মিনিট রেখে ধুয়ে ফেলুন।', trending: false, newArrival: false, deal: false, bestseller: false },
-            { id: 'p11', name: 'গোলাপ বডি লোশন', nameEn: 'Rose Body Lotion', price: 320, originalPrice: null, category: 'Skincare', emoji: '🌺', desc: 'নরম ত্বক', tags: [], badge: null, inStock: true, description: 'সুগন্ধি', specs: ['৩০০ মিলি'], company: 'RAS Body Care', quality: 'গোলাপ নির্যাস | ২৪ ঘন্টা ময়েশ্চার', usage: 'গোসলের পর পুরো শরীরে লাগান।', trending: false, newArrival: false, deal: false, bestseller: false },
-            { id: 'p12', name: 'চেরি ব্লসম পারফিউম', nameEn: 'Cherry Blossom Perfume', price: 890, originalPrice: 1100, category: 'Fragrance', emoji: '🌸', desc: 'মিষ্টি সুগন্ধ', tags: [], badge: 'best', inStock: true, description: 'দীর্ঘস্থায়ী', specs: ['৫০ মিলি'], company: 'RAS Fragrance', quality: 'ইম্পোর্টেড ফ্রেগ্র্যান্স অয়েল | EDP', usage: 'পালস পয়েন্টে (কব্জি, ঘাড়) স্প্রে করুন।', trending: false, newArrival: false, deal: false, bestseller: false },
-            { id: 'p13', name: 'সিলভার চেইন নেকলেস', nameEn: 'Silver Chain Necklace', price: 1200, originalPrice: 1500, category: 'Jewelry', emoji: '💍', desc: 'স্টার্লিং সিলভার', tags: [], badge: null, inStock: true, description: 'মার্জিত ডিজাইন', specs: ['ওজন: ৮ গ্রাম'], company: 'RAS Jewelry', quality: 'হলমার্ক করা সিলভার', usage: 'যেকোনো পোশাকের সাথে মানানসই।', trending: false, newArrival: false, deal: true, bestseller: false },
-            { id: 'p14', name: 'কটন প্রিন্টেড কুর্তি', nameEn: 'Cotton Printed Kurti', price: 850, originalPrice: null, category: 'Clothing', emoji: '👗', desc: 'আরামদায়ক সুতি', tags: [], badge: null, inStock: true, description: 'হ্যান্ড প্রিন্ট', specs: ['ফ্রি সাইজ'], company: 'RAS Fabric', quality: '১০০% সুতি কাপড়', usage: 'ড্রাই ক্লিন বা হালকা ধোয়া।', trending: false, newArrival: true, deal: false, bestseller: false },
-        ];
+        function getFallbackProducts() {
+            return [
+                { id: 'p1', name: 'ভেলভেট ম্যাট লিপস্টিক', nameEn: 'Velvet Matte Lipstick', price: 350, originalPrice: 450, category: 'Cosmetics', image: '', emoji: '💄', desc: 'দীর্ঘস্থায়ী | ওয়াটারপ্রুফ', tags: ['ম্যাট ফিনিশ'], badge: 'best', inStock: true, description: '১২ ঘন্টা রঙ ধরে রাখে।', specs: ['ওজন: ৩.৫ গ্রাম'], company: 'RAS Beauty Lab', quality: 'প্রিমিয়াম কোয়ালিটি — ইউরোপীয় স্ট্যান্ডার্ড', usage: 'ঠোঁটে সরাসরি প্রয়োগ করুন। দীর্ঘস্থায়ী ম্যাট ফিনিশের জন্য বেস্ট।', trending: true, newArrival: true, deal: true, bestseller: true, batch: null },
+                { id: 'p2', name: 'রোজ গ্লো ফেস সিরাম', nameEn: 'Rose Glow Face Serum', price: 650, originalPrice: 850, category: 'Skincare', image: '', emoji: '🌹', desc: 'উজ্জ্বলতা | প্রাকৃতিক গ্লো', tags: ['হাইড্রেটিং'], badge: 'best', inStock: true, description: 'গোলাপ নির্যাসে তৈরি।', specs: ['আয়তন: ৩০ মিলি'], company: 'RAS Skin Science', quality: 'অর্গানিক ইনগ্রেডিয়েন্টস | প্যারাবেন-ফ্রি', usage: 'পরিষ্কার ত্বকে ২-৩ ফোঁটা সিরাম লাগিয়ে আস্তে ম্যাসাজ করুন। রাতে ব্যবহারে সেরা ফল।', trending: true, newArrival: true, deal: true, bestseller: true, batch: null },
+                { id: 'p7', name: 'কাজল ও আইলাইনার ডুও', nameEn: 'Kajal & Eyeliner Duo', price: 350, originalPrice: null, category: 'Cosmetics', image: '', emoji: '👁️', desc: 'স্মাজ প্রুফ', tags: [], badge: 'best', inStock: true, description: 'ওয়াটারপ্রুফ', specs: ['০.৩৫ গ্রাম'], company: 'RAS Beauty Lab', quality: 'স্মাজ-প্রুফ ও ওয়াটারপ্রুফ', usage: 'চোখের নিচে ও উপরে লাইন টানতে ব্যবহার করুন।', trending: false, newArrival: true, deal: false, bestseller: true, batch: null },
+                { id: 'p8', name: 'ভিটামিন সি ব্রাইটেনিং ক্রিম', nameEn: 'Vitamin C Brightening Cream', price: 750, originalPrice: 950, category: 'Skincare', image: '', emoji: '🍊', desc: 'অ্যান্টি-এজিং', tags: ['ভিটামিন সি'], badge: 'best', inStock: true, description: 'উজ্জ্বল ত্বক', specs: ['৫০ মিলি'], company: 'RAS Skin Science', quality: 'ভিটামিন সি ১০% | ক্লিনিকালি টেস্টেড', usage: 'দিনে একবার মুখ ও গলায় লাগান। সানস্ক্রিন সহ ব্যবহার করুন।', trending: false, newArrival: true, deal: false, bestseller: true, batch: null }
+            ];
+        }
 
-        let cart = JSON.parse(localStorage.getItem('ras_cart') || '[]');
-        let wishlist = JSON.parse(localStorage.getItem('ras_wish') || '[]');
-        let orders = JSON.parse(localStorage.getItem('ras_orders') || '[]');
-        let currentUser = JSON.parse(localStorage.getItem('ras_user') || 'null');
-        let currentPage = 'home',
-            currentProduct = null,
-            filterCategory = 'all',
-            sortBy = 'default',
-            searchQuery = '';
-        let pendingAction = null;
-        let appliedPromo = null;
-        let slideshowInterval = null,
-            slideshowPlaying = true,
-            slideshowIndex = 0;
-        const SLIDESHOW_TOTAL = 2;
-
+        // ===== CART & STORAGE =====
         function saveCart() { localStorage.setItem('ras_cart', JSON.stringify(cart)); }
-
         function saveUser() { if (currentUser) localStorage.setItem('ras_user', JSON.stringify(currentUser));
             else localStorage.removeItem('ras_user'); }
 
@@ -2105,7 +2210,6 @@
             b.style.display = t > 0 ? 'flex' : 'none'; }
 
         function lockBodyScroll() { document.body.classList.add('modal-open'); }
-
         function unlockBodyScroll() {
             if (!document.getElementById('checkoutModal').classList.contains('open') &&
                 !document.getElementById('loginModal').classList.contains('open') &&
@@ -2135,6 +2239,109 @@
             }
         }
 
+        // ===== RENDER HELPERS =====
+        function getProductImageHTML(product) {
+            if (product.image && product.image.trim() !== '') {
+                return `<img src="${product.image}" alt="${product.name}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">`;
+            }
+            return '';
+        }
+
+        function getProductEmojiHTML(product) {
+            return `<span class="emoji-fallback" style="display:${product.image && product.image.trim() !== '' ? 'none' : 'flex'};align-items:center;justify-content:center;width:100%;height:100%;">${product.emoji || CAT_EMOJIS[product.category] || '📦'}</span>`;
+        }
+
+        function createProductCard(product, extraClass = '') {
+            const discount = product.originalPrice ? Math.round((1 - product.price / product.originalPrice) * 100) : 0;
+            const isWished = wishlist.includes(product.id);
+            const stockLabel = product.inStock ? 'In Stock' : 'Out of Stock';
+            const stockClass = product.inStock ? '' : 'out';
+            const hasImage = product.image && product.image.trim() !== '';
+            return `
+            <div class="prod-card ${extraClass}" onclick="navigate('product','${product.id}')">
+              <div class="prod-img-wrap">
+                ${hasImage ? `<img src="${product.image}" alt="${product.name}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">` : ''}
+                <span class="emoji-fallback" style="display:${hasImage ? 'none' : 'flex'};align-items:center;justify-content:center;width:100%;height:100%;font-size:3rem;">${product.emoji || CAT_EMOJIS[product.category] || '📦'}</span>
+                ${product.badge==='best'?'<span class="best-badge">⭐ সেরা</span>':''}
+                ${discount>0?`<span class="discount-badge-card">-${discount}%</span>`:''}
+                <span class="stock-badge-card ${stockClass}">${stockLabel}</span>
+              </div>
+              <button class="wish-btn ${isWished?'wished':''}" onclick="toggleWish(event,'${product.id}')"><i class="far fa-heart"></i></button>
+              <div class="prod-body"><div class="prod-name">${product.name}</div><div class="prod-desc">${product.desc}</div>
+                <div class="prod-footer"><div><span class="prod-price">৳${product.price.toLocaleString('bn-BD')}</span>${product.originalPrice?`<span class="prod-price-orig">৳${product.originalPrice.toLocaleString('bn-BD')}</span>`:''}</div>
+                  <button class="add-cart-btn" onclick="addToCart(event,'${product.id}')" ${!product.inStock?'disabled':''}>${!product.inStock?'স্টক শেষ':'কার্টে যোগ'}</button></div></div></div>`;
+        }
+
+        function renderHomeProducts() {
+            document.getElementById('trendingGrid').innerHTML = products.filter(p => p.trending).slice(0, 6).map(p => createProductCard(p)).join('') || '<p style="text-align:center;color:var(--muted-foreground);">🔜 ট্রেন্ডিং পণ্য লোড হচ্ছে...</p>';
+            document.getElementById('newArrivalsGrid').innerHTML = products.filter(p => p.newArrival).slice(0, 6).map(p => createProductCard(p)).join('') || '<p style="text-align:center;color:var(--muted-foreground);">🔜 নতুন পণ্য লোড হচ্ছে...</p>';
+            document.getElementById('dealsGrid').innerHTML = products.filter(p => p.deal).slice(0, 2).map(p => createProductCard(p, 'deal-card')).join('') || '<p style="text-align:center;color:var(--muted-foreground);">🔜 ডিল লোড হচ্ছে...</p>';
+            document.getElementById('bestGrid').innerHTML = products.filter(p => p.bestseller).slice(0, 4).map(p => createProductCard(p)).join('') || '<p style="text-align:center;color:var(--muted-foreground);">🔜 বেস্ট সেলার লোড হচ্ছে...</p>';
+            document.getElementById('homeCatGrid').innerHTML = CATEGORIES.map(cat => `<a class="cat-item" onclick="navigateShopCategory('${cat}')"><div class="cat-icon">${CAT_EMOJIS[cat]}</div><span class="cat-label">${CAT_LABELS[cat]}</span></a>`).join('');
+        }
+
+        function renderShop() {
+            document.getElementById('shopFilters').innerHTML = `<button class="filter-btn active" data-cat="all" onclick="setCategory('all',this)">সব</button>${CATEGORIES.map(cat=>`<button class="filter-btn" data-cat="${cat}" onclick="setCategory('${cat}',this)">${CAT_LABELS[cat]}</button>`).join('')}<select onchange="sortProducts(this.value)" style="margin-left:auto;padding:0.2rem 0.4rem;border:1.5px solid var(--border);border-radius:6px;font-size:0.62rem;background:var(--background);"><option value="default">ডিফল্ট</option><option value="price-asc">দাম: কম→বেশি</option><option value="price-desc">দাম: বেশি→কম</option></select>`;
+            filterProducts();
+        }
+
+        function similarity(str1, str2) {
+            str1 = str1.toLowerCase();
+            str2 = str2.toLowerCase();
+            const len1 = str1.length,
+                len2 = str2.length;
+            const dp = Array.from({ length: len1 + 1 }, () => Array(len2 + 1).fill(0));
+            for (let i = 0; i <= len1; i++) dp[i][0] = i;
+            for (let j = 0; j <= len2; j++) dp[0][j] = j;
+            for (let i = 1; i <= len1; i++) { for (let j = 1; j <= len2; j++) { const cost = str1[i - 1] === str2[j - 1] ? 0 : 1;
+                    dp[i][j] = Math.min(dp[i - 1][j] + 1, dp[i][j - 1] + 1, dp[i - 1][j - 1] + cost); } }
+            const distance = dp[len1][len2],
+                maxLen = Math.max(len1, len2);
+            return maxLen === 0 ? 1 : (maxLen - distance) / maxLen;
+        }
+
+        function maxWordSimilarity(searchTerm, title) {
+            const words = title.toLowerCase().split(/\s+/);
+            let bestSim = 0;
+            for (const word of words) { const sim = similarity(searchTerm, word); if (sim > bestSim) bestSim = sim; }
+            const fullSim = similarity(searchTerm, title.toLowerCase());
+            return Math.max(bestSim, fullSim);
+        }
+
+        function fuzzyFilterProducts(prods, query) {
+            if (!query) return prods;
+            return prods.map(p => ({ ...p, sim: maxWordSimilarity(query, p.name + ' ' + p.nameEn + ' ' + p.desc) })).filter(p => p.sim > 0.3).sort((a, b) => b.sim - a.sim);
+        }
+
+        function filterProducts() {
+            searchQuery = document.getElementById('shopSearch')?.value?.toLowerCase() || '';
+            let prods = [...products];
+            if (filterCategory !== 'all') prods = prods.filter(p => p.category === filterCategory);
+            if (searchQuery) prods = fuzzyFilterProducts(prods, searchQuery);
+            if (sortBy === 'price-asc') prods.sort((a, b) => a.price - b.price);
+            else if (sortBy === 'price-desc') prods.sort((a, b) => b.price - a.price);
+            const grid = document.getElementById('shopGrid');
+            const noRes = document.getElementById('noResults');
+            if (prods.length) {
+                grid.innerHTML = prods.map(p => createProductCard(p)).join('');
+                noRes.style.display = 'none';
+            } else {
+                const trending = products.filter(p => p.trending).slice(0, 6);
+                grid.innerHTML = trending.length ? trending.map(p => createProductCard(p)).join('') : '';
+                noRes.style.display = 'block';
+                noRes.innerHTML = '🔍 কোনো পণ্য পাওয়া যায়নি — ট্রেন্ডিং দেখাচ্ছি';
+            }
+            document.getElementById('shopCount').textContent = prods.length ? `মোট ${prods.length}টি পণ্য` : 'ট্রেন্ডিং পণ্য দেখানো হচ্ছে';
+        }
+
+        function setCategory(cat, btn) { filterCategory = cat;
+            document.querySelectorAll('#shopFilters .filter-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            filterProducts(); }
+
+        function sortProducts(val) { sortBy = val;
+            filterProducts(); }
+
         function navigate(page, productId) {
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
             const el = document.getElementById('page-' + page); if (el) el.classList.add('active');
@@ -2157,110 +2364,21 @@
 
         function navigateShopCategory(cat) { filterCategory = cat;
             navigate('shop');
-            setTimeout(() => { document.querySelectorAll('#shopFilters .filter-btn').forEach(b => b.classList.toggle(
-                    'active', b.dataset.cat === cat)); }, 50); }
-
-        function createProductCard(product, extraClass = '') {
-            const discount = product.originalPrice ? Math.round((1 - product.price / product.originalPrice) * 100) : 0;
-            const isWished = wishlist.includes(product.id);
-            const stockLabel = product.inStock ? 'In Stock' : 'Out of Stock';
-            const stockClass = product.inStock ? '' : 'out';
-            return `
-            <div class="prod-card ${extraClass}" onclick="navigate('product','${product.id}')">
-              <div class="prod-img-wrap"><span class="emoji">${product.emoji}</span>
-                ${product.badge==='best'?'<span class="best-badge">⭐ সেরা</span>':''}
-                ${discount>0?`<span class="discount-badge-card">-${discount}%</span>`:''}
-                <span class="stock-badge-card ${stockClass}">${stockLabel}</span>
-              </div>
-              <button class="wish-btn ${isWished?'wished':''}" onclick="toggleWish(event,'${product.id}')"><i class="far fa-heart"></i></button>
-              <div class="prod-body"><div class="prod-name">${product.name}</div><div class="prod-desc">${product.desc}</div>
-                <div class="prod-footer"><div><span class="prod-price">৳${product.price.toLocaleString('bn-BD')}</span>${product.originalPrice?`<span class="prod-price-orig">৳${product.originalPrice.toLocaleString('bn-BD')}</span>`:''}</div>
-                  <button class="add-cart-btn" onclick="addToCart(event,'${product.id}')" ${!product.inStock?'disabled':''}>${!product.inStock?'স্টক শেষ':'কার্টে যোগ'}</button></div></div></div>`;
-        }
-
-        function renderHomeProducts() {
-            document.getElementById('trendingGrid').innerHTML = PRODUCTS.filter(p => p.trending).slice(0, 6).map(p => createProductCard(p)).join('');
-            document.getElementById('newArrivalsGrid').innerHTML = PRODUCTS.filter(p => p.newArrival).slice(0, 6).map(p => createProductCard(p)).join('');
-            document.getElementById('dealsGrid').innerHTML = PRODUCTS.filter(p => p.deal).slice(0, 2).map(p => createProductCard(p, 'deal-card')).join('');
-            document.getElementById('bestGrid').innerHTML = PRODUCTS.filter(p => p.bestseller).slice(0, 4).map(p => createProductCard(p)).join('');
-            document.getElementById('homeCatGrid').innerHTML = CATEGORIES.map(cat => `<a class="cat-item" onclick="navigateShopCategory('${cat}')"><div class="cat-icon">${CAT_EMOJIS[cat]}</div><span class="cat-label">${CAT_LABELS[cat]}</span></a>`).join('');
-        }
-
-        function renderShop() {
-            document.getElementById('shopFilters').innerHTML = `<button class="filter-btn active" data-cat="all" onclick="setCategory('all',this)">সব</button>${CATEGORIES.map(cat=>`<button class="filter-btn" data-cat="${cat}" onclick="setCategory('${cat}',this)">${CAT_LABELS[cat]}</button>`).join('')}<select onchange="sortProducts(this.value)" style="margin-left:auto;padding:0.2rem 0.4rem;border:1.5px solid var(--border);border-radius:6px;font-size:0.62rem;background:var(--background);"><option value="default">ডিফল্ট</option><option value="price-asc">দাম: কম→বেশি</option><option value="price-desc">দাম: বেশি→কম</option></select>`;
-            filterProducts();
-        }
-
-        function similarity(str1, str2) {
-            str1 = str1.toLowerCase();
-            str2 = str2.toLowerCase();
-            const len1 = str1.length,
-                len2 = str2.length;
-            const dp = Array.from({ length: len1 + 1 }, () => Array(len2 + 1).fill(0));
-            for (let i = 0; i <= len1; i++) dp[i][0] = i;
-            for (let j = 0; j <= len2; j++) dp[0][j] = j;
-            for (let i = 1; i <= len1; i++) { for (let j = 1; j <= len2; j++) { const cost = str1[i - 1] === str2[j - 1] ? 0 :
-                        1;
-                    dp[i][j] = Math.min(dp[i - 1][j] + 1, dp[i][j - 1] + 1, dp[i - 1][j - 1] + cost); } }
-            const distance = dp[len1][len2],
-                maxLen = Math.max(len1, len2);
-            return maxLen === 0 ? 1 : (maxLen - distance) / maxLen;
-        }
-
-        function maxWordSimilarity(searchTerm, title) {
-            const words = title.toLowerCase().split(/\s+/);
-            let bestSim = 0;
-            for (const word of words) { const sim = similarity(searchTerm, word); if (sim > bestSim) bestSim = sim; }
-            const fullSim = similarity(searchTerm, title.toLowerCase());
-            return Math.max(bestSim, fullSim);
-        }
-
-        function fuzzyFilterProducts(prods, query) {
-            if (!query) return prods;
-            return prods.map(p => ({ ...p, sim: maxWordSimilarity(query, p.name + ' ' + p.nameEn + ' ' + p.desc) })).filter(
-                p => p.sim > 0.3).sort((a, b) => b.sim - a.sim);
-        }
-
-        function filterProducts() {
-            searchQuery = document.getElementById('shopSearch')?.value?.toLowerCase() || '';
-            let prods = [...PRODUCTS];
-            if (filterCategory !== 'all') prods = prods.filter(p => p.category === filterCategory);
-            if (searchQuery) prods = fuzzyFilterProducts(prods, searchQuery);
-            if (sortBy === 'price-asc') prods.sort((a, b) => a.price - b.price);
-            else if (sortBy === 'price-desc') prods.sort((a, b) => b.price - a.price);
-            const grid = document.getElementById('shopGrid');
-            const noRes = document.getElementById('noResults');
-            if (prods.length) {
-                grid.innerHTML = prods.map(p => createProductCard(p)).join('');
-                noRes.style.display = 'none';
-            } else {
-                const trending = PRODUCTS.filter(p => p.trending).slice(0, 6);
-                grid.innerHTML = trending.map(p => createProductCard(p)).join('');
-                noRes.style.display = 'block';
-                noRes.innerHTML = '🔍 কোনো পণ্য পাওয়া যায়নি — ট্রেন্ডিং দেখাচ্ছি';
-            }
-            document.getElementById('shopCount').textContent = prods.length ? `মোট ${prods.length}টি পণ্য` : 'ট্রেন্ডিং পণ্য দেখানো হচ্ছে';
-        }
-
-        function setCategory(cat, btn) { filterCategory = cat;
-            document.querySelectorAll('#shopFilters .filter-btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            filterProducts(); }
-
-        function sortProducts(val) { sortBy = val;
-            filterProducts(); }
+            setTimeout(() => { document.querySelectorAll('#shopFilters .filter-btn').forEach(b => b.classList.toggle('active', b.dataset.cat === cat)); }, 50); }
 
         function renderProductDetail(id) {
-            const p = PRODUCTS.find(x => x.id === id);
+            const p = products.find(x => x.id === id);
             if (!p) { document.getElementById('productDetailContent').innerHTML = '<div style="text-align:center;padding:2rem;"><h2 style="font-size:0.85rem;">পণ্য পাওয়া যায়নি</h2></div>'; return; }
             currentProduct = p;
             const discount = p.originalPrice ? Math.round((1 - p.price / p.originalPrice) * 100) : 0;
-            const similar = PRODUCTS.filter(x => x.category === p.category && x.id !== p.id).slice(0, 4);
+            const similar = products.filter(x => x.category === p.category && x.id !== p.id).slice(0, 4);
+            const hasImage = p.image && p.image.trim() !== '';
             document.getElementById('productDetailContent').innerHTML = `
             <div style="display:grid;grid-template-columns:1fr;gap:0.8rem;padding:1rem 0;">
-              <div style="aspect-ratio:3/4;background:var(--pink-light);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:5rem;position:relative;">
+              <div style="aspect-ratio:3/4;background:var(--pink-light);border-radius:14px;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;">
                 <button class="back-btn-img" onclick="navigate('home')" title="মেন পেইজে ফিরুন"><i class="fas fa-arrow-left"></i></button>
-                ${p.emoji}
+                ${hasImage ? `<img src="${p.image}" alt="${p.name}" style="width:100%;height:100%;object-fit:contain;" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">` : ''}
+                <span style="display:${hasImage ? 'none' : 'flex'};align-items:center;justify-content:center;font-size:5rem;width:100%;height:100%;">${p.emoji || CAT_EMOJIS[p.category] || '📦'}</span>
               </div>
               <div><h1 style="font-size:0.95rem;font-weight:800;">${p.name}</h1><p style="color:var(--primary);font-weight:600;font-size:0.7rem;">${p.desc}</p>
                 <div style="font-size:1.2rem;font-weight:900;color:var(--primary);">৳${p.price.toLocaleString('bn-BD')} ${p.originalPrice?`<span style="font-size:0.7rem;text-decoration:line-through;color:var(--muted-foreground);">৳${p.originalPrice.toLocaleString('bn-BD')}</span><span style="background:var(--destructive);color:#fff;padding:0.15rem 0.4rem;border-radius:5px;font-size:0.6rem;">-${discount}%</span>`:''}</div>
@@ -2295,7 +2413,7 @@
         function buyNow(id) {
             if (!currentUser) { pendingAction = ()=>buyNow(id);
                 openLoginModal(); return; }
-            const p = PRODUCTS.find(x => x.id === id);
+            const p = products.find(x => x.id === id);
             if (!p || !p.inStock) return;
             const existing = cart.find(c => c.id === id);
             if (existing) existing.qty = Math.min(existing.qty + 1, 10);
@@ -2306,20 +2424,23 @@
         }
 
         function renderCart() {
-            const items = cart.map(c => ({ ...c, product: PRODUCTS.find(p => p.id === c.id) })).filter(c => c.product);
+            const items = cart.map(c => ({ ...c, product: products.find(p => p.id === c.id) })).filter(c => c.product);
             document.getElementById('cartEmpty').style.display = items.length ? 'none' : 'block';
             document.getElementById('cartContent').style.display = items.length ? 'grid' : 'none';
             if (!items.length) return;
             const subtotal = items.reduce((s, c) => s + c.product.price * c.qty, 0);
             const delivery = subtotal > 0 ? 60 : 0;
-            const total = subtotal + delivery;
-            document.getElementById('cartItems').innerHTML = items.map(c => `
+            document.getElementById('cartItems').innerHTML = items.map(c => {
+                const hasImage = c.product.image && c.product.image.trim() !== '';
+                return `
             <div class="cart-item-row">
-              <span class="cart-item-emoji-small">${c.product.emoji}</span>
+              ${hasImage ? `<img src="${c.product.image}" alt="${c.product.name}" class="cart-item-img-small" onerror="this.style.display='none';this.nextElementSibling.style.display='block';">` : ''}
+              <span class="cart-item-emoji-small" style="display:${hasImage ? 'none' : 'block'};">${c.product.emoji}</span>
               <div class="cart-item-info"><div class="cart-item-name-small">${c.product.name}</div><div class="cart-item-price-small">৳${(c.product.price*c.qty).toLocaleString('bn-BD')}</div></div>
               <div class="cart-item-qty-group"><button class="cart-qty-btn" onclick="changeCartQty('${c.id}',-1)">−</button><span class="cart-qty-val">${c.qty}</span><button class="cart-qty-btn" onclick="changeCartQty('${c.id}',1)">+</button></div>
               <button class="cart-remove-btn" onclick="removeFromCart('${c.id}')"><i class="fas fa-trash-alt"></i></button>
-            </div>`).join('');
+            </div>`;
+            }).join('');
             document.getElementById('orderSummary').innerHTML = `
             <h3 style="font-weight:700;font-size:0.72rem;">অর্ডার সারসংক্ষেপ</h3>
             <div class="summary-row"><span>পণ্যের মূল্য</span><span>৳${subtotal.toLocaleString('bn-BD')}</span></div>
@@ -2339,6 +2460,7 @@
             updateCartBadge();
             renderCart(); }
 
+        // ===== CHECKOUT (rest of functions remain the same) =====
         function getDeliveryCharge() {
             const divEl = document.getElementById('orderDivision');
             const div = divEl ? divEl.value : '';
@@ -2378,7 +2500,7 @@
             if (!currentUser) { pendingAction = ()=>openCheckoutModal();
                 openLoginModal(); return; }
             if (!cart.length) { showToast('কার্ট খালি!', 'error'); return; }
-            const items = cart.map(c => ({ ...c, product: PRODUCTS.find(p => p.id === c.id) })).filter(c => c.product);
+            const items = cart.map(c => ({ ...c, product: products.find(p => p.id === c.id) })).filter(c => c.product);
             const subtotal = items.reduce((s, c) => s + c.product.price * c.qty, 0);
             appliedPromo = null;
             const savedAddr = currentUser?.savedAddress || null;
@@ -2418,11 +2540,10 @@
                 <div id="promoMsg" style="font-size:0.58rem;"></div>
             </div>
             <div class="payment-methods" style="margin-top:0.4rem;"><label class="payment-method selected"><input type="radio" name="paymentMethod" value="cod" checked> 💳 ক্যাশ অন ডেলিভারি (পণ্যের মূল্য)</label></div>
-            <div class="order-summary-panel"><h4>📋 আপনার কার্ট:</h4>${items.map(c=>`<div class="cart-mini-item"><span class="mini-emoji">${c.product.emoji}</span><span class="mini-info">${c.product.name} ×${c.qty}</span><span class="mini-price">৳${(c.product.price*c.qty).toLocaleString('bn-BD')}</span></div>`).join('')}<div id="checkoutPromoDiscountRow" style="display:none;" class="summary-row"><span>প্রোমো ছাড়</span><span id="checkoutPromoDiscount">-৳0</span></div><div class="summary-row total"><span>সর্বমোট (ক্যাশ অন ডেলিভারি)</span><span id="checkoutTotal">৳${subtotal.toLocaleString('bn-BD')}</span></div></div>
+            <div class="order-summary-panel"><h4>📋 আপনার কার্ট:</h4>${items.map(c=>`<div class="cart-mini-item">${c.product.image?`<img src="${c.product.image}" class="mini-img" onerror="this.style.display='none';">`:''}<span class="mini-emoji">${c.product.emoji}</span><span class="mini-info">${c.product.name} ×${c.qty}</span><span class="mini-price">৳${(c.product.price*c.qty).toLocaleString('bn-BD')}</span></div>`).join('')}<div id="checkoutPromoDiscountRow" style="display:none;" class="summary-row"><span>প্রোমো ছাড়</span><span id="checkoutPromoDiscount">-৳0</span></div><div class="summary-row total"><span>সর্বমোট (ক্যাশ অন ডেলিভারি)</span><span id="checkoutTotal">৳${subtotal.toLocaleString('bn-BD')}</span></div></div>
             <button class="btn-primary" style="width:100%;margin-top:0.5rem;margin-bottom:3rem;font-size:0.75rem;padding:0.6rem;" onclick="placeOrder()">✅ অর্ডার নিশ্চিত করুন</button>`;
             if (savedAddr) setTimeout(() => { updateDivision();
-                setTimeout(() => { const d = document.getElementById('orderDistrict'); if (d) for (let o of d.options) if (
-                        o.value === savedAddr.district) { o.selected = true;
+                setTimeout(() => { const d = document.getElementById('orderDistrict'); if (d) for (let o of d.options) if (o.value === savedAddr.district) { o.selected = true;
                         break; }
                     updateDistrict();
                     updateDeliveryChargeDisplay(); }, 150); }, 100);
@@ -2448,8 +2569,7 @@
             const t = document.getElementById('orderThana');
             t.disabled = !dist;
             t.innerHTML = '<option>থানা নির্বাচন করুন</option>';
-            if (div && dist && BD_DATA[div].districts[dist]) BD_DATA[div].districts[dist].forEach(tn => t.innerHTML +=
-                `<option>${tn}</option>`);
+            if (div && dist && BD_DATA[div].districts[dist]) BD_DATA[div].districts[dist].forEach(tn => t.innerHTML += `<option>${tn}</option>`);
         }
 
         function applyPromo() {
@@ -2458,12 +2578,10 @@
             const discountRow = document.getElementById('checkoutPromoDiscountRow');
             const discountEl = document.getElementById('checkoutPromoDiscount');
             const totalEl = document.getElementById('checkoutTotal');
-            const items = cart.map(c => ({ ...c, product: PRODUCTS.find(p => p.id === c.id) })).filter(c => c.product);
+            const items = cart.map(c => ({ ...c, product: products.find(p => p.id === c.id) })).filter(c => c.product);
             const subtotal = items.reduce((s, c) => s + c.product.price * c.qty, 0);
-            if (code === 'CHOICE10' || code === 'FIRST10') { appliedPromo = { code, discountPercent: 10 }; } else if (code ===
-                'ROSE20') { appliedPromo = { code, discountPercent: 20 }; } else { appliedPromo = null;
-                msg.innerHTML = '<span style="color:red;">❌ কোড সঠিক নয়</span>'; if (discountRow) discountRow.style.display =
-                    'none'; if (totalEl) totalEl.textContent = '৳' + subtotal.toLocaleString('bn-BD'); return; }
+            if (code === 'CHOICE10' || code === 'FIRST10') { appliedPromo = { code, discountPercent: 10 }; } else if (code === 'ROSE20') { appliedPromo = { code, discountPercent: 20 }; } else { appliedPromo = null;
+                msg.innerHTML = '<span style="color:red;">❌ কোড সঠিক নয়</span>'; if (discountRow) discountRow.style.display = 'none'; if (totalEl) totalEl.textContent = '৳' + subtotal.toLocaleString('bn-BD'); return; }
             const discount = Math.round(subtotal * (appliedPromo.discountPercent / 100));
             const newTotal = subtotal - discount;
             msg.innerHTML = '<span style="color:green;">✔ ' + appliedPromo.discountPercent + '% ছাড় প্রয়োগ হয়েছে!</span>';
@@ -2487,7 +2605,7 @@
             const deliveryMethod = deliveryPaymentRadio.value;
             const deliveryCharge = (div === 'ঢাকা') ? 60 : 120;
             const orderId = 'RAS-' + Date.now().toString(36).toUpperCase();
-            const items = cart.map(c => ({ ...c, product: PRODUCTS.find(p => p.id === c.id) })).filter(c => c.product);
+            const items = cart.map(c => ({ ...c, product: products.find(p => p.id === c.id) })).filter(c => c.product);
             const subtotal = items.reduce((s, c) => s + c.product.price * c.qty, 0);
             const discount = appliedPromo ? Math.round(subtotal * (appliedPromo.discountPercent / 100)) : 0;
             const total = subtotal - discount;
@@ -2496,8 +2614,7 @@
                 name,
                 phone,
                 address: address + ', ' + thana + ', ' + dist + ', ' + div,
-                items: items.map(i => ({ id: i.id, name: i.product.name, emoji: i.product.emoji, qty: i.qty,
-                    price: i.product.price })),
+                items: items.map(i => ({ id: i.id, name: i.product.name, emoji: i.product.emoji, qty: i.qty, price: i.product.price })),
                 total: total,
                 subtotal,
                 delivery: deliveryCharge,
@@ -2512,11 +2629,11 @@
             cart = [];
             saveCart();
             updateCartBadge();
-            document.getElementById('checkoutModalBody').innerHTML =
-                `<div style="text-align:center;padding:1.5rem;"><div style="font-size:3rem;">🎉</div><h2>অর্ডার সফল!</h2><p>অর্ডার আইডি: <strong>${orderId}</strong></p><p style="font-size:0.65rem;">ডেলিভারি চার্জ পরিশোধ: <strong>${deliveryMethod.toUpperCase()}</strong> — ট্রানজেকশন: <strong>${transactionId}</strong></p><button class="btn-primary" onclick="closeCheckoutModal();navigate('home')">🏠 হোম</button></div>`;
+            document.getElementById('checkoutModalBody').innerHTML = `<div style="text-align:center;padding:1.5rem;"><div style="font-size:3rem;">🎉</div><h2>অর্ডার সফল!</h2><p>অর্ডার আইডি: <strong>${orderId}</strong></p><p style="font-size:0.65rem;">ডেলিভারি চার্জ পরিশোধ: <strong>${deliveryMethod.toUpperCase()}</strong> — ট্রানজেকশন: <strong>${transactionId}</strong></p><button class="btn-primary" onclick="closeCheckoutModal();navigate('home')">🏠 হোম</button></div>`;
             appliedPromo = null;
         }
 
+        // ===== CONTACT, TRACK, MODALS, ETC. =====
         function renderContactInfo() {
             document.getElementById('contactInfo').innerHTML = `
             <div style="display:flex;gap:0.4rem;background:var(--secondary);border-radius:8px;padding:0.5rem;align-items:center;font-size:0.65rem;"><i class="fas fa-map-marker-alt" style="color:var(--primary);"></i><div><strong>ঠিকানা</strong><p style="font-size:0.6rem;">Dhamrai, Dhaka, Bangladesh</p></div></div>
@@ -2529,16 +2646,14 @@
             const msg = document.getElementById('contactMessage').value.trim();
             if (!name || !phone || !msg) { showToast('সব তথ্য দিন', 'error'); return; }
             showToast('✅ বার্তা পাঠানো হয়েছে!', 'success');
-            ['contactName', 'contactPhone', 'contactEmail', 'contactMessage'].forEach(id => document.getElementById(id)
-                .value = '');
+            ['contactName', 'contactPhone', 'contactEmail', 'contactMessage'].forEach(id => document.getElementById(id).value = '');
         }
 
         function buildStatusProgress(idx) {
             let h = '<div class="status-progress">';
             for (let i = 0; i < ORDER_STATUS_STEPS.length; i++) {
                 let cls = i < idx ? 'completed' : i === idx ? 'current' : 'pending';
-                h +=
-                    `<div class="status-step ${cls}"><div class="step-circle">${i<idx?'✔':(i===idx?'●':i+1)}</div><div class="step-line"></div><span class="step-label">${ORDER_STATUS_STEPS[i]}</span></div>`;
+                h += `<div class="status-step ${cls}"><div class="step-circle">${i<idx?'✔':(i===idx?'●':i+1)}</div><div class="step-line"></div><span class="step-label">${ORDER_STATUS_STEPS[i]}</span></div>`;
             }
             return h + '</div>';
         }
@@ -2547,23 +2662,18 @@
             const input = document.getElementById('trackInput').value.trim();
             const res = document.getElementById('trackResult');
             res.style.display = 'block';
-            if (!input) { res.innerHTML =
-                    '<div style="text-align:center;padding:0.8rem;background:#fff;border-radius:8px;font-size:0.68rem;"><h3>⚠️ অর্ডার আইডি অথবা ফোন নম্বর দিন</h3></div>'; return; }
+            if (!input) { res.innerHTML = '<div style="text-align:center;padding:0.8rem;background:#fff;border-radius:8px;font-size:0.68rem;"><h3>⚠️ অর্ডার আইডি অথবা ফোন নম্বর দিন</h3></div>'; return; }
             let matched = [];
-            if (input.toUpperCase().startsWith('RAS-')) { const f = orders.find(o => o.orderId.toLowerCase() === input
-                    .toLowerCase()); if (f) matched = [f]; } else matched = orders.filter(o => o.phone === input);
-            if (!matched.length) { res.innerHTML =
-                    '<div style="text-align:center;padding:1rem;background:#fff;border-radius:8px;font-size:0.68rem;"><h3>❌ অর্ডার পাওয়া যায়নি</h3></div>'; return; }
+            if (input.toUpperCase().startsWith('RAS-')) { const f = orders.find(o => o.orderId.toLowerCase() === input.toLowerCase()); if (f) matched = [f]; } else matched = orders.filter(o => o.phone === input);
+            if (!matched.length) { res.innerHTML = '<div style="text-align:center;padding:1rem;background:#fff;border-radius:8px;font-size:0.68rem;"><h3>❌ অর্ডার পাওয়া যায়নি</h3></div>'; return; }
             res.innerHTML = matched.map((o, i) => {
                 const did = 'td-' + i;
                 return `<div class="order-row-compact"><div class="order-row-header"><span class="order-id">📦 ${o.orderId}</span><span class="order-name">${o.name}</span><span class="order-meta"><span class="order-phone">📞 ${o.phone}</span><span class="order-date">📅 ${o.date}</span></span><span class="order-total">৳${(o.total||0).toLocaleString('bn-BD')}</span><button class="order-detail-btn" onclick="toggleOrderDetail('${did}',this)">বিস্তারিত</button></div><div class="order-row-detail" id="${did}">${buildStatusProgress(o.statusIndex||0)}<div class="detail-grid"><span><span class="dl">ঠিকানা:</span> <span class="dv">${o.address}</span></span>${o.deliveryPaid?`<span><span class="dl">ডেলিভারি ফি:</span> <span class="dv">${o.deliveryPaymentMethod?.toUpperCase()||''} — ৳${o.delivery||0} (পরিশোধিত)</span></span>`:''}</div></div></div>`;
             }).join('');
         }
 
-        function toggleOrderDetail(did, btn) {
-            const d = document.getElementById(did); if (d) { d.classList.toggle('show');
-                btn.textContent = d.classList.contains('show') ? 'সংক্ষেপ' : 'বিস্তারিত'; }
-        }
+        function toggleOrderDetail(did, btn) { const d = document.getElementById(did); if (d) { d.classList.toggle('show');
+                btn.textContent = d.classList.contains('show') ? 'সংক্ষেপ' : 'বিস্তারিত'; } }
 
         function initSlideshow() {
             const imgs = document.querySelectorAll('.slideshow-image');
@@ -2594,9 +2704,7 @@
                 container.classList.add('paused'); }
 
             function toggle() { slideshowPlaying ? pause() : start(); }
-            container.onclick = (e) => { if (e.target.classList.contains('banner-fashion-btn') || e.target.closest(
-                        '.banner-fashion-btn') || e.target.classList.contains('banner-pharma-btn') || e.target.closest(
-                        '.banner-pharma-btn')) return;
+            container.onclick = (e) => { if (e.target.classList.contains('banner-fashion-btn') || e.target.closest('.banner-fashion-btn') || e.target.classList.contains('banner-pharma-btn') || e.target.closest('.banner-pharma-btn')) return;
                 toggle(); };
             dots.forEach(d => d.onclick = (e) => { e.stopPropagation();
                 show(parseInt(d.dataset.index)); if (slideshowPlaying) start(); });
@@ -2607,32 +2715,20 @@
         function goToRASPharma() { showToast('RAS PHARMA শীঘ্রই আসছে!', 'success');
             window.open('https://demo-ras-pharma.com', '_blank'); }
 
-        function handleBannerAction() {
-            if (slideshowIndex === 1) goToRASPharma();
-            else navigate('shop');
-        }
-
-        function toggleWish(event, id) { event.stopPropagation(); const idx = wishlist.indexOf(id); if (idx > -1) wishlist.splice(
-                idx, 1);
+        function toggleWish(event, id) { event.stopPropagation(); const idx = wishlist.indexOf(id); if (idx > -1) wishlist.splice(idx, 1);
             else wishlist.push(id);
             localStorage.setItem('ras_wish', JSON.stringify(wishlist)); }
 
-        function addToCart(event, id) { event.stopPropagation(); const p = PRODUCTS.find(x => x.id === id); if (!p || !p.inStock)
-                return; const existing = cart.find(c => c.id === id); if (existing) existing.qty = Math.min(existing.qty + 1,
-                10);
+        function addToCart(event, id) { event.stopPropagation(); const p = products.find(x => x.id === id); if (!p || !p.inStock) return; const existing = cart.find(c => c.id === id); if (existing) existing.qty = Math.min(existing.qty + 1, 10);
             else cart.push({ id, qty: 1 });
             saveCart();
             updateCartBadge();
             showToast('✅ কার্টে যোগ হয়েছে!', 'success'); }
 
         function toggleMobileMenu() { document.getElementById('mobileNav').classList.toggle('open'); }
-
-        function closeMobileMenu(e) { if (e.target === document.getElementById('mobileNav')) document.getElementById(
-                'mobileNav').classList.remove('open'); }
-
+        function closeMobileMenu(e) { if (e.target === document.getElementById('mobileNav')) document.getElementById('mobileNav').classList.remove('open'); }
         function toggleMobileSearch() { const n = document.getElementById('mobileNav');
-            n.classList.toggle('open'); if (n.classList.contains('open')) setTimeout(() => document.getElementById(
-                'mobileSearchInput')?.focus(), 100); }
+            n.classList.toggle('open'); if (n.classList.contains('open')) setTimeout(() => document.getElementById('mobileSearchInput')?.focus(), 100); }
 
         function openLoginModal() { document.getElementById('loginModal').classList.add('open');
             lockBodyScroll(); }
@@ -2661,8 +2757,7 @@
             lockBodyScroll();
             document.getElementById('profileModal').classList.add('open');
             const addr = currentUser.savedAddress;
-            const addrDisplay = addr ? `${addr.address}, ${addr.thana}, ${addr.district}, ${addr.division}` :
-                'ঠিকানা সেভ করা হয়নি';
+            const addrDisplay = addr ? `${addr.address}, ${addr.thana}, ${addr.district}, ${addr.division}` : 'ঠিকানা সেভ করা হয়নি';
             const myOrders = orders.filter(o => o.phone === currentUser.phone || o.name === currentUser.name).slice(0, 10);
             document.getElementById('profileModalBody').innerHTML = `
             <div class="form-group"><label class="form-label">নাম</label><input type="text" class="form-input" id="profileName" value="${currentUser.name}"><button class="btn-primary" style="margin-top:0.3rem;font-size:0.6rem;padding:0.25rem 0.6rem;" onclick="updateProfileName()">নাম আপডেট</button></div>
@@ -2680,8 +2775,7 @@
             ${myOrders.length?myOrders.map(o=>`<div class="profile-order-mini"><span><strong>${o.orderId}</strong></span><span>${o.date}</span><span>${o.name}</span><span>📞${o.phone}</span><span>${o.address}</span></div>`).join(''):'<p style="font-size:0.6rem;color:var(--muted-foreground);">এখনো কোনো অর্ডার নেই।</p>'}
             <hr><button style="background:var(--destructive);color:#fff;width:100%;padding:0.45rem;border-radius:8px;font-weight:600;font-size:0.65rem;margin-bottom:2rem;" onclick="logoutUser()">🚪 লগআউট</button>`;
             if (addr) setTimeout(() => { updateProfDivision();
-                setTimeout(() => { const d = document.getElementById('profDistrict'); if (d && addr.district) { for (let o of d
-                            .options) if (o.value === addr.district) { o.selected = true;
+                setTimeout(() => { const d = document.getElementById('profDistrict'); if (d && addr.district) { for (let o of d.options) if (o.value === addr.district) { o.selected = true;
                             break; }
                         updateProfDistrict(); } }, 150); }, 100);
         }
@@ -2689,29 +2783,25 @@
         function closeProfileModal() { document.getElementById('profileModal').classList.remove('open');
             unlockBodyScroll(); }
 
-        function updateProfileName() { const n = document.getElementById('profileName').value.trim(); if (!n) { showToast(
-                'নাম লিখুন', 'error'); return; }
+        function updateProfileName() { const n = document.getElementById('profileName').value.trim(); if (!n) { showToast('নাম লিখুন', 'error'); return; }
             currentUser.name = n;
             saveUser();
             updateNavProfile();
             showToast('✅ নাম আপডেট!', 'success'); }
 
         function toggleAddressEdit() { document.getElementById('addrEditPanel')?.classList.toggle('open'); }
-
         function updateProfDivision() {
             const d = document.getElementById('profDivision').value;
             const s = document.getElementById('profDistrict');
             s.innerHTML = '<option>নির্বাচন</option>';
             if (d && BD_DATA[d]) Object.keys(BD_DATA[d].districts).forEach(dn => s.innerHTML += `<option>${dn}</option>`);
         }
-
         function updateProfDistrict() {
             const d = document.getElementById('profDivision').value;
             const dst = document.getElementById('profDistrict').value;
             const s = document.getElementById('profThana');
             s.innerHTML = '<option>নির্বাচন</option>';
-            if (d && dst && BD_DATA[d].districts[dst]) BD_DATA[d].districts[dst].forEach(t => s.innerHTML +=
-                `<option>${t}</option>`);
+            if (d && dst && BD_DATA[d].districts[dst]) BD_DATA[d].districts[dst].forEach(t => s.innerHTML += `<option>${t}</option>`);
         }
 
         function saveProfileAddress() {
@@ -2734,12 +2824,9 @@
             showToast('👋 লগআউট'); }
 
         function toggleLang() { showToast('English coming soon!'); }
-
         function handleNavSearch(val) { searchQuery = val.toLowerCase(); }
-
         function doSearch() { navigate('shop');
-            setTimeout(() => { const inp = document.getElementById('shopSearch'); if (inp) { inp.value = document
-                        .getElementById('navSearch')?.value || '';
+            setTimeout(() => { const inp = document.getElementById('shopSearch'); if (inp) { inp.value = document.getElementById('navSearch')?.value || '';
                     filterProducts(); } }, 100); }
 
         function showToast(msg, type = '') { const t = document.getElementById('toast');
@@ -2748,22 +2835,26 @@
             clearTimeout(window.toastTimer);
             window.toastTimer = setTimeout(() => t.classList.remove('show'), 3000); }
 
-        document.getElementById('checkoutModal').addEventListener('click', e => { if (e.target === e.currentTarget)
-                closeCheckoutModal(); });
-        document.getElementById('loginModal').addEventListener('click', e => { if (e.target === e.currentTarget)
-                closeLoginModal(); });
-        document.getElementById('profileModal').addEventListener('click', e => { if (e.target === e.currentTarget)
-                closeProfileModal(); });
+        // EVENT LISTENERS
+        document.getElementById('checkoutModal').addEventListener('click', e => { if (e.target === e.currentTarget) closeCheckoutModal(); });
+        document.getElementById('loginModal').addEventListener('click', e => { if (e.target === e.currentTarget) closeLoginModal(); });
+        document.getElementById('profileModal').addEventListener('click', e => { if (e.target === e.currentTarget) closeProfileModal(); });
         document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeCheckoutModal();
                 closeLoginModal();
                 closeProfileModal();
                 document.getElementById('mobileNav').classList.remove('open'); } });
 
-        updateCartBadge();
-        updateNavProfile();
-        renderHomeProducts();
-        renderContactInfo();
-        initSlideshow();
+        // ===== INITIALIZATION =====
+        async function init() {
+            await fetchProductsFromSheet();
+            updateCartBadge();
+            updateNavProfile();
+            renderHomeProducts();
+            renderContactInfo();
+            initSlideshow();
+        }
+
+        init();
     </script>
 </body>
 </html>
