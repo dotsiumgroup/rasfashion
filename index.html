@@ -3370,17 +3370,21 @@
 
         function doLogin() {
             const name = document.getElementById('loginName').value.trim();
-            const user = document.getElementById('loginUser').value.trim();
-            const pass = document.getElementById('loginPass').value.trim();
-            if (!name || !user || !pass) { showToast('সব তথ্য পূরণ করুন', 'error'); return; }
-            currentUser = { name, phone: user, email: user, password: pass, savedAddress: currentUser?.savedAddress || null };
-            saveUser();
-            updateNavProfile();
-            closeLoginModal();
-            showToast('✅ লগইন সফল!', 'success');
-            if (pendingAction) { const action = pendingAction;
-                pendingAction = null;
-                setTimeout(action, 200); }
+        function doLogin() {
+    const name = document.getElementById('loginName').value.trim();
+    const user = document.getElementById('loginUser').value.trim();
+    if (!name || !user) { showToast('নাম ও ফোন/ইমেইল পূরণ করুন', 'error'); return; }
+    currentUser = { 
+        name, 
+        phone: user, 
+        email: user, 
+        savedAddress: currentUser?.savedAddress || null 
+    };
+    saveUser();
+    updateNavProfile();
+    closeLoginModal();
+    showToast('✅ লগইন সফল!', 'success');
+    if (pendingAction) { const action = pendingAction; pendingAction = null; setTimeout(action, 200); }
         }
 
         function openProfileModal() {
