@@ -3669,5 +3669,134 @@
 
         init();
     </script>
+            <script>
+(function() {
+    // ========== 1. SCROLL LOCK FIX (মডাল বন্ধে স্ক্রল আনলক) ==========
+    function forceResetScrollLock() {
+        // body থেকে modal-open ক্লাস ও যেকোনো ইনলাইন স্টাইল সরান
+        document.body.classList.remove('modal-open');
+        document.body.style.removeProperty('overflow');
+        document.body.style.removeProperty('position');
+        document.body.style.removeProperty('width');
+        document.body.style.removeProperty('height');
+        // html ট্যাগ থেকেও সরান (নিরাপত্তার জন্য)
+        document.documentElement.style.removeProperty('overflow');
+        document.documentElement.style.removeProperty('position');
+        document.documentElement.style.removeProperty('width');
+        document.documentElement.style.removeProperty('height');
+    }
+
+    // MutationObserver ব্যবহার করে সব মডালের '.open' ক্লাস রিমুভ হলে ফোর্স আনলক করব
+    function watchModalsForClose() {
+        const modalOverlays = document.querySelectorAll('.modal-overlay');
+        modalOverlays.forEach(modal => {
+            // আগের observer থাকলে সরান (নতুন করে যুক্ত করব)
+            if (modal._scrollObserver) modal._scrollObserver.disconnect();
+            const observer = new MutationObserver((mutations) => {
+                mutations.forEach((mutation) => {
+                    if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
+                        // যদি 'open' ক্লাস না থাকে → মডাল বন্ধ
+                        if (!modal.classList.contains('open')) {
+                            forceResetScrollLock();
+                        }
+                    }
+                });
+            });
+            observer.observe(modal, { attributes: true });
+            modal._scrollObserver = observer;
+        });
+    }
+
+    // ডায়নামিকভাবে তৈরি হওয়া মডালগুলোর জন্যও ওয়াচ করতে থাকব (যেমন অ্যাডমিন প্যানেল)
+    function observeNewModals() {
+        const observer = new MutationObserver(() => {
+            watchModalsForClose();
+        });
+        observer.observe(document.body, { childList: true, subtree: true });
+    }
+
+    // এসকেপ কী প্রেস করলেও যেন স্ক্রল লক রিসেট হয়
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            setTimeout(forceResetScrollLock, 100);
+        }
+    });
+
+    // মডালের ব্যাকগ্রাউন্ড ক্লিক করলেও স্ক্রল রিসেট (ডিফল্ট ক্লোজ সুইচ করে)
+    document.addEventListener('click', function(e) {
+        if (e.target && e.target.classList && e.target.classList.contains('modal-overlay')) {
+            setTimeout(forceResetScrollLock, 150);
+        }
+    });
+
+    // সব মডাল ওয়াচ শুরু
+    watchModalsForClose();
+    observeNewModals();
+
+    // ========== 2. DISABLE ZOOM (ওয়েবসাইট জুম ব্লক) ==========
+    // মেটা ভিউপোর্ট আপডেট: user-scalable=no এবং maximum-scale=1
+    function updateMetaForZoom() {
+        let viewportMeta = document.querySelector('meta[name="viewport"]');
+        if (viewportMeta) {
+            let content = viewportMeta.getAttribute('content') || '';
+            // প্রয়োজনীয় প্রপার্টি যোগ/আপডেট
+            let newContent = content
+                .replace(/user-scalable\s*=\s*[^\s,]+/gi, 'user-scalable=no')
+                .replace(/maximum-scale\s*=\s*[^\s,]+/gi, 'maximum-scale=1.0');
+            if (!/user-scalable/i.test(newContent)) newContent += ', user-scalable=no';
+            if (!/maximum-scale/i.test(newContent)) newContent += ', maximum-scale=1.0';
+            viewportMeta.setAttribute('content', newContent);
+        } else {
+            // না থাকলে নতুন মেটা তৈরি করুন
+            const meta = document.createElement('meta');
+            meta.name = 'viewport';
+            meta.content = 'width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0';
+            document.head.appendChild(meta);
+        }
+    }
+
+    // CSS দিয়ে টাচ-অ্যাকশন নিয়ন্ত্রণ (পিঞ্চ জুম আরো ব্লক)
+    function addZoomBlockCSS() {
+        const style = document.createElement('style');
+        style.textContent = `
+            /* সম্পূর্ণ সাইটে জুম ব্লক */
+            html, body {
+                touch-action: pan-x pan-y !important;
+            }
+            /* কোনো এলিমেন্ট যেন জুম না করতে পারে */
+            * {
+                touch-action: pan-x pan-y !important;
+            }
+        `;
+        document.head.appendChild(style);
+    }
+
+    // অতিরিক্ত টাচ ইভেন্টে প্রিভেন্ট ডিফল্ট (শুধু মাল্টি-টাচ জুম ব্লক)
+    function preventPinchZoom() {
+        document.addEventListener('touchmove', function(e) {
+            // দুই বা ততোধিক আঙ্গুলের মুভমেন্ট (পিঞ্চ জুম) ব্লক
+            if (e.touches && e.touches.length >= 2) {
+                e.preventDefault();
+            }
+        }, { passive: false });
+    }
+
+    updateMetaForZoom();
+    addZoomBlockCSS();
+    preventPinchZoom();
+
+    // ========== 3. কিছু ত্রুটি দেখা দিলে বারবার চেক (সেফটি) ==========
+    setInterval(function() {
+        // কোনো ওপেন মডাল না থাকলেও যদি লক ক্লাস বা স্টাইল থেকে যায়, সরিয়ে ফেলো
+        const anyOpenModal = document.querySelector('.modal-overlay.open, #adminPanelOverlay, #adminAccessModal.open');
+        if (!anyOpenModal) {
+            if (document.body.classList.contains('modal-open') || 
+                document.body.style.overflow === 'hidden') {
+                forceResetScrollLock();
+            }
+        }
+    }, 500);
+})();
+                                                                                                                                                       </script>
 </body>
 </html>
