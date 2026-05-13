@@ -92,6 +92,7 @@
         .page {
             display: none;
             animation: fadePage 0.25s ease;
+            position: relative;
         }
         .page.active {
             display: block;
@@ -381,6 +382,32 @@
             margin-top: 0.4rem;
         }
 
+        .page-back-btn {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            z-index: 10;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.9);
+            border: 1.5px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 0.75rem;
+            color: var(--primary);
+            transition: all 0.2s;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+        }
+        .page-back-btn:hover {
+            background: var(--primary);
+            color: #fff;
+            border-color: var(--primary);
+            transform: scale(1.08);
+        }
+
         .hero {
             background: linear-gradient(160deg, #fff0f5, #fff6fa, #fdf0f5);
             padding: 2rem 0.8rem;
@@ -440,11 +467,38 @@
             transition: all 0.2s;
             cursor: pointer;
             letter-spacing: 0.02em;
+            position: relative;
         }
         .btn-primary:hover {
             background: var(--primary-hover);
             transform: translateY(-2px);
             box-shadow: 0 8px 24px rgba(196, 30, 90, 0.3);
+        }
+        .btn-primary:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none;
+        }
+        .btn-primary .btn-spinner {
+            display: none;
+            width: 18px;
+            height: 18px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-top-color: #fff;
+            border-radius: 50%;
+            animation: spin 0.6s linear infinite;
+            margin-right: 0.3rem;
+        }
+        .btn-primary.loading .btn-spinner {
+            display: inline-block;
+        }
+        .btn-primary.loading .btn-text {
+            display: inline;
+        }
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
         }
         .hero-offer {
             margin-top: 0.6rem;
@@ -1354,9 +1408,27 @@
             cursor: pointer;
             transition: all 0.2s;
             white-space: nowrap;
+            position: relative;
         }
         .track-search-wrap button:hover {
             background: var(--primary-hover);
+        }
+        .track-search-wrap button:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+        .track-search-wrap button .btn-spinner {
+            display: none;
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-top-color: #fff;
+            border-radius: 50%;
+            animation: spin 0.6s linear infinite;
+            margin-right: 0.2rem;
+        }
+        .track-search-wrap button.loading .btn-spinner {
+            display: inline-block;
         }
         .order-row-compact {
             border: 1px solid var(--border);
@@ -1437,7 +1509,7 @@
         }
         .order-row-detail {
             display: none;
-            padding: 0.4rem 0.55rem;
+            padding: 0.5rem 0.55rem;
             border-top: 1px solid var(--border);
             background: #fefcfd;
             font-size: 0.6rem;
@@ -1771,7 +1843,6 @@
             border: 1px dashed #c9a135;
         }
 
-        /* ========== LOADING & ERROR STATES ========== */
         .global-loader {
             position: fixed;
             top: 0;
@@ -1808,7 +1879,25 @@
             color: var(--primary);
         }
 
-        /* Error Banner */
+        .inline-loader {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 1rem;
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: var(--muted-foreground);
+        }
+        .inline-loader .spinner-small {
+            width: 22px;
+            height: 22px;
+            border: 3px solid var(--primary-20);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 0.7s linear infinite;
+        }
+
         .error-banner-overlay {
             display: none;
             position: fixed;
@@ -1935,6 +2024,48 @@
             font-weight: 700;
         }
 
+        .order-items-summary {
+            background: #fffbfc;
+            border: 1px solid rgba(196, 30, 90, 0.1);
+            border-radius: 8px;
+            padding: 0.4rem 0.5rem;
+            margin: 0.4rem 0;
+            font-size: 0.55rem;
+        }
+        .order-items-summary h4 {
+            font-size: 0.6rem;
+            font-weight: 700;
+            margin-bottom: 0.3rem;
+            color: var(--primary);
+        }
+        .order-item-mini {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.2rem 0;
+            border-bottom: 1px dotted rgba(196, 30, 90, 0.08);
+            font-size: 0.55rem;
+        }
+        .order-item-mini:last-child {
+            border-bottom: none;
+        }
+        .order-item-mini .item-name {
+            flex: 1;
+            font-weight: 600;
+            font-size: 0.55rem;
+        }
+        .order-item-mini .item-qty {
+            color: var(--muted-foreground);
+            font-size: 0.5rem;
+            margin: 0 0.3rem;
+        }
+        .order-item-mini .item-price {
+            font-weight: 700;
+            color: var(--primary);
+            white-space: nowrap;
+            font-size: 0.55rem;
+        }
+
         @media(max-width:600px) {
             .form-row {
                 grid-template-columns: 1fr;
@@ -2005,16 +2136,105 @@
             display: inline-block;
             margin-right: 0.4rem;
         }
+        .admin-panel-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 600;
+            background: #fff;
+            overflow-y: auto;
+        }
+        .admin-panel-header {
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            background: var(--primary);
+            color: #fff;
+            padding: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        .admin-back-btn {
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: #fff;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+            cursor: pointer;
+        }
+        .admin-panel-body {
+            padding: 0.8rem;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+        .admin-order-row {
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            background: var(--card);
+            margin-bottom: 0.6rem;
+        }
+        .admin-order-summary {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.5rem 0.8rem;
+            cursor: pointer;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            font-size: 0.65rem;
+        }
+        .admin-order-detail {
+            display: none;
+            padding: 0.6rem 0.8rem;
+            border-top: 1px solid var(--border);
+            background: #fdf8fa;
+            font-size: 0.6rem;
+        }
+        .admin-order-detail.show {
+            display: block;
+        }
+        .admin-action-btns {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.3rem;
+            margin-top: 0.6rem;
+        }
+        .admin-action-btn {
+            background: var(--secondary);
+            border: 1px solid var(--border);
+            padding: 0.25rem 0.7rem;
+            border-radius: 6px;
+            font-size: 0.6rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.15s;
+            white-space: nowrap;
+        }
+        .admin-action-btn:hover {
+            background: var(--primary-light);
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+        .admin-action-btn.danger {
+            border-color: #fecaca;
+            color: var(--destructive);
+        }
+        .admin-action-btn.danger:hover {
+            background: #fef2f2;
+        }
     </style>
 </head>
 <body>
-    <!-- Global Loader -->
     <div class="global-loader" id="globalLoader">
         <div class="spinner"></div>
         <div class="loader-text">✨ RAS Fashion লোড হচ্ছে...</div>
     </div>
 
-    <!-- Error Banner -->
     <div class="error-banner-overlay" id="errorBannerOverlay">
         <div class="error-banner">
             <div class="error-icon">⚠️</div>
@@ -2085,6 +2305,7 @@
         </div>
 
         <div class="page" id="page-shop">
+            <button class="page-back-btn" onclick="navigate('home')" title="হোমে ফিরুন"><i class="fas fa-arrow-left"></i></button>
             <div style="background:var(--secondary);padding:1.2rem 0;margin-bottom:0.8rem;"><div class="container"><h1 style="font-size:0.95rem;font-weight:800;">🛍️ সব পণ্য</h1><p style="font-size:0.65rem;color:var(--muted-foreground);" id="shopCount">মোট পণ্য লোড হচ্ছে...</p></div></div>
             <div class="container" style="padding-bottom:2rem;">
                 <div style="position:relative;margin-bottom:0.5rem;"><i class="fas fa-search" style="position:absolute;left:0.55rem;top:50%;transform:translateY(-50%);color:var(--primary);opacity:0.45;font-size:0.65rem;"></i><input type="text" id="shopSearch" placeholder="পণ্য খুঁজুন..." oninput="filterProducts()" style="padding-left:1.8rem;width:100%;padding:0.4rem 0.5rem 0.4rem 1.8rem;border:1.5px solid var(--border);border-radius:7px;font-size:0.68rem;"></div>
@@ -2097,6 +2318,7 @@
         <div class="page" id="page-product"><div class="container" id="productDetailContent" style="padding-bottom:2rem;"></div></div>
 
         <div class="page" id="page-cart">
+            <button class="page-back-btn" onclick="navigate('home')" title="হোমে ফিরুন"><i class="fas fa-arrow-left"></i></button>
             <div class="container" style="padding:1.2rem 0;">
                 <h1 style="font-size:0.95rem;font-weight:800;margin-bottom:0.7rem;">🛒 আমার কার্ট</h1>
                 <div id="cartEmpty" style="display:none;text-align:center;padding:2rem;"><div style="font-size:2.5rem;">🛒</div><h2 style="font-size:0.85rem;">কার্ট খালি</h2><p style="font-size:0.68rem;">পছন্দের পণ্য যোগ করুন</p><a onclick="navigate('shop')" class="btn-primary" style="margin:0 auto;">শপিং করুন</a></div>
@@ -2108,6 +2330,7 @@
         </div>
 
         <div class="page" id="page-contact">
+            <button class="page-back-btn" onclick="navigate('home')" title="হোমে ফিরুন"><i class="fas fa-arrow-left"></i></button>
             <div class="container" style="padding:1.5rem 0;max-width:550px;margin:0 auto;">
                 <h1 style="font-size:0.95rem;font-weight:800;color:var(--primary);">যোগাযোগ করুন 📞</h1>
                 <p style="color:var(--muted-foreground);margin-bottom:1rem;font-size:0.68rem;">আমরা সর্বদা আপনার সাহায্যের জন্য প্রস্তুত</p>
@@ -2124,12 +2347,13 @@
         </div>
 
         <div class="page" id="page-track">
+            <button class="page-back-btn" onclick="navigate('home')" title="হোমে ফিরুন"><i class="fas fa-arrow-left"></i></button>
             <div class="container" style="padding:1.5rem 0;max-width:620px;margin:0 auto;">
-                <div style="background:linear-gradient(145deg,#fff5f8,#fde8f0);border-radius:14px;padding:1.2rem;text-align:center;margin-bottom:1rem;"><h1 style="font-size:0.95rem;font-weight:800;">📦 অর্ডার ট্র্যাক</h1><p style="font-size:0.68rem;color:var(--muted-foreground);">অর্ডার আইডি অথবা ফোন নম্বর লিখুন</p></div>
+                <div style="background:linear-gradient(145deg,#fff5f8,#fde8f0);border-radius:14px;padding:1.2rem;text-align:center;margin-bottom:1rem;"><h1 style="font-size:0.95rem;font-weight:800;">📦 অর্ডার ট্র্যাক</h1><p style="font-size:0.68rem;color:var(--muted-foreground);">অর্ডার আইডি, ফোন নম্বর অথবা লগইন আইডি লিখুন</p></div>
                 <div style="background:var(--card);border:1px solid var(--border);border-radius:10px;padding:0.8rem;">
                     <div class="track-search-wrap">
-                        <input type="text" id="trackInput" placeholder="অর্ডার আইডি বা ফোন নম্বর" onkeypress="if(event.key==='Enter')trackOrder()">
-                        <button onclick="trackOrder()">🔍 ট্র্যাক</button>
+                        <input type="text" id="trackInput" placeholder="অর্ডার আইডি / ফোন / লগইন আইডি" onkeypress="if(event.key==='Enter')trackOrder()">
+                        <button id="trackBtn" onclick="trackOrder()"><span class="btn-spinner"></span><span class="btn-text">🔍 ট্র্যাক</span></button>
                     </div>
                 </div>
                 <div id="trackResult" style="margin-top:0.7rem;display:none;"></div>
@@ -2173,23 +2397,22 @@
         </div>
     </div>
     <div class="modal-overlay" id="loginModal"><div class="modal-full" style="max-width:400px;height:auto;max-height:80vh;"><div class="modal-sticky-header"><h2>👤 লগইন</h2><button class="modal-close-btn" onclick="closeLoginModal()">✕</button></div><div class="modal-scroll-body"><div class="form-group"><label class="form-label">আপনার নাম *</label><input type="text" class="form-input" id="loginName" placeholder="আপনার পুরো নাম"></div><div class="form-group"><label class="form-label">ফোন নম্বর / ইমেইল *</label><input type="text" class="form-input" id="loginUser" placeholder="01XXXXXXXXX বা email"></div><div class="form-group"><label class="form-label">পাসওয়ার্ড *</label><input type="password" class="form-input" id="loginPass" placeholder="পাসওয়ার্ড"></div><button class="btn-primary" style="width:100%;" onclick="doLogin()">লগইন</button><p style="text-align:center;font-size:0.58rem;color:var(--muted-foreground);margin-top:0.3rem;">নতুন অ্যাকাউন্ট? তথ্য দিয়ে লগইন করলেই হয়ে যাবে।</p></div></div></div>
-    <div class="modal-overlay" id="profileModal"><div class="modal-full" style="max-width:460px;height:auto;max-height:85vh;"><div class="modal-sticky-header"><h2>👤 আমার প্রোফাইল</h2><button class="modal-close-btn" onclick="closeProfileModal()">✕</button></div><div class="modal-scroll-body" id="profileModalBody"></div></div></div>
+    <div class="modal-overlay" id="profileModal"><div class="modal-full" style="max-width:460px;height:auto;max-height:85vh;"><div class="modal-sticky-header"><h2>👤 আমার প্রোফাইল</h2><button class="modal-close-btn" onclick="closeProfileModal()">✕</button></div><div class="modal-scroll-body" id="profileModalBody"><div class="inline-loader"><div class="spinner-small"></div> লোড হচ্ছে...</div></div></div></div>
     <div class="toast" id="toast"></div>
 
     <script>
         // ===== CONFIGURATION =====
-        // ⚠️ নিচের URL টি পরিবর্তন করে আপনার Apps Script Deployment URL বসান
-        const GOOGLE_SHEETS_API_URL = 'https://script.google.com/macros/s/AKfycbxwrUku1D64M_ZTR9Pf93r7rDjxuepv596bYXWRwL_ItymqOhYe9eAxOJbsIoZf4PvJrg/exec'; // ← এখানে আপনার https://script.google.com/macros/s/... বসান
+        const GOOGLE_SHEETS_PRODUCT_API_URL = 'https://script.google.com/macros/s/AKfycbxwrUku1D64M_ZTR9Pf93r7rDjxuepv596bYXWRwL_ItymqOhYe9eAxOJbsIoZf4PvJrg/exec';
+        const GOOGLE_SHEETS_ORDER_API_URL = 'https://script.google.com/macros/s/AKfycbzZiDlVjIViH7oY5lOh-3pqaCih3hKAY6iquxarszuhX8ryqJjiAR0kQ4oQXeXxmO8k/exec';
 
         const MAX_RETRY_ATTEMPTS = 3;
         const RETRY_DELAY_MS = 1500;
-        const CORS_PROXY_URL = 'https://corsproxy.io/?'; // CORS সমস্যা সমাধানের জন্য প্রোক্সি
+        const CORS_PROXY_URL = 'https://corsproxy.io/?';
 
-        // ===== GLOBAL STATE =====
         let products = [];
         let cart = JSON.parse(localStorage.getItem('ras_cart') || '[]');
         let wishlist = JSON.parse(localStorage.getItem('ras_wish') || '[]');
-        let orders = JSON.parse(localStorage.getItem('ras_orders') || '[]');
+        let ordersFromSheet = [];
         let currentUser = JSON.parse(localStorage.getItem('ras_user') || 'null');
         let currentPage = 'home',
             currentProduct = null,
@@ -2204,97 +2427,81 @@
         const SLIDESHOW_TOTAL = 2;
         let fetchRetryCount = 0;
         let productsLoaded = false;
+        let ordersLoaded = false;
+        let adminAccessGranted = false;
+        let adminOrders = [];
 
         const CATEGORIES = ['Cosmetics', 'Skincare', 'Haircare', 'Fragrance', 'Jewelry', 'Clothing'];
         const CAT_LABELS = { Cosmetics: 'কসমেটিকস', Skincare: 'স্কিনকেয়ার', Haircare: 'হেয়ারকেয়ার', Fragrance: 'সুগন্ধি', Jewelry: 'জুয়েলারি', Clothing: 'পোশাক' };
         const CAT_EMOJIS = { Cosmetics: '💄', Skincare: '🧴', Haircare: '💆', Fragrance: '🌸', Jewelry: '💍', Clothing: '👗' };
 
-        const BD_DATA = {
-            "ঢাকা": { districts: { "ঢাকা": ["গুলশান","মিরপুর","উত্তরা","ধানমন্ডি","মতিঝিল","সাভার","কেরানীগঞ্জ","নবাবগঞ্জ","দোহার","ধামরাই"],"গাজীপুর": ["গাজীপুর সদর","কালিয়াকৈর","কাপাসিয়া","শ্রীপুর","টঙ্গী"],"নারায়ণগঞ্জ": ["সিদ্ধিরগঞ্জ","বন্দর","ফতুল্লা","নারায়ণগঞ্জ সদর","আড়াইহাজার"],"টাঙ্গাইল": ["টাঙ্গাইল সদর","মধুপুর","নাগরপুর","দেলদুয়ার","কালিহাতী"],"কিশোরগঞ্জ": ["কিশোরগঞ্জ সদর","অষ্টগ্রাম","ইটনা","করিমগঞ্জ","ভৈরব"],"মানিকগঞ্জ": ["মানিকগঞ্জ সদর","সিঙ্গাইর","শিবালয়","হরিরামপুর","ঘিওর"],"মুন্সীগঞ্জ": ["মুন্সীগঞ্জ সদর","শ্রীনগর","টঙ্গীবাড়ী","লৌহজং","সিরাজদিখান"] } },
-            "চট্টগ্রাম": { districts: { "চট্টগ্রাম": ["কোতোয়ালী","পাহাড়তলী","বন্দর","চান্দগাঁও","ইপিজেড","সীতাকুণ্ড","মীরসরাই","পটিয়া","রাঙ্গুনিয়া","বাঁশখালী"],"কক্সবাজার": ["কক্সবাজার সদর","রামু","উখিয়া","টেকনাফ","চকরিয়া"],"কুমিল্লা": ["কুমিল্লা সদর","দেবিদ্বার","চৌদ্দগ্রাম","লাকসাম","নাঙ্গলকোট"],"ফেনী": ["ফেনী সদর","সোনাগাজী","পরশুরাম","দাগনভূঞা","ছাগলনাইয়া"],"ব্রাহ্মণবাড়িয়া": ["ব্রাহ্মণবাড়িয়া সদর","কসবা","নবীনগর","আখাউড়া","বাঞ্ছারামপুর"],"নোয়াখালী": ["নোয়াখালী সদর","বেগমগঞ্জ","চাটখিল","সোনাইমুড়ী","হাতিয়া"] } },
-            "রাজশাহী": { districts: { "রাজশাহী": ["রাজশাহী সদর","বোয়ালিয়া","পবা","গোদাগাড়ী","বাগমারা"],"বগুড়া": ["বগুড়া সদর","শেরপুর","ধুনট","গাবতলী","সোনাতলা"],"জয়পুরহাট": ["জয়পুরহাট সদর","কালাই","আক্কেলপুর","পাঁচবিবি"],"নওগাঁ": ["নওগাঁ সদর","পত্নীতলা","ধামইরহাট","মহাদেবপুর","রাণীনগর"],"নাটোর": ["নাটোর সদর","সিংড়া","বাগাতিপাড়া","লালপুর","গুরুদাসপুর"],"পাবনা": ["পাবনা সদর","ঈশ্বরদী","চাটমোহর","সাঁথিয়া","বেড়া"] } },
-            "খুলনা": { districts: { "খুলনা": ["খুলনা সদর","দৌলতপুর","সল্টানিয়া","পাইকগাছা","বটিয়াঘাটা"],"যশোর": ["যশোর সদর","ঝিকরগাছা","কেশবপুর","মণিরামপুর","অভয়নগর"],"ঝিনাইদহ": ["ঝিনাইদহ সদর","কালীগঞ্জ","কোটচাঁদপুর","মহেশপুর","শৈলকুপা"],"বাগেরহাট": ["বাগেরহাট সদর","মোল্লাহাট","ফকিরহাট","মোংলা","রামপাল"],"সাতক্ষীরা": ["সাতক্ষীরা সদর","কলারোয়া","তালা","দেবহাটা","আশাশুনি"],"কুষ্টিয়া": ["কুষ্টিয়া সদর","কুমারখালী","দৌলতপুর","মিরপুর","ভেড়ামারা"] } },
-            "সিলেট": { districts: { "সিলেট": ["সিলেট সদর","বিয়ানীবাজার","জৈন্তাপুর","গোয়াইনঘাট","কানাইঘাট"],"সুনামগঞ্জ": ["সুনামগঞ্জ সদর","দিরাই","জগন্নাথপুর","ছাতক","তাহিরপুর"],"হবিগঞ্জ": ["হবিগঞ্জ সদর","নবীগঞ্জ","বাহুবল","আজমিরীগঞ্জ","চুনারুঘাট"],"মৌলভীবাজার": ["মৌলভীবাজার সদর","কমলগঞ্জ","শ্রীমঙ্গল","বড়লেখা","রাজনগর"] } },
-            "রংপুর": { districts: { "রংপুর": ["রংপুর সদর","বদরগঞ্জ","পীরগঞ্জ","কাউনিয়া","পীরগাছা"],"দিনাজপুর": ["দিনাজপুর সদর","পার্বতীপুর","বিরামপুর","বোচাগঞ্জ","ফুলবাড়ী"],"কুড়িগ্রাম": ["কুড়িগ্রাম সদর","উলিপুর","নাগেশ্বরী","রাজারহাট","রৌমারী"],"গাইবান্ধা": ["গাইবান্ধা সদর","সুন্দরগঞ্জ","গোবিন্দগঞ্জ","পলাশবাড়ী","সাঘাটা"],"লালমনিরহাট": ["লালমনিরহাট সদর","কালিগঞ্জ","হাতীবান্ধা","আদিতমারী"],"নীলফামারী": ["নীলফামারী সদর","ডোমার","ডিমলা","জলঢাকা","কিশোরগঞ্জ"] } },
-            "বরিশাল": { districts: { "বরিশাল": ["বরিশাল সদর","বাংলাবাজার","হিজলা","মেহেন্দীগঞ্জ","বাকেরগঞ্জ"],"পটুয়াখালী": ["পটুয়াখালী সদর","কলাপাড়া","গলাচিপা","বাউফল","মির্জাগঞ্জ"],"ভোলা": ["ভোলা সদর","দৌলতখান","চরফ্যাশন","লালমোহন","মনপুরা"],"পিরোজপুর": ["পিরোজপুর সদর","নাজিরপুর","কাউখালী","মঠবাড়িয়া","ভান্ডারিয়া"],"বরগুনা": ["বরগুনা সদর","আমতলী","পাথরঘাটা","বেতাগী","বামনা"] } },
-            "ময়মনসিংহ": { districts: { "ময়মনসিংহ": ["ময়মনসিংহ সদর","ত্রিশাল","মুক্তাগাছা","গৌরীপুর","ফুলপুর"],"জামালপুর": ["জামালপুর সদর","মেলান্দহ","দেওয়ানগঞ্জ","বকশীগঞ্জ","সরিষাবাড়ী"],"শেরপুর": ["শেরপুর সদর","নালিতাবাড়ী","ঝিনাইগাতী","শ্রীবরদী","নকলা"],"নেত্রকোণা": ["নেত্রকোণা সদর","কেন্দুয়া","আটপাড়া","মদন","খালিয়াজুড়ী"] } }
-        };
-        const ORDER_STATUS_STEPS = ['অর্ডার প্রাপ্তি', 'অর্ডার কনফার্ম', 'প্যাকেজিং', 'ডেলিভারির জন্য পাঠানো', 'ডেলিভারি সম্পন্ন'];
-
-        // ===== API CALL =====
-        async function tryFetchWithMethod(url, options, timeoutMs = 8000) {
+        async function apiGet(url, timeoutMs = 10000) {
             const controller = new AbortController();
             const timeout = setTimeout(() => controller.abort(), timeoutMs);
             try {
-                const response = await fetch(url, { ...options, signal: controller.signal });
+                const res = await fetch(url, { signal: controller.signal });
                 clearTimeout(timeout);
-                if (!response.ok) throw new Error(`HTTP error ${response.status}`);
-                const data = await response.json();
-                if (data.ok && Array.isArray(data.products)) {
-                    return data.products;
-                }
-                throw new Error(data.error || 'Invalid API response structure');
+                if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                return await res.json();
             } catch (err) {
                 clearTimeout(timeout);
                 throw err;
             }
         }
 
+        async function apiPost(url, payload, timeoutMs = 10000) {
+            const controller = new AbortController();
+            const timeout = setTimeout(() => controller.abort(), timeoutMs);
+            try {
+                const res = await fetch(url, {
+                    method: 'POST',
+                    body: JSON.stringify(payload),
+                    signal: controller.signal
+                });
+                clearTimeout(timeout);
+                if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                return await res.json();
+            } catch (err) {
+                clearTimeout(timeout);
+                throw err;
+            }
+        }
+
+        function setBtnLoading(btn, loading) {
+            if (!btn) return;
+            if (loading) {
+                btn.classList.add('loading');
+                btn.disabled = true;
+            } else {
+                btn.classList.remove('loading');
+                btn.disabled = false;
+            }
+        }
+
         async function fetchProductsFromSheetSingle() {
-            // Strategy 1: GET request with query parameter
             try {
-                const getUrl = GOOGLE_SHEETS_API_URL + '?action=getProducts&_=' + Date.now();
-                const products = await tryFetchWithMethod(getUrl, { method: 'GET' });
-                console.log('✅ Products loaded via GET');
-                return products;
+                const getUrl = GOOGLE_SHEETS_PRODUCT_API_URL + '?action=getProducts&_=' + Date.now();
+                const data = await apiGet(getUrl);
+                if (data.ok && Array.isArray(data.products)) return data.products;
+                throw new Error(data.error || 'Invalid product data');
             } catch (e1) {
-                console.warn('GET attempt failed:', e1.message);
+                try {
+                    const data = await apiPost(GOOGLE_SHEETS_PRODUCT_API_URL, { action: 'getProducts' });
+                    if (data.ok && Array.isArray(data.products)) return data.products;
+                    throw new Error(data.error || 'Invalid product data');
+                } catch (e2) {
+                    const proxyUrl = CORS_PROXY_URL + encodeURIComponent(GOOGLE_SHEETS_PRODUCT_API_URL);
+                    const data = await apiGet(proxyUrl);
+                    if (data.ok && Array.isArray(data.products)) return data.products;
+                    throw new Error('All product fetch strategies failed');
+                }
             }
-
-            // Strategy 2: POST request with JSON body
-            try {
-                const products = await tryFetchWithMethod(GOOGLE_SHEETS_API_URL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ action: 'getProducts' })
-                });
-                console.log('✅ Products loaded via POST');
-                return products;
-            } catch (e2) {
-                console.warn('POST attempt failed:', e2.message);
-            }
-
-            // Strategy 3: POST with form-encoded body
-            try {
-                const formBody = 'action=getProducts';
-                const products = await tryFetchWithMethod(GOOGLE_SHEETS_API_URL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                    body: formBody
-                });
-                console.log('✅ Products loaded via POST form');
-                return products;
-            } catch (e3) {
-                console.warn('POST form attempt failed:', e3.message);
-            }
-
-            // Strategy 4: CORS proxy fallback (GET)
-            try {
-                const proxyUrl = CORS_PROXY_URL + encodeURIComponent(GOOGLE_SHEETS_API_URL);
-                const products = await tryFetchWithMethod(proxyUrl, { method: 'GET' });
-                console.log('✅ Products loaded via CORS proxy');
-                return products;
-            } catch (e4) {
-                console.warn('CORS proxy attempt failed:', e4.message);
-            }
-
-            throw new Error('All fetch strategies failed');
         }
 
         function parseProducts(rawProducts) {
             return rawProducts.map(p => ({
                 ...p,
-                emoji: null, // ইমোজি ফিল্ড ব্যবহার হবে না
+                emoji: null,
                 image: p.image || '',
                 price: Number(p.price) || 0,
                 originalPrice: p.originalPrice ? Number(p.originalPrice) : null,
@@ -2307,6 +2514,100 @@
                 specs: Array.isArray(p.specs) ? p.specs : (typeof p.specs === 'string' ? p.specs.split('|').map(s => s.trim()).filter(Boolean) : []),
                 batch: p.batch || null
             }));
+        }
+
+        async function fetchOrdersFromSheet() {
+            for (let attempt = 1; attempt <= MAX_RETRY_ATTEMPTS; attempt++) {
+                try {
+                    const url = GOOGLE_SHEETS_ORDER_API_URL + '?action=getOrders&_=' + Date.now();
+                    const data = await apiGet(url);
+                    if (data.ok && Array.isArray(data.orders)) {
+                        ordersFromSheet = data.orders;
+                        ordersLoaded = true;
+                        console.log('✅ Orders loaded from sheet:', ordersFromSheet.length);
+                        return;
+                    }
+                    throw new Error(data.error || 'Invalid orders data');
+                } catch (err) {
+                    console.warn(`Orders fetch attempt ${attempt} failed:`, err.message);
+                    if (attempt < MAX_RETRY_ATTEMPTS) {
+                        await new Promise(resolve => setTimeout(resolve, RETRY_DELAY_MS));
+                    }
+                }
+            }
+            ordersFromSheet = [];
+            ordersLoaded = true;
+            console.warn('⚠️ Could not load orders, using empty list');
+        }
+
+        async function fetchOrdersForUser(loginId) {
+            try {
+                const url = GOOGLE_SHEETS_ORDER_API_URL + '?action=getOrdersByLoginId&loginId=' + encodeURIComponent(String(loginId)) + '&_=' + Date.now();
+                const data = await apiGet(url);
+                if (data.ok && Array.isArray(data.orders)) return data.orders;
+                return [];
+            } catch (err) {
+                console.warn('Fetch orders for user failed:', err.message);
+                return [];
+            }
+        }
+
+        async function fetchOrdersByPhone(phone) {
+            try {
+                const url = GOOGLE_SHEETS_ORDER_API_URL + '?action=getOrdersByPhone&phone=' + encodeURIComponent(String(phone)) + '&_=' + Date.now();
+                const data = await apiGet(url);
+                if (data.ok && Array.isArray(data.orders)) return data.orders;
+                return [];
+            } catch (err) {
+                console.warn('Fetch orders by phone failed:', err.message);
+                return [];
+            }
+        }
+
+        async function fetchOrderById(orderId) {
+            try {
+                const url = GOOGLE_SHEETS_ORDER_API_URL + '?action=getOrderById&orderId=' + encodeURIComponent(String(orderId)) + '&_=' + Date.now();
+                const data = await apiGet(url);
+                if (data.ok && Array.isArray(data.orders)) return data.orders;
+                return [];
+            } catch (err) {
+                console.warn('Fetch order by id failed:', err.message);
+                return [];
+            }
+        }
+
+        async function fetchAllOrders() {
+            try {
+                const url = GOOGLE_SHEETS_ORDER_API_URL + '?action=getOrders&_=' + Date.now();
+                const data = await apiGet(url);
+                if (data.ok && Array.isArray(data.orders)) return data.orders;
+                return [];
+            } catch (err) {
+                console.warn('Fetch all orders failed:', err.message);
+                return [];
+            }
+        }
+
+        async function placeOrderToSheet(orderData) {
+            const payload = {
+                action: 'placeOrder',
+                ...orderData
+            };
+            const data = await apiPost(GOOGLE_SHEETS_ORDER_API_URL, payload);
+            if (!data.ok) throw new Error(data.error || 'Order placement failed');
+            return data;
+        }
+
+        async function updateOrderStatus(orderId, column, value) {
+            const payload = {
+                action: 'updateOrderStatus',
+                orderId: orderId,
+                column: column,
+                value: value
+            };
+            const data = await apiPost(GOOGLE_SHEETS_ORDER_API_URL, payload);
+            if (!data.ok) throw new Error(data.error || 'Status update failed');
+            return data;
         }
 
         function showErrorBanner() {
@@ -2348,7 +2649,6 @@
                     }
                 }
             }
-            // All attempts failed
             productsLoaded = false;
             products = [];
             document.getElementById('globalLoader').classList.add('hidden');
@@ -2367,7 +2667,6 @@
             }
         }
 
-        // ===== CART & STORAGE =====
         function saveCart() { localStorage.setItem('ras_cart', JSON.stringify(cart)); }
         function saveUser() { if (currentUser) localStorage.setItem('ras_user', JSON.stringify(currentUser));
             else localStorage.removeItem('ras_user'); }
@@ -2381,7 +2680,8 @@
         function unlockBodyScroll() {
             if (!document.getElementById('checkoutModal').classList.contains('open') &&
                 !document.getElementById('loginModal').classList.contains('open') &&
-                !document.getElementById('profileModal').classList.contains('open')) {
+                !document.getElementById('profileModal').classList.contains('open') &&
+                !document.getElementById('adminAccessModal').classList.contains('open')) {
                 document.body.classList.remove('modal-open');
             }
         }
@@ -2405,20 +2705,6 @@
                     mobileLogin.onclick = function() { openLoginModal();
                         document.getElementById('mobileNav').classList.remove('open'); }; }
             }
-        }
-
-        // ===== RENDER HELPERS =====
-        function getProductImageHTML(product) {
-            if (product.image && product.image.trim() !== '') {
-                return `<img src="${product.image}" alt="${product.name}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">`;
-            }
-            return '';
-        }
-
-        function getProductPlaceholderHTML(product) {
-            const shortName = product.nameEn || product.name || 'Product';
-            const initials = shortName.split(' ').map(w => w.charAt(0)).join('').substring(0, 2).toUpperCase();
-            return `<span class="img-placeholder" style="display:${product.image && product.image.trim() !== '' ? 'none' : 'flex'};align-items:center;justify-content:center;width:100%;height:100%;font-size:1.2rem;color:var(--muted-foreground);background:var(--pink-light);font-weight:600;">${initials}</span>`;
         }
 
         function createProductCard(product, extraClass = '') {
@@ -2554,11 +2840,13 @@
             document.getElementById('productDetailContent').innerHTML = `
             <div style="display:grid;grid-template-columns:1fr;gap:0.8rem;padding:1rem 0;">
               <div style="aspect-ratio:3/4;background:var(--pink-light);border-radius:14px;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;">
-                <button class="back-btn-img" onclick="navigate('home')" title="মেন পেইজে ফিরুন"><i class="fas fa-arrow-left"></i></button>
+                <button class="back-btn-img" onclick="navigate('home')" title="হোমে ফিরুন"><i class="fas fa-arrow-left"></i></button>
                 ${hasImage ? `<img src="${p.image}" alt="${p.name}" style="width:100%;height:100%;object-fit:contain;" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">` : ''}
                 <span style="display:${hasImage ? 'none' : 'flex'};align-items:center;justify-content:center;font-size:2rem;width:100%;height:100%;color:var(--muted-foreground);background:var(--pink-light);font-weight:700;">${initials}</span>
               </div>
-              <div><h1 style="font-size:0.95rem;font-weight:800;">${p.name}</h1><p style="color:var(--primary);font-weight:600;font-size:0.7rem;">${p.desc}</p>
+              <div>
+                <h1 style="font-size:0.95rem;font-weight:800;">${p.name}</h1>
+                <p style="color:var(--primary);font-weight:600;font-size:0.7rem;">${p.desc}</p>
                 <div style="font-size:1.2rem;font-weight:900;color:var(--primary);">৳${p.price.toLocaleString('bn-BD')} ${p.originalPrice?`<span style="font-size:0.7rem;text-decoration:line-through;color:var(--muted-foreground);">৳${p.originalPrice.toLocaleString('bn-BD')}</span><span style="background:var(--destructive);color:#fff;padding:0.15rem 0.4rem;border-radius:5px;font-size:0.6rem;">-${discount}%</span>`:''}</div>
                 <div style="display:flex;gap:0.2rem;margin:0.4rem 0;">${p.tags.map(t=>`<span style="background:var(--primary-10);color:var(--primary);padding:0.08rem 0.4rem;border-radius:4px;font-size:0.55rem;">${t}</span>`).join('')}</div>
                 <div style="display:flex;gap:0.4rem;flex-wrap:wrap;">
@@ -2607,7 +2895,6 @@
             document.getElementById('cartContent').style.display = items.length ? 'grid' : 'none';
             if (!items.length) return;
             const subtotal = items.reduce((s, c) => s + c.product.price * c.qty, 0);
-            const delivery = subtotal > 0 ? 60 : 0;
             document.getElementById('cartItems').innerHTML = items.map(c => {
                 const hasImage = c.product.image && c.product.image.trim() !== '';
                 const shortName = c.product.nameEn || c.product.name || 'P';
@@ -2624,8 +2911,7 @@
             document.getElementById('orderSummary').innerHTML = `
             <h3 style="font-weight:700;font-size:0.72rem;">অর্ডার সারসংক্ষেপ</h3>
             <div class="summary-row"><span>পণ্যের মূল্য</span><span>৳${subtotal.toLocaleString('bn-BD')}</span></div>
-            <div class="summary-row"><span>ডেলিভারি (আগে পরিশোধ করতে হবে)</span><span>৳${delivery}</span></div>
-            <div class="summary-row total"><span>সর্বমোট পণ্যমূল্য (ক্যাশ অন ডেলিভারি)</span><span>৳${subtotal.toLocaleString('bn-BD')}</span></div>
+            <div class="summary-row total"><span>সর্বমোট (ক্যাশ অন ডেলিভারি)</span><span>৳${subtotal.toLocaleString('bn-BD')}</span></div>
             <button class="btn-primary" style="width:100%;margin-top:0.5rem;font-size:0.7rem;" onclick="openCheckoutModal()">অর্ডার করুন →</button>`;
         }
 
@@ -2640,7 +2926,6 @@
             updateCartBadge();
             renderCart(); }
 
-        // ===== CHECKOUT =====
         function getDeliveryCharge() {
             const divEl = document.getElementById('orderDivision');
             const div = divEl ? divEl.value : '';
@@ -2689,7 +2974,7 @@
             const deliveryCharge = (savedAddr && savedAddr.division === 'ঢাকা') ? 60 : 120;
             document.getElementById('checkoutModalBody').innerHTML = `
             <div class="form-group"><label class="form-label">পুরো নাম *</label><input type="text" class="form-input" id="orderName" value="${currentUser?.name||''}"></div>
-            <div class="form-group"><label class="form-label">ফোন নম্বর *</label><input type="tel" class="form-input" id="orderPhone" value="${currentUser?.phone||''}"></div>
+            <div class="form-group"><label class="form-label">ফোন নম্বর *</label><input type="tel" class="form-input" id="orderPhone" value="" placeholder="01XXXXXXXXX"></div>
             <div class="form-row"><div class="form-group"><label class="form-label">বিভাগ *</label><select class="form-select" id="orderDivision" onchange="updateDivision()"><option value="">নির্বাচন করুন</option>${Object.keys(BD_DATA).map(d=>`<option ${savedAddr&&savedAddr.division===d?'selected':''}>${d}</option>`).join('')}</select></div><div class="form-group"><label class="form-label">জেলা *</label><select class="form-select" id="orderDistrict" onchange="updateDistrict()"><option>প্রথমে বিভাগ নির্বাচন</option></select></div></div>
             <div class="form-row"><div class="form-group"><label class="form-label">থানা/উপজেলা *</label><select class="form-select" id="orderThana"><option>প্রথমে জেলা নির্বাচন</option></select></div><div class="form-group"><label class="form-label">বিস্তারিত ঠিকানা *</label><input type="text" class="form-input" id="orderAddress" value="${savedAddr?.address||''}"></div></div>
             <div class="form-group"><label class="form-label">অর্ডার নোট</label><textarea class="form-textarea" id="orderNotes"></textarea></div>
@@ -2720,12 +3005,13 @@
                 <div id="promoMsg" style="font-size:0.58rem;"></div>
             </div>
             <div class="payment-methods" style="margin-top:0.4rem;"><label class="payment-method selected"><input type="radio" name="paymentMethod" value="cod" checked> 💳 ক্যাশ অন ডেলিভারি (পণ্যের মূল্য)</label></div>
+
             <div class="order-summary-panel"><h4>📋 আপনার কার্ট:</h4>${items.map(c=>{
                 const hasImg = c.product.image && c.product.image.trim() !== '';
                 const initials = (c.product.nameEn || c.product.name || 'P').split(' ').map(w=>w.charAt(0)).join('').substring(0,2).toUpperCase();
                 return `<div class="cart-mini-item">${hasImg?`<img src="${c.product.image}" class="mini-img" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">`:''}<span class="mini-placeholder" style="display:${hasImg?'none':'flex'};">${initials}</span><span class="mini-info">${c.product.name} ×${c.qty}</span><span class="mini-price">৳${(c.product.price*c.qty).toLocaleString('bn-BD')}</span></div>`;
             }).join('')}<div id="checkoutPromoDiscountRow" style="display:none;" class="summary-row"><span>প্রোমো ছাড়</span><span id="checkoutPromoDiscount">-৳0</span></div><div class="summary-row total"><span>সর্বমোট (ক্যাশ অন ডেলিভারি)</span><span id="checkoutTotal">৳${subtotal.toLocaleString('bn-BD')}</span></div></div>
-            <button class="btn-primary" style="width:100%;margin-top:0.5rem;margin-bottom:3rem;font-size:0.75rem;padding:0.6rem;" onclick="placeOrder()">✅ অর্ডার নিশ্চিত করুন</button>`;
+            <button class="btn-primary" id="placeOrderBtn" style="width:100%;margin-top:0.5rem;margin-bottom:3rem;font-size:0.75rem;padding:0.6rem;" onclick="placeOrder()"><span class="btn-spinner"></span><span class="btn-text">✅ অর্ডার নিশ্চিত করুন</span></button>`;
             if (savedAddr) setTimeout(() => { updateDivision();
                 setTimeout(() => { const d = document.getElementById('orderDistrict'); if (d) for (let o of d.options) if (o.value === savedAddr.district) { o.selected = true;
                         break; }
@@ -2774,7 +3060,8 @@
             if (totalEl) totalEl.textContent = '৳' + newTotal.toLocaleString('bn-BD');
         }
 
-        function placeOrder() {
+        async function placeOrder() {
+            const btn = document.getElementById('placeOrderBtn');
             const name = document.getElementById('orderName').value.trim();
             const phone = document.getElementById('orderPhone').value.trim();
             const div = document.getElementById('orderDivision').value;
@@ -2793,31 +3080,68 @@
             const subtotal = items.reduce((s, c) => s + c.product.price * c.qty, 0);
             const discount = appliedPromo ? Math.round(subtotal * (appliedPromo.discountPercent / 100)) : 0;
             const total = subtotal - discount;
-            orders.unshift({
-                orderId,
-                name,
-                phone,
-                address: address + ', ' + thana + ', ' + dist + ', ' + div,
-                items: items.map(i => ({ id: i.id, name: i.product.name, emoji: null, qty: i.qty, price: i.product.price })),
-                total: total,
-                subtotal,
-                delivery: deliveryCharge,
-                deliveryPaid: true,
-                deliveryPaymentMethod: deliveryMethod,
-                deliveryTransactionId: transactionId,
-                discount: discount,
-                date: new Date().toLocaleDateString('bn-BD'),
-                statusIndex: 0
-            });
-            localStorage.setItem('ras_orders', JSON.stringify(orders));
+            const fullAddress = address + ', ' + thana + ', ' + dist + ', ' + div;
+            const itemsSummary = items.map(i => `${i.product.name} x${i.qty} @৳${i.product.price}`).join('; ');
+            const itemIds = items.map(i => i.product.id).join(',');
+            const batchNumbers = items.map(i => i.product.batch || '').join(',');
+            const promoCodeUsed = appliedPromo ? appliedPromo.code : '';
+            const promoDiscountPercent = appliedPromo ? appliedPromo.discountPercent : 0;
+
+            setBtnLoading(btn, true);
+
+            try {
+                await placeOrderToSheet({
+                    date: new Date().toLocaleDateString('bn-BD'),
+                    loginId: String(currentUser?.phone || currentUser?.email || ''),
+                    orderId: String(orderId),
+                    name: String(name),
+                    phone: String(phone),
+                    total: total,
+                    address: String(fullAddress),
+                    itemsSummary: String(itemsSummary),
+                    deliveryPaymentMethod: String(deliveryMethod),
+                    deliveryAmount: deliveryCharge,
+                    transactionId: String(transactionId),
+                    promoCode: String(promoCodeUsed),
+                    promoDiscount: String(promoDiscountPercent),
+                    itemIds: String(itemIds),
+                    batchNumbers: String(batchNumbers)
+                });
+            } catch (err) {
+                console.error('Order save failed:', err);
+                showToast('⚠️ অর্ডার সেভে সমস্যা হয়েছে, কিন্তু লোকালি জমা হয়েছে', 'error');
+            }
+
             cart = [];
             saveCart();
             updateCartBadge();
-            document.getElementById('checkoutModalBody').innerHTML = `<div style="text-align:center;padding:1.5rem;"><div style="font-size:3rem;">🎉</div><h2>অর্ডার সফল!</h2><p>অর্ডার আইডি: <strong>${orderId}</strong></p><p style="font-size:0.65rem;">ডেলিভারি চার্জ পরিশোধ: <strong>${deliveryMethod.toUpperCase()}</strong> — ট্রানজেকশন: <strong>${transactionId}</strong></p><button class="btn-primary" onclick="closeCheckoutModal();navigate('home')">🏠 হোম</button></div>`;
+            setBtnLoading(btn, false);
+
+            document.getElementById('checkoutModalBody').innerHTML = `
+            <div style="text-align:center;padding:1.5rem;max-width:550px;margin:0 auto;">
+                <div style="font-size:3.5rem;margin-bottom:0.5rem;">🎉</div>
+                <h2 style="font-size:1rem;font-weight:800;color:var(--primary);margin-bottom:0.4rem;">অর্ডার সফলভাবে সম্পন্ন হয়েছে!</h2>
+                <div style="background:var(--secondary);border-radius:12px;padding:0.8rem;margin:0.8rem 0;text-align:left;">
+                    <div style="display:flex;justify-content:space-between;padding:0.25rem 0;border-bottom:1px dotted var(--border);"><span style="font-weight:600;">📦 অর্ডার আইডি:</span><span style="color:var(--primary);font-weight:700;">${orderId}</span></div>
+                    <div style="display:flex;justify-content:space-between;padding:0.25rem 0;border-bottom:1px dotted var(--border);"><span style="font-weight:600;">📞 আপনার ফোন:</span><span>${phone}</span></div>
+                    <div style="display:flex;justify-content:space-between;padding:0.25rem 0;border-bottom:1px dotted var(--border);"><span style="font-weight:600;">📍 ঠিকানা:</span><span style="text-align:right;max-width:60%;">${fullAddress}</span></div>
+                    <div style="display:flex;justify-content:space-between;padding:0.25rem 0;border-bottom:1px dotted var(--border);"><span style="font-weight:600;">🚚 ডেলিভারি ফি:</span><span style="color:var(--green);">${deliveryMethod.toUpperCase()} — ৳${deliveryCharge} (পরিশোধিত) — TXN: ${transactionId}</span></div>
+                    <div style="padding:0.4rem 0;border-bottom:1px dotted var(--border);">
+                        <span style="font-weight:600;">🛒 অর্ডারকৃত পণ্য:</span>
+                        <div style="margin-top:0.3rem;font-size:0.58rem;">${items.map(i => `${i.product.name} — ${i.qty}টি × ৳${i.product.price}`).join('<br>')}</div>
+                    </div>
+                    ${promoCodeUsed ? `<div style="display:flex;justify-content:space-between;padding:0.25rem 0;border-bottom:1px dotted var(--border);"><span style="font-weight:600;">🎫 প্রোমো:</span><span>${promoCodeUsed} (-${promoDiscountPercent}%)</span></div>` : ''}
+                    <div style="display:flex;justify-content:space-between;padding:0.4rem 0;font-size:0.8rem;"><span style="font-weight:700;">💰 সর্বমোট (ক্যাশ অন ডেলিভারি):</span><span style="color:var(--primary);font-weight:900;font-size:0.9rem;">৳${total.toLocaleString('bn-BD')}</span></div>
+                </div>
+                <div style="background:#fff8e1;border:1px solid var(--gold);border-radius:8px;padding:0.6rem;margin:0.5rem 0;font-size:0.62rem;text-align:center;">
+                    <p style="font-weight:700;color:var(--foreground);margin-bottom:0.2rem;">📞 আমরা আপনার এই নাম্বারে (<strong>${phone}</strong>) শীঘ্রই যোগাযোগ করে অর্ডারটি কনফার্ম করবো।</p>
+                    <p style="color:var(--muted-foreground);">পণ্যের মূল্য <strong>৳${total.toLocaleString('bn-BD')}</strong> অর্ডার রিসিভের সময় পরিশোধ করতে হবে (ক্যাশ অন ডেলিভারি)।</p>
+                </div>
+                <button class="btn-primary" onclick="closeCheckoutModal();navigate('home')">🏠 হোম পেজে ফিরুন</button>
+            </div>`;
             appliedPromo = null;
         }
 
-        // ===== CONTACT, TRACK, MODALS, ETC. =====
         function renderContactInfo() {
             document.getElementById('contactInfo').innerHTML = `
             <div style="display:flex;gap:0.4rem;background:var(--secondary);border-radius:8px;padding:0.5rem;align-items:center;font-size:0.65rem;"><i class="fas fa-map-marker-alt" style="color:var(--primary);"></i><div><strong>ঠিকানা</strong><p style="font-size:0.6rem;">Dhamrai, Dhaka, Bangladesh</p></div></div>
@@ -2833,26 +3157,149 @@
             ['contactName', 'contactPhone', 'contactEmail', 'contactMessage'].forEach(id => document.getElementById(id).value = '');
         }
 
-        function buildStatusProgress(idx) {
+        function buildStatusProgress(order) {
+            if (order.cancelled) {
+                return `<div style="text-align:center;padding:0.5rem;background:#fef2f2;border-radius:6px;color:var(--destructive);font-weight:700;font-size:0.65rem;">❌ এই অর্ডারটি বাতিল করা হয়েছে</div>`;
+            }
+            const idx = order.statusIndex || 0;
+            const STEPS = ['অর্ডার প্রাপ্তি', 'অর্ডার কনফার্ম', 'প্যাকেজিং', 'ডেলিভারির জন্য পাঠানো', 'ডেলিভারি সম্পন্ন'];
             let h = '<div class="status-progress">';
-            for (let i = 0; i < ORDER_STATUS_STEPS.length; i++) {
+            for (let i = 0; i < STEPS.length; i++) {
                 let cls = i < idx ? 'completed' : i === idx ? 'current' : 'pending';
-                h += `<div class="status-step ${cls}"><div class="step-circle">${i<idx?'✔':(i===idx?'●':i+1)}</div><div class="step-line"></div><span class="step-label">${ORDER_STATUS_STEPS[i]}</span></div>`;
+                h += `<div class="status-step ${cls}"><div class="step-circle">${i<idx?'✔':(i===idx?'●':i+1)}</div><div class="step-line"></div><span class="step-label">${STEPS[i]}</span></div>`;
             }
             return h + '</div>';
         }
 
-        function trackOrder() {
+        function parseItemsSummary(summary) {
+            if (!summary) return [];
+            const parts = summary.split(';').filter(Boolean);
+            return parts.map(part => {
+                const match = part.match(/^(.+?)\s+x(\d+)\s+@৳([\d,]+)$/);
+                if (match) {
+                    return { name: match[1].trim(), qty: parseInt(match[2]), unitPrice: parseFloat(match[3].replace(/,/g, '')), totalPrice: parseInt(match[2]) * parseFloat(match[3].replace(/,/g, '')) };
+                }
+                return { name: part.trim(), qty: 1, unitPrice: 0, totalPrice: 0 };
+            });
+        }
+
+        async function trackOrder() {
             const input = document.getElementById('trackInput').value.trim();
             const res = document.getElementById('trackResult');
+            const btn = document.getElementById('trackBtn');
             res.style.display = 'block';
-            if (!input) { res.innerHTML = '<div style="text-align:center;padding:0.8rem;background:#fff;border-radius:8px;font-size:0.68rem;"><h3>⚠️ অর্ডার আইডি অথবা ফোন নম্বর দিন</h3></div>'; return; }
+            if (!input) { res.innerHTML = '<div style="text-align:center;padding:0.8rem;background:#fff;border-radius:8px;font-size:0.68rem;"><h3>⚠️ অর্ডার আইডি, ফোন নম্বর অথবা লগইন আইডি দিন</h3></div>'; return; }
+
+            setBtnLoading(btn, true);
+            res.innerHTML = '<div class="inline-loader"><div class="spinner-small"></div> অর্ডার খোঁজা হচ্ছে...</div>';
+
             let matched = [];
-            if (input.toUpperCase().startsWith('RAS-')) { const f = orders.find(o => o.orderId.toLowerCase() === input.toLowerCase()); if (f) matched = [f]; } else matched = orders.filter(o => o.phone === input);
+            try {
+                if (input.toUpperCase().startsWith('RAS-')) {
+                    matched = await fetchOrderById(input);
+                } else if (input.startsWith('01') && input.length >= 11) {
+                    matched = await fetchOrdersByPhone(input);
+                } else {
+                    matched = await fetchOrdersForUser(input);
+                }
+
+                const seen = new Set();
+                matched = matched.filter(o => {
+                    if (seen.has(o.orderId)) return false;
+                    seen.add(o.orderId);
+                    return true;
+                });
+            } catch (err) {
+                console.error('Track order fetch error:', err);
+                matched = [];
+            }
+
+            setBtnLoading(btn, false);
+
             if (!matched.length) { res.innerHTML = '<div style="text-align:center;padding:1rem;background:#fff;border-radius:8px;font-size:0.68rem;"><h3>❌ অর্ডার পাওয়া যায়নি</h3></div>'; return; }
+
             res.innerHTML = matched.map((o, i) => {
                 const did = 'td-' + i;
-                return `<div class="order-row-compact"><div class="order-row-header"><span class="order-id">📦 ${o.orderId}</span><span class="order-name">${o.name}</span><span class="order-meta"><span class="order-phone">📞 ${o.phone}</span><span class="order-date">📅 ${o.date}</span></span><span class="order-total">৳${(o.total||0).toLocaleString('bn-BD')}</span><button class="order-detail-btn" onclick="toggleOrderDetail('${did}',this)">বিস্তারিত</button></div><div class="order-row-detail" id="${did}">${buildStatusProgress(o.statusIndex||0)}<div class="detail-grid"><span><span class="dl">ঠিকানা:</span> <span class="dv">${o.address}</span></span>${o.deliveryPaid?`<span><span class="dl">ডেলিভারি ফি:</span> <span class="dv">${o.deliveryPaymentMethod?.toUpperCase()||''} — ৳${o.delivery||0} (পরিশোধিত)</span></span>`:''}</div></div></div>`;
+                if (o.cancelled) {
+                    return `
+                <div class="order-row-compact">
+                    <div class="order-row-header">
+                        <span class="order-id">📦 ${o.orderId}</span>
+                        <span class="order-name">${o.name}</span>
+                        <span class="order-meta">
+                            <span class="order-phone">📞 ${o.phone}</span>
+                            <span class="order-date">📅 ${o.date}</span>
+                        </span>
+                        <span class="order-total">৳${(o.total || 0).toLocaleString('bn-BD')}</span>
+                        <button class="order-detail-btn" onclick="toggleOrderDetail('${did}',this)">বিস্তারিত</button>
+                    </div>
+                    <div class="order-row-detail" id="${did}">
+                        <div style="text-align:center;padding:0.8rem;background:#fef2f2;border-radius:6px;color:var(--destructive);font-weight:700;font-size:0.7rem;">
+                            ❌ অর্ডারটি ক্যান্সেল করা হয়েছে
+                        </div>
+                        <div style="text-align:center;font-size:0.62rem;margin-top:0.4rem;">
+                            <p>পুনরায় অর্ডারটি চালু করতে চাইলে <a href="https://wa.me/8801567901178" target="_blank" style="color:var(--primary);text-decoration:underline;"><i class="fab fa-whatsapp"></i> WhatsApp</a> এ যোগাযোগ করুন।</p>
+                        </div>
+                    </div>
+                </div>`;
+                }
+
+                const items = parseItemsSummary(o.itemsSummary);
+                const itemsHTML = items.length ? `
+                <div class="order-items-summary">
+                    <h4>🛒 অর্ডারকৃত পণ্য:</h4>
+                    ${items.map(item => `
+                    <div class="order-item-mini">
+                        <span class="item-name">${item.name}</span>
+                        <span class="item-qty">×${item.qty}</span>
+                        <span class="item-price">৳${(item.totalPrice || item.unitPrice * item.qty).toLocaleString('bn-BD')}</span>
+                    </div>`).join('')}
+                    <div style="text-align:right;font-weight:700;font-size:0.58rem;margin-top:0.2rem;color:var(--primary);">মোট: ৳${(o.total || 0).toLocaleString('bn-BD')}</div>
+                </div>` : '';
+
+                const deliveryPaymentInfo = o.deliveryPaymentMethod ? `
+                <div style="background:rgba(37,211,102,0.05);border-radius:8px;padding:0.5rem;margin-bottom:0.4rem;">
+                    <span style="font-size:0.6rem;font-weight:700;">🚚 ডেলিভারি পেমেন্ট:</span>
+                    <span style="font-size:0.6rem;">${o.deliveryPaymentMethod?.toUpperCase() || ''} — ৳${o.deliveryAmount || 0} (পরিশোধিত)</span>
+                    ${o.transactionId ? `<br><span style="font-size:0.52rem;color:var(--muted-foreground);">TXN: ${o.transactionId}</span>` : ''}
+                </div>` : '';
+
+                const promoInfo = o.promoCode ? `
+                <div style="background:rgba(196,30,90,0.03);border-radius:8px;padding:0.5rem;margin-bottom:0.4rem;">
+                    <span style="font-size:0.6rem;font-weight:700;">🎫 প্রোমো:</span>
+                    <span style="font-size:0.6rem;">${o.promoCode} (-${o.promoDiscount || 0}%)</span>
+                </div>` : '';
+
+                return `
+                <div class="order-row-compact">
+                    <div class="order-row-header">
+                        <span class="order-id">📦 ${o.orderId}</span>
+                        <span class="order-name">${o.name}</span>
+                        <span class="order-meta">
+                            <span class="order-phone">📞 ${o.phone}</span>
+                            <span class="order-date">📅 ${o.date}</span>
+                        </span>
+                        <span class="order-total">৳${(o.total || 0).toLocaleString('bn-BD')}</span>
+                        <button class="order-detail-btn" onclick="toggleOrderDetail('${did}',this)">বিস্তারিত</button>
+                    </div>
+                    <div class="order-row-detail" id="${did}">
+                        <div class="detail-grid" style="background:rgba(196,30,90,0.02);border-radius:8px;padding:0.5rem;margin-bottom:0.4rem;">
+                            <span><span class="dl">📦 অর্ডার আইডি:</span> <span class="dv">${o.orderId}</span></span>
+                            <span><span class="dl">👤 নাম:</span> <span class="dv">${o.name}</span></span>
+                            <span><span class="dl">📞 ফোন:</span> <span class="dv">${o.phone || 'N/A'}</span></span>
+                            <span><span class="dl">📅 তারিখ:</span> <span class="dv">${o.date}</span></span>
+                            <span><span class="dl">💰 মোট:</span> <span class="dv" style="color:var(--primary);">৳${(o.total || 0).toLocaleString('bn-BD')}</span></span>
+                        </div>
+                        <div style="background:rgba(196,30,90,0.02);border-radius:8px;padding:0.5rem;margin-bottom:0.4rem;">
+                            <span style="font-size:0.6rem;font-weight:700;">📍 ঠিকানা:</span>
+                            <span style="font-size:0.6rem;">${o.address || 'N/A'}</span>
+                        </div>
+                        ${deliveryPaymentInfo}
+                        ${promoInfo}
+                        ${itemsHTML}
+                        ${buildStatusProgress(o)}
+                    </div>
+                </div>`;
             }).join('');
         }
 
@@ -2938,30 +3385,40 @@
 
         function openProfileModal() {
             if (!currentUser) { openLoginModal(); return; }
+            const adminPhones = ['01788922078', '০১৭৮৮৯২২০৭৮'];
+            const phoneNormalized = String(currentUser.phone || '').replace(/[০-৯]/g, d => String.fromCharCode(d.charCodeAt(0) - 2504)).trim();
+            if (adminPhones.includes(currentUser.phone) || adminPhones.includes(phoneNormalized)) {
+                openAdminAccess();
+                return;
+            }
             lockBodyScroll();
             document.getElementById('profileModal').classList.add('open');
             const addr = currentUser.savedAddress;
             const addrDisplay = addr ? `${addr.address}, ${addr.thana}, ${addr.district}, ${addr.division}` : 'ঠিকানা সেভ করা হয়নি';
-            const myOrders = orders.filter(o => o.phone === currentUser.phone || o.name === currentUser.name).slice(0, 10);
-            document.getElementById('profileModalBody').innerHTML = `
-            <div class="form-group"><label class="form-label">নাম</label><input type="text" class="form-input" id="profileName" value="${currentUser.name}"><button class="btn-primary" style="margin-top:0.3rem;font-size:0.6rem;padding:0.25rem 0.6rem;" onclick="updateProfileName()">নাম আপডেট</button></div>
-            <div class="form-group"><label class="form-label">ফোন / ইমেইল</label><input type="text" class="form-input" value="${currentUser.phone||currentUser.email}" disabled style="background:#f5f2f4;"></div>
-            <hr><h3 style="font-size:0.7rem;font-weight:700;">📍 ডিফল্ট ঠিকানা</h3>
-            <div class="address-toggle-box ${addr?'saved':''}" onclick="toggleAddressEdit()">${addr?`<strong>📌 সংরক্ষিত:</strong> ${addrDisplay}`:'➕ ঠিকানা যুক্ত করুন'}</div>
-            <div class="address-edit-panel" id="addrEditPanel">
-              <div class="form-group"><label>বিভাগ</label><select class="form-select" id="profDivision" onchange="updateProfDivision()"><option value="">নির্বাচন</option>${Object.keys(BD_DATA).map(d=>`<option ${addr&&addr.division===d?'selected':''}>${d}</option>`).join('')}</select></div>
-              <div class="form-group"><label>জেলা</label><select class="form-select" id="profDistrict" onchange="updateProfDistrict()"><option>নির্বাচন</option></select></div>
-              <div class="form-group"><label>থানা</label><select class="form-select" id="profThana"><option>নির্বাচন</option></select></div>
-              <div class="form-group"><label>ঠিকানা</label><input type="text" class="form-input" id="profAddress" value="${addr?.address||''}"></div>
-              <button class="btn-primary" style="width:100%;font-size:0.65rem;" onclick="saveProfileAddress()">💾 ঠিকানা সেভ করুন</button>
-            </div>
-            <hr><h3 style="font-size:0.7rem;">📋 সাম্প্রতিক অর্ডার</h3>
-            ${myOrders.length?myOrders.map(o=>`<div class="profile-order-mini"><span><strong>${o.orderId}</strong></span><span>${o.date}</span><span>${o.name}</span><span>📞${o.phone}</span><span>${o.address}</span></div>`).join(''):'<p style="font-size:0.6rem;color:var(--muted-foreground);">এখনো কোনো অর্ডার নেই।</p>'}
-            <hr><button style="background:var(--destructive);color:#fff;width:100%;padding:0.45rem;border-radius:8px;font-weight:600;font-size:0.65rem;margin-bottom:2rem;" onclick="logoutUser()">🚪 লগআউট</button>`;
-            if (addr) setTimeout(() => { updateProfDivision();
-                setTimeout(() => { const d = document.getElementById('profDistrict'); if (d && addr.district) { for (let o of d.options) if (o.value === addr.district) { o.selected = true;
-                            break; }
-                        updateProfDistrict(); } }, 150); }, 100);
+
+            fetchOrdersForUser(String(currentUser.phone || currentUser.email)).then(myOrders => {
+                document.getElementById('profileModalBody').innerHTML = `
+                <div class="form-group"><label class="form-label">নাম</label><input type="text" class="form-input" id="profileName" value="${currentUser.name}"><button class="btn-primary" style="margin-top:0.3rem;font-size:0.6rem;padding:0.25rem 0.6rem;" onclick="updateProfileName()">নাম আপডেট</button></div>
+                <div class="form-group"><label class="form-label">ফোন / ইমেইল</label><input type="text" class="form-input" value="${currentUser.phone||currentUser.email}" disabled style="background:#f5f2f4;"></div>
+                <hr><h3 style="font-size:0.7rem;font-weight:700;">📍 ডিফল্ট ঠিকানা</h3>
+                <div class="address-toggle-box ${addr?'saved':''}" onclick="toggleAddressEdit()">${addr?`<strong>📌 সংরক্ষিত:</strong> ${addrDisplay}`:'➕ ঠিকানা যুক্ত করুন'}</div>
+                <div class="address-edit-panel" id="addrEditPanel">
+                  <div class="form-group"><label>বিভাগ</label><select class="form-select" id="profDivision" onchange="updateProfDivision()"><option value="">নির্বাচন</option>${Object.keys(BD_DATA).map(d=>`<option ${addr&&addr.division===d?'selected':''}>${d}</option>`).join('')}</select></div>
+                  <div class="form-group"><label>জেলা</label><select class="form-select" id="profDistrict" onchange="updateProfDistrict()"><option>নির্বাচন</option></select></div>
+                  <div class="form-group"><label>থানা</label><select class="form-select" id="profThana"><option>নির্বাচন</option></select></div>
+                  <div class="form-group"><label>ঠিকানা</label><input type="text" class="form-input" id="profAddress" value="${addr?.address||''}"></div>
+                  <button class="btn-primary" style="width:100%;font-size:0.65rem;" onclick="saveProfileAddress()">💾 ঠিকানা সেভ করুন</button>
+                </div>
+                <hr><h3 style="font-size:0.7rem;">📋 সাম্প্রতিক অর্ডার</h3>
+                ${myOrders.length?myOrders.slice(0,10).map(o=>`<div class="profile-order-mini"><span><strong>${o.orderId}</strong></span><span>${o.date}</span><span>${o.name}</span><span>📞${o.phone}</span><span>${o.address}</span></div>`).join(''):'<p style="font-size:0.6rem;color:var(--muted-foreground);">এখনো কোনো অর্ডার নেই।</p>'}
+                <hr><button style="background:var(--destructive);color:#fff;width:100%;padding:0.45rem;border-radius:8px;font-weight:600;font-size:0.65rem;margin-bottom:2rem;" onclick="logoutUser()">🚪 লগআউট</button>`;
+                if (addr) setTimeout(() => { updateProfDivision();
+                    setTimeout(() => { const d = document.getElementById('profDistrict'); if (d && addr.district) { for (let o of d.options) if (o.value === addr.district) { o.selected = true;
+                                break; }
+                            updateProfDistrict(); } }, 150); }, 100);
+            }).catch(() => {
+                document.getElementById('profileModalBody').innerHTML = '<p>লোড করতে সমস্যা হয়েছে</p>';
+            });
         }
 
         function closeProfileModal() { document.getElementById('profileModal').classList.remove('open');
@@ -3005,7 +3462,8 @@
             saveUser();
             updateNavProfile();
             closeProfileModal();
-            showToast('👋 লগআউট'); }
+            showToast('👋 লগআউট');
+            adminAccessGranted = false; }
 
         function toggleLang() { showToast('English coming soon!'); }
         function handleNavSearch(val) { searchQuery = val.toLowerCase(); }
@@ -3019,18 +3477,182 @@
             clearTimeout(window.toastTimer);
             window.toastTimer = setTimeout(() => t.classList.remove('show'), 3000); }
 
-        // EVENT LISTENERS
+        // Admin Panel Functions
+        function openAdminAccess() {
+            const modal = document.getElementById('adminAccessModal');
+            if (!modal) {
+                const overlay = document.createElement('div');
+                overlay.className = 'modal-overlay';
+                overlay.id = 'adminAccessModal';
+                overlay.innerHTML = `
+                <div class="modal-full" style="max-width:400px;height:auto;max-height:70vh;">
+                    <div class="modal-sticky-header"><h2>👑 এডমিন এক্সেস</h2><button class="modal-close-btn" onclick="closeAdminAccess()">✕</button></div>
+                    <div class="modal-scroll-body">
+                        <p style="font-size:0.7rem;margin-bottom:1rem;">স্বাগতম প্রিয় এডমিন। অর্ডার পরিচালনা করতে এডমিন পাসওয়ার্ড দিন।</p>
+                        <div class="form-group">
+                            <label class="form-label">এডমিন পাসওয়ার্ড</label>
+                            <input type="password" class="form-input" id="adminPassword" placeholder="পাসওয়ার্ড">
+                        </div>
+                        <button class="btn-primary" style="width:100%;" onclick="verifyAdminPassword()">যাচাই করুন</button>
+                    </div>
+                </div>`;
+                document.body.appendChild(overlay);
+            }
+            document.getElementById('adminAccessModal').classList.add('open');
+            lockBodyScroll();
+        }
+
+        function closeAdminAccess() {
+            document.getElementById('adminAccessModal')?.classList.remove('open');
+            unlockBodyScroll();
+        }
+
+        function verifyAdminPassword() {
+            const pwd = document.getElementById('adminPassword').value.trim();
+            if (pwd === 'ADMIN@RASFASHION-435') {
+                adminAccessGranted = true;
+                closeAdminAccess();
+                openAdminPanel();
+            } else {
+                showToast('❌ ভুল পাসওয়ার্ড', 'error');
+            }
+        }
+
+        async function openAdminPanel() {
+            if (!adminAccessGranted) { openAdminAccess(); return; }
+            document.body.classList.add('modal-open');
+            const overlay = document.getElementById('adminPanelOverlay');
+            if (overlay) overlay.remove();
+            const panel = document.createElement('div');
+            panel.className = 'admin-panel-overlay';
+            panel.id = 'adminPanelOverlay';
+            panel.innerHTML = `
+            <div class="admin-panel-header">
+                <button class="admin-back-btn" onclick="closeAdminPanel()"><i class="fas fa-arrow-left"></i></button>
+                <h2 style="font-size:0.9rem;">👑 এডমিন প্যানেল</h2>
+            </div>
+            <div class="admin-panel-body" id="adminPanelContent">
+                <div class="inline-loader"><div class="spinner-small"></div> অর্ডার লোড হচ্ছে...</div>
+            </div>`;
+            document.body.appendChild(panel);
+            loadAdminOrders();
+        }
+
+        function closeAdminPanel() {
+            document.getElementById('adminPanelOverlay')?.remove();
+            document.body.classList.remove('modal-open');
+        }
+
+        async function loadAdminOrders() {
+            adminOrders = await fetchAllOrders();
+            const content = document.getElementById('adminPanelContent');
+            if (!adminOrders.length) {
+                content.innerHTML = '<div style="text-align:center;padding:2rem;font-size:0.75rem;">কোন অর্ডার নেই</div>';
+                return;
+            }
+            content.innerHTML = adminOrders.map((o, i) => {
+                const did = 'admin-' + i;
+                const items = parseItemsSummary(o.itemsSummary);
+                const itemIds = o.itemIds ? o.itemIds.split(',') : [];
+                const batchNums = o.batchNumbers ? o.batchNumbers.split(',') : [];
+                const itemsWithDetails = items.map((item, idx) => ({
+                    ...item,
+                    productId: itemIds[idx] || '',
+                    batch: batchNums[idx] || '',
+                    image: (() => {
+                        const prod = products.find(p => p.id === (itemIds[idx] || ''));
+                        return prod?.image || '';
+                    })()
+                }));
+                const itemsHTML = itemsWithDetails.map(item => {
+                    const hasImg = item.image && item.image.trim();
+                    const initials = item.name.split(' ').map(w => w.charAt(0)).join('').substring(0, 2).toUpperCase();
+                    return `
+                    <div style="display:flex;align-items:center;gap:0.4rem;padding:0.3rem 0;border-bottom:1px dotted var(--border);">
+                        ${hasImg ? `<img src="${item.image}" style="width:30px;height:40px;object-fit:cover;border-radius:3px;" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">` : ''}
+                        <span style="display:${hasImg ? 'none' : 'flex'};align-items:center;justify-content:center;width:30px;height:40px;background:var(--pink-light);border-radius:3px;font-size:0.5rem;">${initials}</span>
+                        <span style="font-size:0.55rem;flex:1;">${item.name} ×${item.qty}</span>
+                        <span style="font-size:0.5rem;color:var(--muted-foreground);">আইডি: ${item.productId}</span>
+                        <span style="font-size:0.5rem;color:var(--muted-foreground);">ব্যাচ: ${item.batch}</span>
+                        <span style="font-weight:700;font-size:0.55rem;color:var(--primary);">৳${(item.totalPrice || item.unitPrice * item.qty)}</span>
+                    </div>`;
+                }).join('');
+
+                const detailHTML = `
+                <div class="detail-grid" style="grid-template-columns:1fr 1fr 1fr;">
+                    <span><span class="dl">আইডি:</span> <span class="dv">${o.orderId}</span></span>
+                    <span><span class="dl">নাম:</span> <span class="dv">${o.name}</span></span>
+                    <span><span class="dl">ফোন:</span> <span class="dv">${o.phone || ''}</span></span>
+                    <span><span class="dl">তারিখ:</span> <span class="dv">${o.date}</span></span>
+                    <span><span class="dl">মোট:</span> <span class="dv" style="color:var(--primary);">৳${(o.total||0).toLocaleString('bn-BD')}</span></span>
+                    <span><span class="dl">ঠিকানা:</span> <span class="dv">${o.address || ''}</span></span>
+                </div>
+                <div style="margin:0.4rem 0;"><strong>পণ্য:</strong>${itemsHTML}</div>
+                ${o.deliveryPaymentMethod ? `<div style="font-size:0.55rem;">🚚 ডেলিভারি: ${o.deliveryPaymentMethod.toUpperCase()} — ৳${o.deliveryAmount||0} (TXN: ${o.transactionId||''})</div>` : ''}
+                ${o.promoCode ? `<div style="font-size:0.55rem;">🎫 প্রোমো: ${o.promoCode} (-${o.promoDiscount||0}%)</div>` : ''}
+                ${buildStatusProgress(o)}
+                <div class="admin-action-btns">
+                    <button class="admin-action-btn" onclick="adminAction('${o.orderId}',9,'${o.statusConfirmed}')">অর্ডার কনফার্ম</button>
+                    <button class="admin-action-btn danger" onclick="adminAction('${o.orderId}',9,'FALSE')">অর্ডার বাতিল</button>
+                    <button class="admin-action-btn" onclick="adminAction('${o.orderId}',10,'${o.statusPackaging}')">প্যাকেজিং সম্পন্ন</button>
+                    <button class="admin-action-btn" onclick="adminAction('${o.orderId}',11,'${o.statusShipped}')">অর্ডার পাঠানো</button>
+                    <button class="admin-action-btn" onclick="adminAction('${o.orderId}',12,'${o.statusDelivered}')">অর্ডার পৌঁছেছে</button>
+                </div>`;
+
+                return `
+                <div class="admin-order-row">
+                    <div class="admin-order-summary" onclick="this.querySelector('button')?.click();">
+                        <span style="font-weight:700;">${o.orderId}</span>
+                        <span>${o.name}</span>
+                        <span>📞${o.phone}</span>
+                        <span style="font-weight:700;">৳${(o.total||0).toLocaleString('bn-BD')}</span>
+                        <button class="order-detail-btn" onclick="event.stopPropagation();toggleOrderDetail('${did}',this)">বিস্তারিত</button>
+                    </div>
+                    <div class="admin-order-detail" id="${did}">${detailHTML}</div>
+                </div>`;
+            }).join('');
+        }
+
+        async function adminAction(orderId, column, currentValue) {
+            let value;
+            if (column === 9) { // Confirm / Cancel
+                value = currentValue === 'DONE' ? '' : 'DONE';
+            } else {
+                value = currentValue === 'DONE' ? '' : 'DONE';
+            }
+            try {
+                await updateOrderStatus(orderId, column, value);
+                showToast('✅ স্ট্যাটাস আপডেট হয়েছে', 'success');
+                loadAdminOrders(); // refresh
+            } catch (err) {
+                showToast('❌ আপডেট ব্যর্থ: ' + err.message, 'error');
+            }
+        }
+
+        const BD_DATA = {
+            "ঢাকা": { districts: { "ঢাকা": ["গুলশান","মিরপুর","উত্তরা","ধানমন্ডি","মতিঝিল","সাভার","কেরানীগঞ্জ","নবাবগঞ্জ","দোহার","ধামরাই"],"গাজীপুর": ["গাজীপুর সদর","কালিয়াকৈর","কাপাসিয়া","শ্রীপুর","টঙ্গী"],"নারায়ণগঞ্জ": ["সিদ্ধিরগঞ্জ","বন্দর","ফতুল্লা","নারায়ণগঞ্জ সদর","আড়াইহাজার"],"টাঙ্গাইল": ["টাঙ্গাইল সদর","মধুপুর","নাগরপুর","দেলদুয়ার","কালিহাতী"],"কিশোরগঞ্জ": ["কিশোরগঞ্জ সদর","অষ্টগ্রাম","ইটনা","করিমগঞ্জ","ভৈরব"],"মানিকগঞ্জ": ["মানিকগঞ্জ সদর","সিঙ্গাইর","শিবালয়","হরিরামপুর","ঘিওর"],"মুন্সীগঞ্জ": ["মুন্সীগঞ্জ সদর","শ্রীনগর","টঙ্গীবাড়ী","লৌহজং","সিরাজদিখান"] } },
+            "চট্টগ্রাম": { districts: { "চট্টগ্রাম": ["কোতোয়ালী","পাহাড়তলী","বন্দর","চান্দগাঁও","ইপিজেড","সীতাকুণ্ড","মীরসরাই","পটিয়া","রাঙ্গুনিয়া","বাঁশখালী"],"কক্সবাজার": ["কক্সবাজার সদর","রামু","উখিয়া","টেকনাফ","চকরিয়া"],"কুমিল্লা": ["কুমিল্লা সদর","দেবিদ্বার","চৌদ্দগ্রাম","লাকসাম","নাঙ্গলকোট"],"ফেনী": ["ফেনী সদর","সোনাগাজী","পরশুরাম","দাগনভূঞা","ছাগলনাইয়া"],"ব্রাহ্মণবাড়িয়া": ["ব্রাহ্মণবাড়িয়া সদর","কসবা","নবীনগর","আখাউড়া","বাঞ্ছারামপুর"],"নোয়াখালী": ["নোয়াখালী সদর","বেগমগঞ্জ","চাটখিল","সোনাইমুড়ী","হাতিয়া"] } },
+            "রাজশাহী": { districts: { "রাজশাহী": ["রাজশাহী সদর","বোয়ালিয়া","পবা","গোদাগাড়ী","বাগমারা"],"বগুড়া": ["বগুড়া সদর","শেরপুর","ধুনট","গাবতলী","সোনাতলা"],"জয়পুরহাট": ["জয়পুরহাট সদর","কালাই","আক্কেলপুর","পাঁচবিবি"],"নওগাঁ": ["নওগাঁ সদর","পত্নীতলা","ধামইরহাট","মহাদেবপুর","রাণীনগর"],"নাটোর": ["নাটোর সদর","সিংড়া","বাগাতিপাড়া","লালপুর","গুরুদাসপুর"],"পাবনা": ["পাবনা সদর","ঈশ্বরদী","চাটমোহর","সাঁথিয়া","বেড়া"] } },
+            "খুলনা": { districts: { "খুলনা": ["খুলনা সদর","দৌলতপুর","সল্টানিয়া","পাইকগাছা","বটিয়াঘাটা"],"যশোর": ["যশোর সদর","ঝিকরগাছা","কেশবপুর","মণিরামপুর","অভয়নগর"],"ঝিনাইদহ": ["ঝিনাইদহ সদর","কালীগঞ্জ","কোটচাঁদপুর","মহেশপুর","শৈলকুপা"],"বাগেরহাট": ["বাগেরহাট সদর","মোল্লাহাট","ফকিরহাট","মোংলা","রামপাল"],"সাতক্ষীরা": ["সাতক্ষীরা সদর","কলারোয়া","তালা","দেবহাটা","আশাশুনি"],"কুষ্টিয়া": ["কুষ্টিয়া সদর","কুমারখালী","দৌলতপুর","মিরপুর","ভেড়ামারা"] } },
+            "সিলেট": { districts: { "সিলেট": ["সিলেট সদর","বিয়ানীবাজার","জৈন্তাপুর","গোয়াইনঘাট","কানাইঘাট"],"সুনামগঞ্জ": ["সুনামগঞ্জ সদর","দিরাই","জগন্নাথপুর","ছাতক","তাহিরপুর"],"হবিগঞ্জ": ["হবিগঞ্জ সদর","নবীগঞ্জ","বাহুবল","আজমিরীগঞ্জ","চুনারুঘাট"],"মৌলভীবাজার": ["মৌলভীবাজার সদর","কমলগঞ্জ","শ্রীমঙ্গল","বড়লেখা","রাজনগর"] } },
+            "রংপুর": { districts: { "রংপুর": ["রংপুর সদর","বদরগঞ্জ","পীরগঞ্জ","কাউনিয়া","পীরগাছা"],"দিনাজপুর": ["দিনাজপুর সদর","পার্বতীপুর","বিরামপুর","বোচাগঞ্জ","ফুলবাড়ী"],"কুড়িগ্রাম": ["কুড়িগ্রাম সদর","উলিপুর","নাগেশ্বরী","রাজারহাট","রৌমারী"],"গাইবান্ধা": ["গাইবান্ধা সদর","সুন্দরগঞ্জ","গোবিন্দগঞ্জ","পলাশবাড়ী","সাঘাটা"],"লালমনিরহাট": ["লালমনিরহাট সদর","কালিগঞ্জ","হাতীবান্ধা","আদিতমারী"],"নীলফামারী": ["নীলফামারী সদর","ডোমার","ডিমলা","জলঢাকা","কিশোরগঞ্জ"] } },
+            "বরিশাল": { districts: { "বরিশাল": ["বরিশাল সদর","বাংলাবাজার","হিজলা","মেহেন্দীগঞ্জ","বাকেরগঞ্জ"],"পটুয়াখালী": ["পটুয়াখালী সদর","কলাপাড়া","গলাচিপা","বাউফল","মির্জাগঞ্জ"],"ভোলা": ["ভোলা সদর","দৌলতখান","চরফ্যাশন","লালমোহন","মনপুরা"],"পিরোজপুর": ["পিরোজপুর সদর","নাজিরপুর","কাউখালী","মঠবাড়িয়া","ভান্ডারিয়া"],"বরগুনা": ["বরগুনা সদর","আমতলী","পাথরঘাটা","বেতাগী","বামনা"] } },
+            "ময়মনসিংহ": { districts: { "ময়মনসিংহ": ["ময়মনসিংহ সদর","ত্রিশাল","মুক্তাগাছা","গৌরীপুর","ফুলপুর"],"জামালপুর": ["জামালপুর সদর","মেলান্দহ","দেওয়ানগঞ্জ","বকশীগঞ্জ","সরিষাবাড়ী"],"শেরপুর": ["শেরপুর সদর","নালিতাবাড়ী","ঝিনাইগাতী","শ্রীবরদী","নকলা"],"নেত্রকোণা": ["নেত্রকোণা সদর","কেন্দুয়া","আটপাড়া","মদন","খালিয়াজুড়ী"] } }
+        };
+
         document.getElementById('checkoutModal').addEventListener('click', e => { if (e.target === e.currentTarget) closeCheckoutModal(); });
         document.getElementById('loginModal').addEventListener('click', e => { if (e.target === e.currentTarget) closeLoginModal(); });
         document.getElementById('profileModal').addEventListener('click', e => { if (e.target === e.currentTarget) closeProfileModal(); });
         document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeCheckoutModal();
                 closeLoginModal();
                 closeProfileModal();
+                closeAdminAccess();
+                closeAdminPanel();
                 document.getElementById('mobileNav').classList.remove('open'); } });
 
-        // ===== INITIALIZATION =====
         async function init() {
             await fetchProductsFromSheet();
+            fetchOrdersFromSheet().catch(() => {});
             if (productsLoaded) {
                 updateCartBadge();
                 updateNavProfile();
@@ -3041,7 +3663,6 @@
                 updateCartBadge();
                 updateNavProfile();
                 renderContactInfo();
-                // Keep empty grids - error banner will show
                 initSlideshow();
             }
         }
@@ -3049,4 +3670,4 @@
         init();
     </script>
 </body>
-    </html>
+</html>
