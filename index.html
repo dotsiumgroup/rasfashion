@@ -2,7 +2,7 @@
 <html lang="bn">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>RAS Fashion — সাশ্রয়ী বিউটি ও লাইফস্টাইল | Affordable Fashion Bangladesh</title>
     <meta name="description" content="বাংলাদেশের সেরা সাশ্রয়ী বিউটি, ফ্যাশন ও লাইফস্টাইল শপ। স্কিনকেয়ার, মেকআপ, জুয়েলারি, পোশাক — ক্যাশ অন ডেলিভারি।">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -180,6 +180,25 @@
             pointer-events: none;
             font-size: 0.7rem;
         }
+        /* Search button replacement */
+        .nav-search .search-submit {
+            position: absolute;
+            right: 0.3rem;
+            top: 50%;
+            transform: translateY(-50%);
+            background: transparent;
+            border: none;
+            color: var(--primary);
+            opacity: 0.5;
+            font-size: 0.7rem;
+            cursor: pointer;
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+            transition: opacity 0.15s;
+        }
+        .nav-search .search-submit:hover {
+            opacity: 1;
+        }
         .nav-links {
             display: none;
             align-items: center;
@@ -208,18 +227,40 @@
             align-items: center;
             gap: 0.3rem;
         }
-        .lang-btn {
-            padding: 0.18rem 0.45rem;
-            border: 1.5px solid var(--border);
-            border-radius: 5px;
-            font-size: 0.82rem;
-            font-weight: 700;
+        /* Wishlist button - now similar to cart button */
+        .wish-header-btn {
+            position: relative;
+            padding: 0.3rem;
+            border-radius: 7px;
             background: none;
-            transition: all 0.15s;
+            display: flex;
+            align-items: center;
+            color: var(--primary);
+            transition: background 0.15s;
             cursor: pointer;
+            font-size: 0.85rem;
+            border: none;
         }
-        .lang-btn:hover {
+        .wish-header-btn:hover {
             background: var(--muted);
+        }
+        .wish-header-btn .wish-count {
+            position: absolute;
+            top: -5px;
+            right: -6px;
+            background: var(--primary);
+            color: #fff;
+            font-size: 0.55rem;
+            font-weight: 700;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+        .wish-header-btn .wish-count.show {
+            display: flex;
         }
         .cart-btn {
             position: relative;
@@ -349,12 +390,34 @@
         }
         .mobile-nav-panel input {
             width: 100%;
-            padding: 0.5rem 0.8rem;
+            padding: 0.5rem 2rem 0.5rem 0.8rem;
             border: 1.5px solid var(--border);
             border-radius: 8px;
             font-size: 0.72rem;
             margin-bottom: 0.6rem;
             outline: none;
+            position: relative;
+        }
+        .mobile-nav-panel .mobile-search-wrap {
+            position: relative;
+        }
+        .mobile-nav-panel .mobile-search-submit {
+            position: absolute;
+            right: 0.4rem;
+            top: 50%;
+            transform: translateY(-50%);
+            background: transparent;
+            border: none;
+            color: var(--primary);
+            opacity: 0.5;
+            font-size: 0.7rem;
+            cursor: pointer;
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+            transition: opacity 0.15s;
+        }
+        .mobile-nav-panel .mobile-search-submit:hover {
+            opacity: 1;
         }
         .mobile-nav-panel a {
             display: block;
@@ -381,7 +444,6 @@
             font-weight: 600;
             margin-top: 0.4rem;
         }
-
         .page-back-btn {
             position: absolute;
             top: 8px;
@@ -407,7 +469,6 @@
             border-color: var(--primary);
             transform: scale(1.08);
         }
-
         .hero {
             background: linear-gradient(160deg, #fff0f5, #fff6fa, #fdf0f5);
             padding: 2rem 0.8rem;
@@ -516,7 +577,6 @@
                 opacity: 0.55;
             }
         }
-
         .section-title {
             font-size: 0.95rem;
             font-weight: 800;
@@ -574,7 +634,6 @@
             font-weight: 600;
             text-align: center;
         }
-
         .products-section {
             padding: 1.2rem 0;
         }
@@ -607,7 +666,6 @@
             max-width: 460px;
             margin: 0 auto;
         }
-
         .prod-card {
             border: 1px solid rgba(196, 30, 90, 0.05);
             border-radius: 10px;
@@ -699,8 +757,8 @@
             top: 6px;
             right: 6px;
             z-index: 3;
-            width: 25px;
-            height: 25px;
+            width: 28px;
+            height: 28px;
             border-radius: 50%;
             background: rgba(255, 255, 255, 0.9);
             border: none;
@@ -710,14 +768,22 @@
             box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
             transition: transform 0.2s;
             cursor: pointer;
+            font-size: 0.75rem;
             color: var(--muted-foreground);
-            font-size: 0.6rem;
         }
         .wish-btn:hover {
             transform: scale(1.15);
         }
         .wish-btn.wished {
             color: var(--primary);
+            background: var(--primary-10);
+        }
+        .wish-btn.wished i {
+            font-weight: 900;
+            color: var(--primary);
+        }
+        .wish-btn i {
+            transition: all 0.15s;
         }
         .prod-body {
             padding: 0.5rem;
@@ -783,7 +849,6 @@
             opacity: 0.5;
             cursor: not-allowed;
         }
-
         .trust-section {
             padding: 1.5rem 0;
         }
@@ -831,7 +896,6 @@
             font-size: 0.6rem;
             color: var(--muted-foreground);
         }
-
         .delivery-section {
             background: linear-gradient(to right, #fff5f8, #fde8f0, #fff5f8);
             padding: 1.3rem 0.8rem;
@@ -862,7 +926,6 @@
             color: var(--muted-foreground);
             margin-top: 0.1rem;
         }
-
         .service-section {
             padding: 1.5rem 0;
             background: var(--secondary);
@@ -922,7 +985,6 @@
             transform: scale(1.04);
             box-shadow: 0 4px 14px rgba(15, 76, 129, 0.3);
         }
-
         .social-section {
             background: linear-gradient(145deg, #fff5f8, #fde8f0);
             padding: 1.5rem 0.8rem;
@@ -967,7 +1029,6 @@
             background: #25D366;
             color: #fff;
         }
-
         footer {
             background: #fff;
             border-top: 1px solid rgba(196, 30, 90, 0.06);
@@ -991,6 +1052,7 @@
             font-weight: 700;
             color: var(--primary);
             font-size: 0.72rem;
+            cursor: pointer;
         }
         .footer-top .brand-mini img {
             width: 22px;
@@ -1066,7 +1128,37 @@
                 display: inline;
             }
         }
-
+        .admin-float {
+            position: fixed;
+            left: 0.7rem;
+            bottom: 1rem;
+            z-index: 200;
+            background: var(--primary);
+            color: #fff;
+            display: none;
+            align-items: center;
+            gap: 0.35rem;
+            padding: 0.45rem 0.8rem;
+            border-radius: 999px;
+            box-shadow: 0 4px 18px rgba(196, 30, 90, 0.3);
+            transition: transform 0.2s;
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+        }
+        .admin-float:hover {
+            transform: scale(1.05);
+        }
+        .admin-float span {
+            display: none;
+        }
+        @media(min-width:640px) {
+            .admin-float span {
+                display: inline;
+            }
+        }
         .modal-overlay {
             display: none;
             position: fixed;
@@ -1093,7 +1185,6 @@
             position: relative;
             box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
         }
-
         #checkoutModal .modal-full {
             max-width: 100%;
             width: 100%;
@@ -1101,7 +1192,6 @@
             max-height: 100vh;
             border-radius: 0;
         }
-
         .modal-sticky-header {
             position: sticky;
             top: 0;
@@ -1276,7 +1366,6 @@
             white-space: nowrap;
             font-size: 0.62rem;
         }
-
         .cart-item-row {
             display: flex;
             align-items: center;
@@ -1378,7 +1467,6 @@
             background: #fef2f2;
             border-color: var(--destructive);
         }
-
         .track-search-wrap {
             display: flex;
             gap: 0.3rem;
@@ -1540,7 +1628,6 @@
             font-weight: 600;
             font-size: 0.6rem;
         }
-
         .status-progress {
             display: flex;
             align-items: flex-start;
@@ -1628,7 +1715,6 @@
         .status-step.current .step-label {
             color: var(--primary);
         }
-
         .banner-slider {
             margin: 0.4rem 0.6rem 0;
         }
@@ -1681,7 +1767,6 @@
             background-color: var(--primary);
             transform: scale(1.2);
         }
-
         .banner-fashion-btn,
         .banner-pharma-btn {
             position: absolute;
@@ -1712,7 +1797,6 @@
             border-color: var(--primary);
             transform: scale(1.04);
         }
-
         .back-btn-img {
             position: absolute;
             top: 8px;
@@ -1738,17 +1822,92 @@
             border-color: var(--primary);
             transform: scale(1.08);
         }
-
+        /* Product detail page: two-column layout on desktop */
+        .product-detail-wrapper {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1rem;
+            padding: 1rem 0;
+        }
+        @media (min-width: 768px) {
+            .product-detail-wrapper {
+                grid-template-columns: 1fr 1fr;
+                gap: 2rem;
+                padding: 2rem 0;
+            }
+        }
+        .product-detail-image {
+            aspect-ratio: 3/4;
+            background: var(--pink-light);
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .product-detail-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+        .product-detail-info {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        .product-detail-info h1 {
+            font-size: 0.95rem;
+            font-weight: 800;
+        }
+        .product-detail-info .desc {
+            color: var(--primary);
+            font-weight: 600;
+            font-size: 0.7rem;
+        }
+        .product-detail-info .price-block {
+            font-size: 1.2rem;
+            font-weight: 900;
+            color: var(--primary);
+        }
+        .product-detail-info .price-block .orig {
+            font-size: 0.7rem;
+            text-decoration: line-through;
+            color: var(--muted-foreground);
+        }
+        .product-detail-info .price-block .discount-badge {
+            background: var(--destructive);
+            color: #fff;
+            padding: 0.15rem 0.4rem;
+            border-radius: 5px;
+            font-size: 0.6rem;
+            margin-left: 0.3rem;
+        }
+        .product-detail-info .tags {
+            display: flex;
+            gap: 0.2rem;
+            flex-wrap: wrap;
+        }
+        .product-detail-info .tags span {
+            background: var(--primary-10);
+            color: var(--primary);
+            padding: 0.08rem 0.4rem;
+            border-radius: 4px;
+            font-size: 0.55rem;
+        }
+        .product-detail-info .actions {
+            display: flex;
+            gap: 0.4rem;
+            flex-wrap: wrap;
+        }
         .product-detail-info-block {
             background: #fdf9fb;
             border: 1px solid rgba(196, 30, 90, 0.06);
             border-radius: 8px;
             padding: 0.5rem 0.6rem;
-            margin-top: 0.5rem;
             font-size: 0.58rem;
             color: var(--muted-foreground);
             line-height: 1.5;
-            position: relative;
         }
         .product-detail-info-block strong {
             color: var(--foreground);
@@ -1768,7 +1927,23 @@
             border-radius: 4px;
             font-size: 0.55rem;
         }
-        .stock-contact-wa {
+        .product-detail-info .delivery-box {
+            background: var(--secondary);
+            border-radius: 8px;
+            padding: 0.5rem;
+            font-size: 0.62rem;
+        }
+        .product-detail-info .delivery-box div {
+            margin: 0.15rem 0;
+        }
+        .related-products {
+            margin-top: 1.5rem;
+        }
+        .related-products h2 {
+            font-size: 0.8rem;
+            font-weight: 800;
+        }
+        .product-detail-info-block .stock-contact-wa {
             color: var(--green);
             font-size: 0.6rem;
             font-weight: 600;
@@ -1777,7 +1952,6 @@
             align-items: center;
             gap: 0.2rem;
         }
-
         .address-toggle-box {
             border: 1.5px dashed var(--border);
             border-radius: 8px;
@@ -1813,7 +1987,6 @@
         .address-edit-panel.open {
             display: block;
         }
-
         .delivery-payment-box {
             background: #fff5f8;
             border: 2px solid var(--primary);
@@ -1842,7 +2015,6 @@
             font-size: 0.65rem;
             border: 1px dashed #c9a135;
         }
-
         .global-loader {
             position: fixed;
             top: 0;
@@ -1878,7 +2050,6 @@
             font-weight: 600;
             color: var(--primary);
         }
-
         .inline-loader {
             display: inline-flex;
             align-items: center;
@@ -1897,7 +2068,6 @@
             border-radius: 50%;
             animation: spin 0.7s linear infinite;
         }
-
         .error-banner-overlay {
             display: none;
             position: fixed;
@@ -1972,7 +2142,6 @@
             color: var(--muted-foreground);
             margin-top: 0.5rem;
         }
-
         .toast {
             position: fixed;
             bottom: 3.5rem;
@@ -2001,7 +2170,6 @@
         .toast.error {
             background: var(--destructive);
         }
-
         .filter-btn {
             padding: 0.2rem 0.5rem;
             border-radius: 6px;
@@ -2023,7 +2191,6 @@
             border-color: var(--primary);
             font-weight: 700;
         }
-
         .order-items-summary {
             background: #fffbfc;
             border: 1px solid rgba(196, 30, 90, 0.1);
@@ -2065,7 +2232,6 @@
             white-space: nowrap;
             font-size: 0.55rem;
         }
-
         @media(max-width:600px) {
             .form-row {
                 grid-template-columns: 1fr;
@@ -2109,7 +2275,6 @@
                 right: 4px;
             }
         }
-
         .shimmer {
             background: linear-gradient(90deg, #f0e8ec 25%, #fdf6f9 50%, #f0e8ec 75%);
             background-size: 200% 100%;
@@ -2198,38 +2363,147 @@
         .admin-order-detail.show {
             display: block;
         }
-        .admin-action-btns {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.3rem;
-            margin-top: 0.6rem;
-        }
-        .admin-action-btn {
-            background: var(--secondary);
-            border: 1px solid var(--border);
-            padding: 0.25rem 0.7rem;
+        /* New admin action button */
+        .admin-action-btn-single {
+            background: var(--primary);
+            color: #fff;
+            border: none;
+            padding: 0.3rem 0.8rem;
             border-radius: 6px;
             font-size: 0.6rem;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.15s;
             white-space: nowrap;
+            margin-top: 0.5rem;
         }
-        .admin-action-btn:hover {
-            background: var(--primary-light);
-            border-color: var(--primary);
+        .admin-action-btn-single:hover {
+            background: var(--primary-hover);
+            transform: scale(1.03);
+        }
+        .footer-modal .modal-full {
+            max-width: 500px;
+            height: auto;
+            max-height: 80vh;
+        }
+        .footer-modal .modal-scroll-body {
+            padding: 0.8rem 1.2rem 1.5rem;
+        }
+        .footer-modal .modal-scroll-body h3 {
+            font-size: 0.85rem;
+            font-weight: 800;
             color: var(--primary);
+            margin-bottom: 0.5rem;
         }
-        .admin-action-btn.danger {
-            border-color: #fecaca;
-            color: var(--destructive);
+        .footer-modal .modal-scroll-body p {
+            font-size: 0.65rem;
+            line-height: 1.6;
+            color: var(--muted-foreground);
         }
-        .admin-action-btn.danger:hover {
-            background: #fef2f2;
+        .footer-modal .modal-scroll-body ul {
+            font-size: 0.65rem;
+            line-height: 1.6;
+            color: var(--muted-foreground);
+            padding-left: 1.2rem;
+            margin: 0.4rem 0;
+        }
+        .footer-modal .modal-scroll-body ul li {
+            margin-bottom: 0.2rem;
+        }
+        .wishlist-page .page-back-btn {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            z-index: 10;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.9);
+            border: 1.5px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 0.75rem;
+            color: var(--primary);
+            transition: all 0.2s;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+        }
+        .wishlist-page .page-back-btn:hover {
+            background: var(--primary);
+            color: #fff;
+            border-color: var(--primary);
+            transform: scale(1.08);
+        }
+        .wishlist-empty {
+            text-align: center;
+            padding: 2.5rem 1rem;
+        }
+        .wishlist-empty .empty-icon {
+            font-size: 3rem;
+            margin-bottom: 0.5rem;
+        }
+        .wishlist-empty h2 {
+            font-size: 0.9rem;
+            font-weight: 800;
+        }
+        .wishlist-empty p {
+            font-size: 0.68rem;
+            color: var(--muted-foreground);
+            margin-bottom: 1rem;
+        }
+        .toggle-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+        /* Admin action modal */
+        .admin-action-modal .modal-full {
+            max-width: 480px;
+            height: auto;
+            max-height: 85vh;
+        }
+        .admin-action-modal .modal-scroll-body {
+            padding: 1rem 1.2rem 1.5rem;
+        }
+        .admin-action-modal .modal-scroll-body .action-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.3rem;
+            margin-bottom: 0.6rem;
+        }
+        .admin-action-modal .modal-scroll-body .action-group label {
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+            font-size: 0.65rem;
+            cursor: pointer;
+        }
+        .admin-action-modal .modal-scroll-body .action-group input[type="radio"] {
+            margin: 0;
+            flex-shrink: 0;
+        }
+        .admin-action-modal .modal-scroll-body .action-group input[type="checkbox"] {
+            margin: 0;
+            flex-shrink: 0;
+        }
+        .admin-action-modal .modal-scroll-body .note-group textarea {
+            width: 100%;
+            padding: 0.4rem;
+            border: 1.5px solid var(--border);
+            border-radius: 6px;
+            font-size: 0.6rem;
+            resize: vertical;
+            min-height: 50px;
+        }
+        .admin-action-modal .modal-scroll-body .submit-btn {
+            width: 100%;
+            margin-top: 0.6rem;
         }
     </style>
 </head>
 <body>
+    <!-- Existing HTML structure unchanged except where noted -->
     <div class="global-loader" id="globalLoader">
         <div class="spinner"></div>
         <div class="loader-text">✨ RAS Fashion লোড হচ্ছে...</div>
@@ -2248,7 +2522,11 @@
     <nav class="navbar">
         <div class="inner">
             <a class="nav-logo" onclick="navigate('home')"><img src="https://i.imgur.com/XfScOKb.png" alt="RAS Fashion"><span>RAS Fashion</span></a>
-            <div class="nav-search"><i class="fas fa-search search-icon"></i><input type="text" id="navSearch" placeholder="পণ্য খুঁজুন..." oninput="handleNavSearch(this.value)" onkeypress="if(event.key==='Enter')doSearch()"></div>
+            <div class="nav-search">
+                <i class="fas fa-search search-icon"></i>
+                <input type="text" id="navSearch" placeholder="পণ্য খুঁজুন..." oninput="handleNavSearch(this.value)" onkeypress="if(event.key==='Enter')doSearch()">
+                <button class="search-submit" onclick="doSearch()"><i class="fas fa-search"></i></button>
+            </div>
             <div class="nav-links">
                 <a class="nav-link active" id="nl-home" onclick="navigate('home')">হোম</a>
                 <a class="nav-link" id="nl-shop" onclick="navigate('shop')">শপ</a>
@@ -2256,7 +2534,10 @@
                 <a class="nav-link" id="nl-track" onclick="navigate('track')">অর্ডার ট্র্যাক</a>
             </div>
             <div class="nav-right">
-                <button class="lang-btn" onclick="toggleLang()">EN</button>
+                <div class="toggle-wrapper">
+                    <!-- Wishlist button styled like cart button -->
+                    <button class="wish-header-btn" onclick="navigate('wishlist')" id="wishHeaderBtn" title="পছন্দের তালিকা"><i class="fas fa-heart"></i><span class="wish-count" id="wishHeaderCount">0</span></button>
+                </div>
                 <button class="cart-btn" onclick="navigate('cart')"><i class="fas fa-shopping-cart"></i><span class="cart-badge" id="cartBadge" style="display:none">0</span></button>
                 <button class="login-btn" id="loginBtnNav" onclick="openLoginModal()">লগইন</button>
                 <button class="mobile-search-btn" onclick="toggleMobileSearch()"><i class="fas fa-search"></i></button>
@@ -2267,11 +2548,15 @@
     </nav>
     <div class="mobile-nav" id="mobileNav" onclick="closeMobileMenu(event)">
         <div class="mobile-nav-panel">
-            <input type="text" placeholder="পণ্য খুঁজুন..." id="mobileSearchInput" oninput="handleNavSearch(this.value)" onkeypress="if(event.key==='Enter'){doSearch();toggleMobileMenu()}">
+            <div class="mobile-search-wrap">
+                <input type="text" placeholder="পণ্য খুঁজুন..." id="mobileSearchInput" oninput="handleNavSearch(this.value)" onkeypress="if(event.key==='Enter'){doSearch();toggleMobileMenu()}">
+                <button class="mobile-search-submit" onclick="doSearch();toggleMobileMenu()"><i class="fas fa-search"></i></button>
+            </div>
             <a onclick="navigate('home')" id="mnl-home" class="active">🏠 হোম</a>
             <a onclick="navigate('shop')" id="mnl-shop">🛍️ শপ</a>
             <a onclick="navigate('contact')" id="mnl-contact">📞 যোগাযোগ</a>
             <a onclick="navigate('track')" id="mnl-track">📦 অর্ডার ট্র্যাক</a>
+            <a onclick="navigate('wishlist')" id="mnl-wishlist">❤️ পছন্দের তালিকা</a>
             <a class="login-mobile" id="mobileLoginLink" onclick="openLoginModal();document.getElementById('mobileNav').classList.remove('open')">লগইন / সাইনআপ</a>
         </div>
     </div>
@@ -2305,7 +2590,7 @@
         </div>
 
         <div class="page" id="page-shop">
-            <button class="page-back-btn" onclick="navigate('home')" title="হোমে ফিরুন"><i class="fas fa-arrow-left"></i></button>
+            <button class="page-back-btn" onclick="navigateBack()" title="পূর্বের পৃষ্ঠায় ফিরুন"><i class="fas fa-arrow-left"></i></button>
             <div style="background:var(--secondary);padding:1.2rem 0;margin-bottom:0.8rem;"><div class="container"><h1 style="font-size:0.95rem;font-weight:800;">🛍️ সব পণ্য</h1><p style="font-size:0.65rem;color:var(--muted-foreground);" id="shopCount">মোট পণ্য লোড হচ্ছে...</p></div></div>
             <div class="container" style="padding-bottom:2rem;">
                 <div style="position:relative;margin-bottom:0.5rem;"><i class="fas fa-search" style="position:absolute;left:0.55rem;top:50%;transform:translateY(-50%);color:var(--primary);opacity:0.45;font-size:0.65rem;"></i><input type="text" id="shopSearch" placeholder="পণ্য খুঁজুন..." oninput="filterProducts()" style="padding-left:1.8rem;width:100%;padding:0.4rem 0.5rem 0.4rem 1.8rem;border:1.5px solid var(--border);border-radius:7px;font-size:0.68rem;"></div>
@@ -2318,7 +2603,7 @@
         <div class="page" id="page-product"><div class="container" id="productDetailContent" style="padding-bottom:2rem;"></div></div>
 
         <div class="page" id="page-cart">
-            <button class="page-back-btn" onclick="navigate('home')" title="হোমে ফিরুন"><i class="fas fa-arrow-left"></i></button>
+            <button class="page-back-btn" onclick="navigateBack()" title="পূর্বের পৃষ্ঠায় ফিরুন"><i class="fas fa-arrow-left"></i></button>
             <div class="container" style="padding:1.2rem 0;">
                 <h1 style="font-size:0.95rem;font-weight:800;margin-bottom:0.7rem;">🛒 আমার কার্ট</h1>
                 <div id="cartEmpty" style="display:none;text-align:center;padding:2rem;"><div style="font-size:2.5rem;">🛒</div><h2 style="font-size:0.85rem;">কার্ট খালি</h2><p style="font-size:0.68rem;">পছন্দের পণ্য যোগ করুন</p><a onclick="navigate('shop')" class="btn-primary" style="margin:0 auto;">শপিং করুন</a></div>
@@ -2330,7 +2615,7 @@
         </div>
 
         <div class="page" id="page-contact">
-            <button class="page-back-btn" onclick="navigate('home')" title="হোমে ফিরুন"><i class="fas fa-arrow-left"></i></button>
+            <button class="page-back-btn" onclick="navigateBack()" title="পূর্বের পৃষ্ঠায় ফিরুন"><i class="fas fa-arrow-left"></i></button>
             <div class="container" style="padding:1.5rem 0;max-width:550px;margin:0 auto;">
                 <h1 style="font-size:0.95rem;font-weight:800;color:var(--primary);">যোগাযোগ করুন 📞</h1>
                 <p style="color:var(--muted-foreground);margin-bottom:1rem;font-size:0.68rem;">আমরা সর্বদা আপনার সাহায্যের জন্য প্রস্তুত</p>
@@ -2347,7 +2632,7 @@
         </div>
 
         <div class="page" id="page-track">
-            <button class="page-back-btn" onclick="navigate('home')" title="হোমে ফিরুন"><i class="fas fa-arrow-left"></i></button>
+            <button class="page-back-btn" onclick="navigateBack()" title="পূর্বের পৃষ্ঠায় ফিরুন"><i class="fas fa-arrow-left"></i></button>
             <div class="container" style="padding:1.5rem 0;max-width:620px;margin:0 auto;">
                 <div style="background:linear-gradient(145deg,#fff5f8,#fde8f0);border-radius:14px;padding:1.2rem;text-align:center;margin-bottom:1rem;"><h1 style="font-size:0.95rem;font-weight:800;">📦 অর্ডার ট্র্যাক</h1><p style="font-size:0.68rem;color:var(--muted-foreground);">অর্ডার আইডি, ফোন নম্বর অথবা লগইন আইডি লিখুন</p></div>
                 <div style="background:var(--card);border:1px solid var(--border);border-radius:10px;padding:0.8rem;">
@@ -2359,21 +2644,35 @@
                 <div id="trackResult" style="margin-top:0.7rem;display:none;"></div>
             </div>
         </div>
+
+        <div class="page" id="page-wishlist">
+            <button class="page-back-btn" onclick="navigateBack()" title="পূর্বের পৃষ্ঠায় ফিরুন"><i class="fas fa-arrow-left"></i></button>
+            <div class="container" style="padding:1.2rem 0;">
+                <h1 style="font-size:0.95rem;font-weight:800;margin-bottom:0.7rem;">❤️ আমার পছন্দের তালিকা</h1>
+                <div id="wishlistGrid" class="prod-grid" style="margin-top:0.5rem;"></div>
+                <div id="wishlistEmpty" style="display:none;" class="wishlist-empty">
+                    <div class="empty-icon">💔</div>
+                    <h2>পছন্দের তালিকা খালি</h2>
+                    <p>পণ্যের উপরে হৃদয় আইকনে চাপ দিয়ে আপনার পছন্দের পণ্য যুক্ত করুন</p>
+                    <a onclick="navigate('shop')" class="btn-primary" style="margin:0 auto;">শপিং শুরু করুন</a>
+                </div>
+            </div>
+        </div>
     </main>
 
     <footer>
         <div class="container">
             <div class="footer-top">
-                <span class="brand-mini"><img src="https://i.imgur.com/iyGw6Lh.png" alt="RAS"> RAS Fashion</span>
+                <span class="brand-mini" onclick="scrollToTop()"><img src="https://i.imgur.com/iyGw6Lh.png" alt="RAS"> RAS Fashion</span>
                 <span class="sep">|</span>
                 <a onclick="navigate('home')">হোম</a>
                 <a onclick="navigate('shop')">শপ</a>
                 <a onclick="navigate('track')">অর্ডার ট্র্যাক</a>
                 <a onclick="navigate('contact')">যোগাযোগ</a>
                 <span class="sep">|</span>
-                <a>শর্তাবলী</a>
-                <a>গোপনীয়তা নীতি</a>
-                <a>রিটার্ন পলিসি</a>
+                <a onclick="openFooterModal('terms')">শর্তাবলী</a>
+                <a onclick="openFooterModal('privacy')">গোপনীয়তা নীতি</a>
+                <a onclick="openFooterModal('return')">রিটার্ন পলিসি</a>
             </div>
             <div class="footer-info">
                 <span>📍 Dhamrai, Dhaka, Bangladesh</span>
@@ -2389,6 +2688,7 @@
     </footer>
 
     <a href="https://wa.me/8801567901178" target="_blank" class="wa-float"><i class="fab fa-whatsapp"></i><span>চ্যাট করুন</span></a>
+    <button class="admin-float" id="adminFloatBtn" onclick="openAdminAccess()"><i class="fas fa-shield-alt"></i><span>এডমিন</span></button>
 
     <div class="modal-overlay" id="checkoutModal">
         <div class="modal-full">
@@ -2398,6 +2698,22 @@
     </div>
     <div class="modal-overlay" id="loginModal"><div class="modal-full" style="max-width:400px;height:auto;max-height:80vh;"><div class="modal-sticky-header"><h2>👤 লগইন</h2><button class="modal-close-btn" onclick="closeLoginModal()">✕</button></div><div class="modal-scroll-body"><div class="form-group"><label class="form-label">আপনার নাম *</label><input type="text" class="form-input" id="loginName" placeholder="আপনার পুরো নাম"></div><div class="form-group"><label class="form-label">ফোন নম্বর / ইমেইল *</label><input type="text" class="form-input" id="loginUser" placeholder="01XXXXXXXXX বা email"></div><div class="form-group"><label class="form-label">পাসওয়ার্ড *   <b>(যেমন: 1234 লিখুন)</b></label><input type="password" class="form-input" id="loginPass" placeholder="পাসওয়ার্ড"></div><button class="btn-primary" style="width:100%;" onclick="doLogin()">লগইন</button><p style="text-align:center;font-size:0.58rem;color:var(--muted-foreground);margin-top:0.3rem;">নতুন অ্যাকাউন্ট? তথ্য দিয়ে লগইন করলেই হয়ে যাবে।</p></div></div></div>
     <div class="modal-overlay" id="profileModal"><div class="modal-full" style="max-width:460px;height:auto;max-height:85vh;"><div class="modal-sticky-header"><h2>👤 আমার প্রোফাইল</h2><button class="modal-close-btn" onclick="closeProfileModal()">✕</button></div><div class="modal-scroll-body" id="profileModalBody"><div class="inline-loader"><div class="spinner-small"></div> লোড হচ্ছে...</div></div></div></div>
+
+    <div class="modal-overlay footer-modal" id="footerModal">
+        <div class="modal-full">
+            <div class="modal-sticky-header"><h2 id="footerModalTitle">শর্তাবলী</h2><button class="modal-close-btn" onclick="closeFooterModal()">✕</button></div>
+            <div class="modal-scroll-body" id="footerModalBody"></div>
+        </div>
+    </div>
+
+    <!-- Admin Action Modal -->
+    <div class="modal-overlay admin-action-modal" id="adminActionModal">
+        <div class="modal-full">
+            <div class="modal-sticky-header"><h2>⚙️ অর্ডার আপডেট</h2><button class="modal-close-btn" onclick="closeAdminActionModal()">✕</button></div>
+            <div class="modal-scroll-body" id="adminActionModalBody"></div>
+        </div>
+    </div>
+
     <div class="toast" id="toast"></div>
 
     <script>
@@ -2430,6 +2746,11 @@
         let ordersLoaded = false;
         let adminAccessGranted = false;
         let adminOrders = [];
+        let adminAccessExpiry = null;
+        let pageScrollPositions = {};
+        let navigationStack = [];
+        let backPressCount = 0;
+        let backPressTimer = null;
 
         const CATEGORIES = ['Cosmetics', 'Skincare', 'Haircare', 'Fragrance', 'Jewelry', 'Clothing'];
         const CAT_LABELS = { Cosmetics: 'কসমেটিকস', Skincare: 'স্কিনকেয়ার', Haircare: 'হেয়ারকেয়ার', Fragrance: 'সুগন্ধি', Jewelry: 'জুয়েলারি', Clothing: 'পোশাক' };
@@ -2610,6 +2931,18 @@
             return data;
         }
 
+        // New: update multiple status columns and note
+        async function updateOrderStatusFull(orderId, updates) {
+            const payload = {
+                action: 'updateOrderStatusFull',
+                orderId: orderId,
+                updates: updates
+            };
+            const data = await apiPost(GOOGLE_SHEETS_ORDER_API_URL, payload);
+            if (!data.ok) throw new Error(data.error || 'Status update failed');
+            return data;
+        }
+
         function showErrorBanner() {
             document.getElementById('errorBannerOverlay').classList.add('show');
             document.getElementById('retryCountText').textContent =
@@ -2681,7 +3014,7 @@
             if (!document.getElementById('checkoutModal').classList.contains('open') &&
                 !document.getElementById('loginModal').classList.contains('open') &&
                 !document.getElementById('profileModal').classList.contains('open') &&
-                !document.getElementById('adminAccessModal').classList.contains('open')) {
+                !document.getElementById('adminAccessModal')?.classList.contains('open')) {
                 document.body.classList.remove('modal-open');
             }
         }
@@ -2705,6 +3038,33 @@
                     mobileLogin.onclick = function() { openLoginModal();
                         document.getElementById('mobileNav').classList.remove('open'); }; }
             }
+            updateAdminFloat();
+        }
+
+        function updateAdminFloat() {
+            const adminFloat = document.getElementById('adminFloatBtn');
+            if (currentUser) {
+                const phone = String(currentUser.phone || '').replace(/[০-৯]/g, d => String.fromCharCode(d.charCodeAt(0) - 2504)).trim();
+                const adminPhones = ['01788922078', '01788922078'];
+                if (adminPhones.includes(phone) || adminPhones.includes(currentUser.phone)) {
+                    adminFloat.style.display = 'flex';
+                } else {
+                    adminFloat.style.display = 'none';
+                }
+            } else {
+                adminFloat.style.display = 'none';
+            }
+        }
+
+        function updateWishCount() {
+            const count = wishlist.length;
+            const badge = document.getElementById('wishHeaderCount');
+            if (count > 0) {
+                badge.textContent = count;
+                badge.classList.add('show');
+            } else {
+                badge.classList.remove('show');
+            }
         }
 
         function createProductCard(product, extraClass = '') {
@@ -2724,7 +3084,7 @@
                 ${discount>0?`<span class="discount-badge-card">-${discount}%</span>`:''}
                 <span class="stock-badge-card ${stockClass}">${stockLabel}</span>
               </div>
-              <button class="wish-btn ${isWished?'wished':''}" onclick="toggleWish(event,'${product.id}')"><i class="far fa-heart"></i></button>
+              <button class="wish-btn ${isWished?'wished':''}" onclick="toggleWish(event,'${product.id}')"><i class="${isWished?'fas':'far'} fa-heart"></i></button>
               <div class="prod-body"><div class="prod-name">${product.name}</div><div class="prod-desc">${product.desc}</div>
                 <div class="prod-footer"><div><span class="prod-price">৳${product.price.toLocaleString('bn-BD')}</span>${product.originalPrice?`<span class="prod-price-orig">৳${product.originalPrice.toLocaleString('bn-BD')}</span>`:''}</div>
                   <button class="add-cart-btn" onclick="addToCart(event,'${product.id}')" ${!product.inStock?'disabled':''}>${!product.inStock?'স্টক শেষ':'কার্টে যোগ'}</button></div></div></div>`;
@@ -2805,6 +3165,15 @@
             filterProducts(); }
 
         function navigate(page, productId) {
+            if (page === 'home' && currentPage === 'home') {
+                scrollToTop();
+                return;
+            }
+            const prevPage = currentPage;
+            // Save scroll position only for home
+            if (prevPage && prevPage !== page && prevPage === 'home') {
+                saveScrollPosition(prevPage);
+            }
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
             const el = document.getElementById('page-' + page); if (el) el.classList.add('active');
             window.scrollTo(0, 0);
@@ -2813,15 +3182,35 @@
             const navMap = { home: 'nl-home', shop: 'nl-shop', contact: 'nl-contact', track: 'nl-track' };
             const navEl = document.getElementById(navMap[page]); if (navEl) navEl.classList.add('active');
             document.querySelectorAll('.mobile-nav-panel a[class]').forEach(a => a.classList.remove('active'));
-            const mnlMap = { home: 'mnl-home', shop: 'mnl-shop', contact: 'mnl-contact', track: 'mnl-track' };
+            const mnlMap = { home: 'mnl-home', shop: 'mnl-shop', contact: 'mnl-contact', track: 'mnl-track', wishlist: 'mnl-wishlist' };
             const mnlEl = document.getElementById(mnlMap[page]); if (mnlEl) mnlEl.classList.add('active');
             document.getElementById('mobileNav').classList.remove('open');
             if (page === 'shop') renderShop();
             if (page === 'cart') renderCart();
             if (page === 'product' && productId) renderProductDetail(productId);
             if (page === 'home') { renderHomeProducts();
-                initSlideshow(); }
+                initSlideshow();
+                // Restore home scroll position if any
+                restoreScrollPosition('home'); }
             if (page === 'contact') renderContactInfo();
+            if (page === 'wishlist') renderWishlist();
+            if (prevPage && prevPage !== page) {
+                if (!navigationStack.includes(prevPage)) {
+                    navigationStack.push(prevPage);
+                }
+            }
+            // No automatic scroll restore for other pages
+        }
+
+        function navigateBack() {
+            if (navigationStack.length > 0) {
+                const prev = navigationStack.pop();
+                // Save only home
+                if (currentPage === 'home') saveScrollPosition(currentPage);
+                navigate(prev);
+            } else {
+                navigate('home');
+            }
         }
 
         function navigateShopCategory(cat) { filterCategory = cat;
@@ -2838,18 +3227,21 @@
             const shortName = p.nameEn || p.name || 'P';
             const initials = shortName.split(' ').map(w => w.charAt(0)).join('').substring(0, 2).toUpperCase();
             document.getElementById('productDetailContent').innerHTML = `
-            <div style="display:grid;grid-template-columns:1fr;gap:0.8rem;padding:1rem 0;">
-              <div style="aspect-ratio:3/4;background:var(--pink-light);border-radius:14px;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;">
-                <button class="back-btn-img" onclick="navigate('home')" title="হোমে ফিরুন"><i class="fas fa-arrow-left"></i></button>
-                ${hasImage ? `<img src="${p.image}" alt="${p.name}" style="width:100%;height:100%;object-fit:contain;" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">` : ''}
+            <div class="product-detail-wrapper">
+              <div class="product-detail-image">
+                <button class="back-btn-img" onclick="navigateBack()" title="পূর্বের পৃষ্ঠায় ফিরুন"><i class="fas fa-arrow-left"></i></button>
+                ${hasImage ? `<img src="${p.image}" alt="${p.name}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">` : ''}
                 <span style="display:${hasImage ? 'none' : 'flex'};align-items:center;justify-content:center;font-size:2rem;width:100%;height:100%;color:var(--muted-foreground);background:var(--pink-light);font-weight:700;">${initials}</span>
               </div>
-              <div>
-                <h1 style="font-size:0.95rem;font-weight:800;">${p.name}</h1>
-                <p style="color:var(--primary);font-weight:600;font-size:0.7rem;">${p.desc}</p>
-                <div style="font-size:1.2rem;font-weight:900;color:var(--primary);">৳${p.price.toLocaleString('bn-BD')} ${p.originalPrice?`<span style="font-size:0.7rem;text-decoration:line-through;color:var(--muted-foreground);">৳${p.originalPrice.toLocaleString('bn-BD')}</span><span style="background:var(--destructive);color:#fff;padding:0.15rem 0.4rem;border-radius:5px;font-size:0.6rem;">-${discount}%</span>`:''}</div>
-                <div style="display:flex;gap:0.2rem;margin:0.4rem 0;">${p.tags.map(t=>`<span style="background:var(--primary-10);color:var(--primary);padding:0.08rem 0.4rem;border-radius:4px;font-size:0.55rem;">${t}</span>`).join('')}</div>
-                <div style="display:flex;gap:0.4rem;flex-wrap:wrap;">
+              <div class="product-detail-info">
+                <h1>${p.name}</h1>
+                <div class="desc">${p.desc}</div>
+                <div class="price-block">
+                  ৳${p.price.toLocaleString('bn-BD')}
+                  ${p.originalPrice ? `<span class="orig">৳${p.originalPrice.toLocaleString('bn-BD')}</span><span class="discount-badge">-${discount}%</span>` : ''}
+                </div>
+                <div class="tags">${p.tags.map(t=>`<span>${t}</span>`).join('')}</div>
+                <div class="actions">
                   <button class="btn-primary" onclick="addToCartFromDetail()" ${!p.inStock?'disabled':''}>${p.inStock?'কার্টে যোগ করুন':'স্টক শেষ'}</button>
                   ${p.inStock?`<button style="background:none;border:2px solid var(--primary);color:var(--primary);padding:0.5rem 1.2rem;border-radius:8px;font-weight:700;font-size:0.7rem;" onclick="buyNow('${p.id}')">⚡ এখনই অর্ডার</button>`:''}
                 </div>
@@ -2861,9 +3253,13 @@
                   ${p.specs.length?`<div class="info-row"><strong>📏 স্পেসিফিকেশন:</strong> <span>${p.specs.join(' | ')}</span></div>`:''}
                   <div class="info-row"><strong>📝 বিস্তারিত:</strong> <span>${p.description}</span></div>
                 </div>
-                <div style="background:var(--secondary);border-radius:8px;padding:0.5rem;margin-top:0.5rem;font-size:0.62rem;"><div>🚚 ঢাকায় ৳৬০ | বাইরে ৳১২০</div><div>💳 ক্যাশ অন ডেলিভারি</div></div>
-              </div></div>
-            ${similar.length?`<div style="margin-top:1.5rem;"><h2 style="font-size:0.8rem;font-weight:800;">সম্পর্কিত পণ্য</h2><div class="prod-grid-4">${similar.map(p=>createProductCard(p)).join('')}</div></div>`:''}`;
+                <div class="delivery-box">
+                  <div>🚚 ঢাকায় ৳৬০ | বাইরে ৳১২০</div>
+                  <div>💳 ক্যাশ অন ডেলিভারি</div>
+                </div>
+              </div>
+            </div>
+            ${similar.length?`<div class="related-products"><h2>সম্পর্কিত পণ্য</h2><div class="prod-grid-4">${similar.map(p=>createProductCard(p)).join('')}</div></div>`:''}`;
         }
 
         function addToCartFromDetail() {
@@ -2950,10 +3346,12 @@
             if (!selected || !numberDisplay || !numberText || !txnGroup) return;
             const method = selected.value;
             let phoneNumber = '';
-            if (method === 'nagad' || method === 'bkash') {
+            if (method === 'nagad' || method === 'upay') {
+                phoneNumber = '01921996424';
+            } else if (method === 'bkash') {
                 phoneNumber = '01921996424';
             } else if (method === 'rocket') {
-                phoneNumber = '01567901178';
+                phoneNumber = '019630945064';
             }
             numberText.textContent = method.toUpperCase() + ' — ' + phoneNumber;
             numberDisplay.style.display = 'block';
@@ -2988,6 +3386,7 @@
                         <label class="payment-method" style="cursor:pointer;"><input type="radio" name="deliveryPayment" value="nagad" onchange="updateDeliveryPaymentMethod()"> নগদ</label>
                         <label class="payment-method" style="cursor:pointer;"><input type="radio" name="deliveryPayment" value="bkash" onchange="updateDeliveryPaymentMethod()"> বিকাশ</label>
                         <label class="payment-method" style="cursor:pointer;"><input type="radio" name="deliveryPayment" value="rocket" onchange="updateDeliveryPaymentMethod()"> রকেট</label>
+                        <label class="payment-method" style="cursor:pointer;"><input type="radio" name="deliveryPayment" value="upay" onchange="updateDeliveryPaymentMethod()"> উপায়</label>
                     </div>
                 </div>
                 <div class="delivery-number-display" id="deliveryPaymentNumber">
@@ -3158,17 +3557,47 @@
         }
 
         function buildStatusProgress(order) {
+            // Cancelled check based on statusConfirmed === 'FALSE'
             if (order.cancelled) {
                 return `<div style="text-align:center;padding:0.5rem;background:#fef2f2;border-radius:6px;color:var(--destructive);font-weight:700;font-size:0.65rem;">❌ এই অর্ডারটি বাতিল করা হয়েছে</div>`;
             }
-            const idx = order.statusIndex || 0;
+            // Status index: 0 = order received (always done), 1 = confirmed, 2 = packaging, 3 = shipped, 4 = delivered
             const STEPS = ['অর্ডার প্রাপ্তি', 'অর্ডার কনফার্ম', 'প্যাকেজিং', 'ডেলিভারির জন্য পাঠানো', 'ডেলিভারি সম্পন্ন'];
             let h = '<div class="status-progress">';
             for (let i = 0; i < STEPS.length; i++) {
-                let cls = i < idx ? 'completed' : i === idx ? 'current' : 'pending';
-                h += `<div class="status-step ${cls}"><div class="step-circle">${i<idx?'✔':(i===idx?'●':i+1)}</div><div class="step-line"></div><span class="step-label">${STEPS[i]}</span></div>`;
+                let cls = 'pending';
+                let displayNum = i + 1;
+                if (i === 0) {
+                    cls = 'completed'; // Always completed
+                } else if (i === 1 && order.statusConfirmed === 'DONE') {
+                    cls = 'completed';
+                } else if (i === 2 && order.statusPackaging === 'DONE') {
+                    cls = 'completed';
+                } else if (i === 3 && order.statusShipped === 'DONE') {
+                    cls = 'completed';
+                } else if (i === 4 && order.statusDelivered === 'DONE') {
+                    cls = 'completed';
+                }
+                // Current step: the first non-completed step
+                if (cls === 'pending' && i !== 0) {
+                    // Check if previous step is completed
+                    let prevCompleted = false;
+                    if (i === 1) prevCompleted = true; // step0 always completed
+                    else if (i === 2) prevCompleted = order.statusConfirmed === 'DONE';
+                    else if (i === 3) prevCompleted = order.statusPackaging === 'DONE';
+                    else if (i === 4) prevCompleted = order.statusShipped === 'DONE';
+                    if (prevCompleted) cls = 'current';
+                }
+                // For step0, always completed
+                if (i === 0) cls = 'completed';
+                h += `<div class="status-step ${cls}"><div class="step-circle">${cls === 'completed' ? '✔' : (cls === 'current' ? '●' : i+1)}</div><div class="step-line"></div><span class="step-label">${STEPS[i]}</span></div>`;
             }
-            return h + '</div>';
+            h += '</div>';
+            // Display note if exists
+            if (order.note) {
+                h += `<div style="font-size:0.52rem;color:var(--muted-foreground);background:#f5f2f4;padding:0.3rem;border-radius:4px;margin-top:0.3rem;">📝 নোট: ${order.note}</div>`;
+            }
+            return h;
         }
 
         function parseItemsSummary(summary) {
@@ -3235,10 +3664,10 @@
                     </div>
                     <div class="order-row-detail" id="${did}">
                         <div style="text-align:center;padding:0.8rem;background:#fef2f2;border-radius:6px;color:var(--destructive);font-weight:700;font-size:0.7rem;">
-                            ❌ অর্ডারটি ক্যান্সেল করা হয়েছে
+                            ❌ অর্ডারটি বাতিল করা হয়েছে
                         </div>
                         <div style="text-align:center;font-size:0.62rem;margin-top:0.4rem;">
-                            <p>পুনরায় অর্ডারটি চালু করতে চাইলে <a href="https://wa.me/8801567901178" target="_blank" style="color:var(--primary);text-decoration:underline;"><i class="fab fa-whatsapp"></i> WhatsApp</a> এ যোগাযোগ করুন।</p>
+                            <p>পুনরায় অর্ডারটি সক্রিয় করতে <a href="https://wa.me/8801567901178" target="_blank" style="color:var(--primary);text-decoration:underline;"><i class="fab fa-whatsapp"></i> WhatsApp</a> এ যোগাযোগ করুন।</p>
                         </div>
                     </div>
                 </div>`;
@@ -3346,9 +3775,26 @@
         function goToRASPharma() { showToast('RAS PHARMA শীঘ্রই আসছে!', 'success');
             window.open('https://demo-ras-pharma.com', '_blank'); }
 
-        function toggleWish(event, id) { event.stopPropagation(); const idx = wishlist.indexOf(id); if (idx > -1) wishlist.splice(idx, 1);
-            else wishlist.push(id);
-            localStorage.setItem('ras_wish', JSON.stringify(wishlist)); }
+        function toggleWish(event, id) {
+            event.stopPropagation();
+            const idx = wishlist.indexOf(id);
+            if (idx > -1) {
+                wishlist.splice(idx, 1);
+            } else {
+                wishlist.push(id);
+            }
+            localStorage.setItem('ras_wish', JSON.stringify(wishlist));
+            updateWishCount();
+            const btn = event.currentTarget;
+            const isWished = wishlist.includes(id);
+            btn.classList.toggle('wished', isWished);
+            btn.innerHTML = `<i class="${isWished ? 'fas' : 'far'} fa-heart"></i>`;
+            if (currentPage === 'wishlist') {
+                renderWishlist();
+            }
+            if (currentPage === 'home' || currentPage === 'shop' || currentPage === 'product') {
+            }
+        }
 
         function addToCart(event, id) { event.stopPropagation(); const p = products.find(x => x.id === id); if (!p || !p.inStock) return; const existing = cart.find(c => c.id === id); if (existing) existing.qty = Math.min(existing.qty + 1, 10);
             else cart.push({ id, qty: 1 });
@@ -3385,12 +3831,6 @@
 
         function openProfileModal() {
             if (!currentUser) { openLoginModal(); return; }
-            const adminPhones = ['01788922078', '০১৭৮৮৯২২০৭৮'];
-            const phoneNormalized = String(currentUser.phone || '').replace(/[০-৯]/g, d => String.fromCharCode(d.charCodeAt(0) - 2504)).trim();
-            if (adminPhones.includes(currentUser.phone) || adminPhones.includes(phoneNormalized)) {
-                openAdminAccess();
-                return;
-            }
             lockBodyScroll();
             document.getElementById('profileModal').classList.add('open');
             const addr = currentUser.savedAddress;
@@ -3463,13 +3903,33 @@
             updateNavProfile();
             closeProfileModal();
             showToast('👋 লগআউট');
-            adminAccessGranted = false; }
+            adminAccessGranted = false;
+            adminAccessExpiry = null;
+            localStorage.removeItem('ras_admin_expiry'); }
 
-        function toggleLang() { showToast('English coming soon!'); }
         function handleNavSearch(val) { searchQuery = val.toLowerCase(); }
-        function doSearch() { navigate('shop');
-            setTimeout(() => { const inp = document.getElementById('shopSearch'); if (inp) { inp.value = document.getElementById('navSearch')?.value || '';
-                    filterProducts(); } }, 100); }
+        function doSearch() {
+            if (document.getElementById('mobileNav').classList.contains('open')) {
+                document.getElementById('mobileNav').classList.remove('open');
+            }
+            // Close keyboard by blurring active element
+            if (document.activeElement) {
+                document.activeElement.blur();
+            }
+            navigate('shop');
+            setTimeout(() => {
+                const inp = document.getElementById('shopSearch');
+                if (inp) {
+                    inp.value = document.getElementById('navSearch')?.value || document.getElementById('mobileSearchInput')?.value ||
+                        '';
+                    filterProducts();
+                }
+                // Ensure keyboard is closed
+                if (document.activeElement) {
+                    document.activeElement.blur();
+                }
+            }, 150);
+        }
 
         function showToast(msg, type = '') { const t = document.getElementById('toast');
             t.textContent = msg;
@@ -3477,8 +3937,116 @@
             clearTimeout(window.toastTimer);
             window.toastTimer = setTimeout(() => t.classList.remove('show'), 3000); }
 
-        // Admin Panel Functions
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Only home page scroll is saved
+        function saveScrollPosition(page) {
+            if (page === 'home') {
+                pageScrollPositions[page] = window.scrollY;
+            }
+        }
+
+        function restoreScrollPosition(page) {
+            if (page === 'home') {
+                const pos = pageScrollPositions[page] || 0;
+                setTimeout(() => {
+                    window.scrollTo({ top: pos, behavior: 'auto' });
+                }, 50);
+            }
+        }
+
+        function openFooterModal(type) {
+            const modal = document.getElementById('footerModal');
+            const title = document.getElementById('footerModalTitle');
+            const body = document.getElementById('footerModalBody');
+            const content = {
+                terms: {
+                    title: '📜 শর্তাবলী',
+                    body: `
+                    <h3>শর্তাবলী ও ব্যবহারের নিয়ম</h3>
+                    <p>RAS Fashion এ আপনাকে স্বাগতম। আমাদের সাইট ব্যবহার করার পূর্বে নিম্নলিখিত শর্তাবলী পড়ে নিন:</p>
+                    <ul>
+                        <li>সাইটের সকল পণ্যের তথ্য সঠিক এবং নির্ভরযোগ্য।</li>
+                        <li>অর্ডার দেওয়ার আগে পণ্যের বিবরণ ও দাম ভালোভাবে যাচাই করুন।</li>
+                        <li>ক্যাশ অন ডেলিভারি পদ্ধতিতে পণ্য হাতে পেয়ে দাম পরিশোধ করুন।</li>
+                        <li>ডেলিভারি চার্জ পরিশোধের পর পণ্য ডেলিভারি দেওয়া হবে।</li>
+                        <li>অর্ডার কনফার্মেশনের পর কোনো পরিবর্তন করতে চাইলে দ্রুত আমাদের জানান।</li>
+                        <li>পণ্য সরবরাহের সময় অপ্রত্যাশিত বিলম্ব হতে পারে।</li>
+                        <li>ব্যবহারকারী হিসেবে আপনি সঠিক তথ্য প্রদানের জন্য দায়ী।</li>
+                    </ul>
+                    <p>এই শর্তাবলী যে কোনো সময় পরিবর্তন করা হতে পারে।</p>
+                `
+                },
+                privacy: {
+                    title: '🔒 গোপনীয়তা নীতি',
+                    body: `
+                    <h3>গোপনীয়তা নীতি</h3>
+                    <p>আমরা আপনার ব্যক্তিগত তথ্যের গোপনীয়তা রক্ষা করতে প্রতিশ্রুতিবদ্ধ:</p>
+                    <ul>
+                        <li>আপনার নাম, ফোন নম্বর, ইমেইল এবং ঠিকানা শুধুমাত্র অর্ডার প্রক্রিয়াকরণের জন্য ব্যবহার করা হয়।</li>
+                        <li>আপনার তথ্য কোনো তৃতীয় পক্ষের সাথে শেয়ার করা হয় না।</li>
+                        <li>পেমেন্ট সংক্রান্ত তথ্য নিরাপদে সংরক্ষণ করা হয়।</li>
+                        <li>আপনার পছন্দের তালিকা (wishlist) এবং কার্ট তথ্য আপনার ডিভাইসে স্থানীয়ভাবে সংরক্ষিত হয়।</li>
+                        <li>আমরা আপনার ডেটা সুরক্ষার জন্য সর্বোচ্চ নিরাপত্তা ব্যবস্থা গ্রহণ করি।</li>
+                        <li>যেকোনো প্রশ্ন বা উদ্বেগ থাকলে আমাদের সাথে যোগাযোগ করুন।</li>
+                    </ul>
+                `
+                },
+                return: {
+                    title: '🔄 রিটার্ন পলিসি',
+                    body: `
+                    <h3>রিটার্ন ও রিপ্লেসমেন্ট নীতি</h3>
+                    <p>আমরা আপনার সন্তুষ্টি নিশ্চিত করতে চাই। নিম্নলিখিত শর্তে রিটার্ন বা রিপ্লেসমেন্ট গ্রহণ করা হয়:</p>
+                    <ul>
+                        <li>পণ্য হাতে পাওয়ার ৩ দিনের মধ্যে যেকোনো সমস্যা জানালে রিটার্ন করা যাবে।</li>
+                        <li>পণ্যের সাথে যদি কোনো ত্রুটি বা ক্ষতি থাকে, তবে তা ফেরত দেওয়া যাবে।</li>
+                        <li>পণ্য অবশ্যই তার মূল প্যাকেজিং এবং অবস্থায় থাকতে হবে।</li>
+                        <li>ব্যবহার করা বা খোলা পণ্য সাধারণত রিটার্ন করা যায় না।</li>
+                        <li>কাস্টমারকে ডেলিভারি চার্জ বহন করতে হতে পারে।</li>
+                        <li>রিটার্ন অনুরোধ আমাদের সাথে যোগাযোগ করে নিশ্চিত করতে হবে।</li>
+                        <li>আমরা আপনার সন্তুষ্টির জন্য সর্বদা চেষ্টা করি।</li>
+                    </ul>
+                    <p>রিটার্ন বা রিপ্লেসমেন্টের জন্য <strong>WhatsApp: +880 1567-901178</strong> এ যোগাযোগ করুন।</p>
+                `
+                }
+            };
+            const data = content[type];
+            if (!data) return;
+            title.textContent = data.title;
+            body.innerHTML = data.body;
+            modal.classList.add('open');
+            lockBodyScroll();
+        }
+
+        function closeFooterModal() {
+            document.getElementById('footerModal').classList.remove('open');
+            unlockBodyScroll();
+        }
+
+        function renderWishlist() {
+            const grid = document.getElementById('wishlistGrid');
+            const empty = document.getElementById('wishlistEmpty');
+            const wishItems = products.filter(p => wishlist.includes(p.id));
+            if (wishItems.length) {
+                grid.innerHTML = wishItems.map(p => createProductCard(p)).join('');
+                empty.style.display = 'none';
+                grid.style.display = 'grid';
+            } else {
+                grid.innerHTML = '';
+                empty.style.display = 'block';
+                grid.style.display = 'none';
+            }
+            updateWishCount();
+        }
+
+        // ===== ADMIN PANEL FUNCTIONS =====
         function openAdminAccess() {
+            if (adminAccessGranted && adminAccessExpiry && Date.now() < adminAccessExpiry) {
+                openAdminPanel();
+                return;
+            }
             const modal = document.getElementById('adminAccessModal');
             if (!modal) {
                 const overlay = document.createElement('div');
@@ -3511,6 +4079,8 @@
             const pwd = document.getElementById('adminPassword').value.trim();
             if (pwd === 'ADMIN@RASFASHION-435') {
                 adminAccessGranted = true;
+                adminAccessExpiry = Date.now() + 15 * 24 * 60 * 60 * 1000;
+                localStorage.setItem('ras_admin_expiry', String(adminAccessExpiry));
                 closeAdminAccess();
                 openAdminPanel();
             } else {
@@ -3519,7 +4089,17 @@
         }
 
         async function openAdminPanel() {
-            if (!adminAccessGranted) { openAdminAccess(); return; }
+            if (!adminAccessGranted) {
+                const savedExpiry = localStorage.getItem('ras_admin_expiry');
+                if (savedExpiry && Date.now() < parseInt(savedExpiry)) {
+                    adminAccessGranted = true;
+                    adminAccessExpiry = parseInt(savedExpiry);
+                } else {
+                    openAdminAccess();
+                    return;
+                }
+            }
+            if (!adminAccessGranted) return;
             document.body.classList.add('modal-open');
             const overlay = document.getElementById('adminPanelOverlay');
             if (overlay) overlay.remove();
@@ -3591,13 +4171,8 @@
                 ${o.deliveryPaymentMethod ? `<div style="font-size:0.55rem;">🚚 ডেলিভারি: ${o.deliveryPaymentMethod.toUpperCase()} — ৳${o.deliveryAmount||0} (TXN: ${o.transactionId||''})</div>` : ''}
                 ${o.promoCode ? `<div style="font-size:0.55rem;">🎫 প্রোমো: ${o.promoCode} (-${o.promoDiscount||0}%)</div>` : ''}
                 ${buildStatusProgress(o)}
-                <div class="admin-action-btns">
-                    <button class="admin-action-btn" onclick="adminAction('${o.orderId}',9,'${o.statusConfirmed}')">অর্ডার কনফার্ম</button>
-                    <button class="admin-action-btn danger" onclick="adminAction('${o.orderId}',9,'FALSE')">অর্ডার বাতিল</button>
-                    <button class="admin-action-btn" onclick="adminAction('${o.orderId}',10,'${o.statusPackaging}')">প্যাকেজিং সম্পন্ন</button>
-                    <button class="admin-action-btn" onclick="adminAction('${o.orderId}',11,'${o.statusShipped}')">অর্ডার পাঠানো</button>
-                    <button class="admin-action-btn" onclick="adminAction('${o.orderId}',12,'${o.statusDelivered}')">অর্ডার পৌঁছেছে</button>
-                </div>`;
+                <button class="admin-action-btn-single" onclick="openAdminActionModal('${o.orderId}')">⚙️ অ্যাকশন</button>
+                `;
 
                 return `
                 <div class="admin-order-row">
@@ -3613,22 +4188,155 @@
             }).join('');
         }
 
-        async function adminAction(orderId, column, currentValue) {
-            let value;
-            if (column === 9) { // Confirm / Cancel
-                value = currentValue === 'DONE' ? '' : 'DONE';
+        let adminActionOrderId = null;
+
+        function openAdminActionModal(orderId) {
+            adminActionOrderId = orderId;
+            const modal = document.getElementById('adminActionModal');
+            const body = document.getElementById('adminActionModalBody');
+            // Find current order to pre-fill
+            const order = adminOrders.find(o => o.orderId === orderId);
+            const confirmChecked = order && order.statusConfirmed === 'DONE' ? 'checked' : '';
+            const cancelChecked = order && order.statusConfirmed === 'FALSE' ? 'checked' : '';
+            const packagingChecked = order && order.statusPackaging === 'DONE' ? 'checked' : '';
+            const shippedChecked = order && order.statusShipped === 'DONE' ? 'checked' : '';
+            const deliveredChecked = order && order.statusDelivered === 'DONE' ? 'checked' : '';
+            const note = order ? (order.note || '') : '';
+
+            body.innerHTML = `
+            <div style="margin-bottom:0.5rem;">
+                <p style="font-size:0.7rem;font-weight:600;">অর্ডার আইডি: <span style="color:var(--primary);">${orderId}</span></p>
+            </div>
+            <div class="action-group">
+                <label><input type="radio" name="adminStatus" value="confirm" ${confirmChecked} onchange="toggleAdminStatusOptions()"> অর্ডার কনফার্ম</label>
+                <label><input type="radio" name="adminStatus" value="cancel" ${cancelChecked} onchange="toggleAdminStatusOptions()"> অর্ডার বাতিল</label>
+            </div>
+            <div class="action-group" id="adminStatusOptions" style="${confirmChecked ? '' : 'opacity:0.5;pointer-events:none;'}">
+                <label><input type="checkbox" id="adminPackaging" ${packagingChecked}> প্যাকেজিং সম্পন্ন</label>
+                <label><input type="checkbox" id="adminShipped" ${shippedChecked}> পণ্য প্রেরণ করা হয়েছে</label>
+                <label><input type="checkbox" id="adminDelivered" ${deliveredChecked}> ডেলিভারি সম্পন্ন হয়েছে</label>
+            </div>
+            <div class="note-group">
+                <label class="form-label">নোট</label>
+                <textarea id="adminNote" placeholder="নোট লিখুন...">${note}</textarea>
+            </div>
+            <button class="btn-primary submit-btn" onclick="submitAdminAction()">আপডেট করুন</button>
+            `;
+            modal.classList.add('open');
+            lockBodyScroll();
+        }
+
+        function closeAdminActionModal() {
+            document.getElementById('adminActionModal').classList.remove('open');
+            unlockBodyScroll();
+        }
+
+        function toggleAdminStatusOptions() {
+            const confirmRadio = document.querySelector('input[name="adminStatus"][value="confirm"]');
+            const options = document.getElementById('adminStatusOptions');
+            if (confirmRadio && confirmRadio.checked) {
+                options.style.opacity = '1';
+                options.style.pointerEvents = 'auto';
             } else {
-                value = currentValue === 'DONE' ? '' : 'DONE';
+                options.style.opacity = '0.5';
+                options.style.pointerEvents = 'none';
+                // Uncheck checkboxes when cancel is selected
+                document.getElementById('adminPackaging').checked = false;
+                document.getElementById('adminShipped').checked = false;
+                document.getElementById('adminDelivered').checked = false;
             }
+        }
+
+        async function submitAdminAction() {
+            const orderId = adminActionOrderId;
+            if (!orderId) return;
+            const statusRadio = document.querySelector('input[name="adminStatus"]:checked');
+            if (!statusRadio) { showToast('অর্ডার কনফার্ম বা বাতিল নির্বাচন করুন', 'error'); return; }
+            const isConfirm = statusRadio.value === 'confirm';
+            const isCancel = statusRadio.value === 'cancel';
+            const packaging = document.getElementById('adminPackaging').checked;
+            const shipped = document.getElementById('adminShipped').checked;
+            const delivered = document.getElementById('adminDelivered').checked;
+            const note = document.getElementById('adminNote').value.trim();
+
+            let updates = {};
+
+            if (isCancel) {
+                updates.confirmed = 'FALSE';
+                updates.packaging = '';
+                updates.shipped = '';
+                updates.delivered = '';
+            } else {
+                updates.confirmed = 'DONE';
+                updates.packaging = packaging ? 'DONE' : '';
+                updates.shipped = shipped ? 'DONE' : '';
+                updates.delivered = delivered ? 'DONE' : '';
+            }
+            updates.note = note;
+
             try {
-                await updateOrderStatus(orderId, column, value);
-                showToast('✅ স্ট্যাটাস আপডেট হয়েছে', 'success');
-                loadAdminOrders(); // refresh
+                await updateOrderStatusFull(orderId, updates);
+                showToast('✅ অর্ডার আপডেট সফল', 'success');
+                closeAdminActionModal();
+                // Reload admin panel
+                await loadAdminOrders();
             } catch (err) {
                 showToast('❌ আপডেট ব্যর্থ: ' + err.message, 'error');
             }
         }
 
+        // ===== BACK BUTTON HANDLING =====
+        function handleBackButton(e) {
+            const anyModal = document.querySelector('.modal-overlay.open, #adminPanelOverlay');
+            if (anyModal) {
+                if (document.getElementById('checkoutModal').classList.contains('open')) {
+                    closeCheckoutModal();
+                } else if (document.getElementById('loginModal').classList.contains('open')) {
+                    closeLoginModal();
+                } else if (document.getElementById('profileModal').classList.contains('open')) {
+                    closeProfileModal();
+                } else if (document.getElementById('footerModal').classList.contains('open')) {
+                    closeFooterModal();
+                } else if (document.getElementById('adminAccessModal')?.classList.contains('open')) {
+                    closeAdminAccess();
+                } else if (document.getElementById('adminPanelOverlay')) {
+                    closeAdminPanel();
+                } else if (document.getElementById('adminActionModal').classList.contains('open')) {
+                    closeAdminActionModal();
+                }
+                e.preventDefault();
+                return;
+            }
+            if (document.getElementById('mobileNav').classList.contains('open')) {
+                document.getElementById('mobileNav').classList.remove('open');
+                e.preventDefault();
+                return;
+            }
+            if (currentPage === 'home') {
+                if (backPressCount === 0) {
+                    backPressCount++;
+                    showToast('🔙 আবার চাপ দিলে ওয়েবসাইট থেকে বের হবে', '');
+                    if (backPressTimer) clearTimeout(backPressTimer);
+                    backPressTimer = setTimeout(() => { backPressCount = 0; }, 1000);
+                    e.preventDefault();
+                    return;
+                } else if (backPressCount >= 1) {
+                    if (backPressTimer) clearTimeout(backPressTimer);
+                    backPressCount = 0;
+                    return;
+                }
+            } else {
+                if (navigationStack.length > 0) {
+                    e.preventDefault();
+                    navigateBack();
+                } else {
+                    e.preventDefault();
+                    navigate('home');
+                }
+            }
+        }
+
+        // ===== BD DATA =====
         const BD_DATA = {
             "ঢাকা": { districts: { "ঢাকা": ["গুলশান","মিরপুর","উত্তরা","ধানমন্ডি","মতিঝিল","সাভার","কেরানীগঞ্জ","নবাবগঞ্জ","দোহার","ধামরাই"],"গাজীপুর": ["গাজীপুর সদর","কালিয়াকৈর","কাপাসিয়া","শ্রীপুর","টঙ্গী"],"নারায়ণগঞ্জ": ["সিদ্ধিরগঞ্জ","বন্দর","ফতুল্লা","নারায়ণগঞ্জ সদর","আড়াইহাজার"],"টাঙ্গাইল": ["টাঙ্গাইল সদর","মধুপুর","নাগরপুর","দেলদুয়ার","কালিহাতী"],"কিশোরগঞ্জ": ["কিশোরগঞ্জ সদর","অষ্টগ্রাম","ইটনা","করিমগঞ্জ","ভৈরব"],"মানিকগঞ্জ": ["মানিকগঞ্জ সদর","সিঙ্গাইর","শিবালয়","হরিরামপুর","ঘিওর"],"মুন্সীগঞ্জ": ["মুন্সীগঞ্জ সদর","শ্রীনগর","টঙ্গীবাড়ী","লৌহজং","সিরাজদিখান"] } },
             "চট্টগ্রাম": { districts: { "চট্টগ্রাম": ["কোতোয়ালী","পাহাড়তলী","বন্দর","চান্দগাঁও","ইপিজেড","সীতাকুণ্ড","মীরসরাই","পটিয়া","রাঙ্গুনিয়া","বাঁশখালী"],"কক্সবাজার": ["কক্সবাজার সদর","রামু","উখিয়া","টেকনাফ","চকরিয়া"],"কুমিল্লা": ["কুমিল্লা সদর","দেবিদ্বার","চৌদ্দগ্রাম","লাকসাম","নাঙ্গলকোট"],"ফেনী": ["ফেনী সদর","সোনাগাজী","পরশুরাম","দাগনভূঞা","ছাগলনাইয়া"],"ব্রাহ্মণবাড়িয়া": ["ব্রাহ্মণবাড়িয়া সদর","কসবা","নবীনগর","আখাউড়া","বাঞ্ছারামপুর"],"নোয়াখালী": ["নোয়াখালী সদর","বেগমগঞ্জ","চাটখিল","সোনাইমুড়ী","হাতিয়া"] } },
@@ -3640,163 +4348,166 @@
             "ময়মনসিংহ": { districts: { "ময়মনসিংহ": ["ময়মনসিংহ সদর","ত্রিশাল","মুক্তাগাছা","গৌরীপুর","ফুলপুর"],"জামালপুর": ["জামালপুর সদর","মেলান্দহ","দেওয়ানগঞ্জ","বকশীগঞ্জ","সরিষাবাড়ী"],"শেরপুর": ["শেরপুর সদর","নালিতাবাড়ী","ঝিনাইগাতী","শ্রীবরদী","নকলা"],"নেত্রকোণা": ["নেত্রকোণা সদর","কেন্দুয়া","আটপাড়া","মদন","খালিয়াজুড়ী"] } }
         };
 
+        // ===== EVENT LISTENERS & INIT =====
         document.getElementById('checkoutModal').addEventListener('click', e => { if (e.target === e.currentTarget) closeCheckoutModal(); });
         document.getElementById('loginModal').addEventListener('click', e => { if (e.target === e.currentTarget) closeLoginModal(); });
         document.getElementById('profileModal').addEventListener('click', e => { if (e.target === e.currentTarget) closeProfileModal(); });
+        document.getElementById('footerModal').addEventListener('click', e => { if (e.target === e.currentTarget) closeFooterModal(); });
+        document.getElementById('adminActionModal').addEventListener('click', e => { if (e.target === e.currentTarget) closeAdminActionModal(); });
         document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeCheckoutModal();
                 closeLoginModal();
                 closeProfileModal();
                 closeAdminAccess();
                 closeAdminPanel();
+                closeFooterModal();
+                closeAdminActionModal();
                 document.getElementById('mobileNav').classList.remove('open'); } });
 
+        document.addEventListener('popstate', handleBackButton);
+
+        // Clear home scroll on page refresh/unload
+        window.addEventListener('beforeunload', function() {
+            delete pageScrollPositions['home'];
+        });
+
         async function init() {
+            const savedExpiry = localStorage.getItem('ras_admin_expiry');
+            if (savedExpiry && Date.now() < parseInt(savedExpiry)) {
+                adminAccessGranted = true;
+                adminAccessExpiry = parseInt(savedExpiry);
+            }
             await fetchProductsFromSheet();
             fetchOrdersFromSheet().catch(() => {});
             if (productsLoaded) {
                 updateCartBadge();
                 updateNavProfile();
+                updateWishCount();
                 renderHomeProducts();
                 renderContactInfo();
                 initSlideshow();
             } else {
                 updateCartBadge();
                 updateNavProfile();
+                updateWishCount();
                 renderContactInfo();
                 initSlideshow();
             }
+            if (!navigationStack.includes('home')) {
+                navigationStack.push('home');
+            }
+            // Ensure home starts at top on fresh load
+            window.scrollTo(0, 0);
         }
 
         init();
     </script>
-            <script>
-(function() {
-    // ========== 1. SCROLL LOCK FIX (মডাল বন্ধে স্ক্রল আনলক) ==========
-    function forceResetScrollLock() {
-        // body থেকে modal-open ক্লাস ও যেকোনো ইনলাইন স্টাইল সরান
-        document.body.classList.remove('modal-open');
-        document.body.style.removeProperty('overflow');
-        document.body.style.removeProperty('position');
-        document.body.style.removeProperty('width');
-        document.body.style.removeProperty('height');
-        // html ট্যাগ থেকেও সরান (নিরাপত্তার জন্য)
-        document.documentElement.style.removeProperty('overflow');
-        document.documentElement.style.removeProperty('position');
-        document.documentElement.style.removeProperty('width');
-        document.documentElement.style.removeProperty('height');
-    }
+    <script>
+        (function() {
+            function forceResetScrollLock() {
+                document.body.classList.remove('modal-open');
+                document.body.style.removeProperty('overflow');
+                document.body.style.removeProperty('position');
+                document.body.style.removeProperty('width');
+                document.body.style.removeProperty('height');
+                document.documentElement.style.removeProperty('overflow');
+                document.documentElement.style.removeProperty('position');
+                document.documentElement.style.removeProperty('width');
+                document.documentElement.style.removeProperty('height');
+            }
 
-    // MutationObserver ব্যবহার করে সব মডালের '.open' ক্লাস রিমুভ হলে ফোর্স আনলক করব
-    function watchModalsForClose() {
-        const modalOverlays = document.querySelectorAll('.modal-overlay');
-        modalOverlays.forEach(modal => {
-            // আগের observer থাকলে সরান (নতুন করে যুক্ত করব)
-            if (modal._scrollObserver) modal._scrollObserver.disconnect();
-            const observer = new MutationObserver((mutations) => {
-                mutations.forEach((mutation) => {
-                    if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
-                        // যদি 'open' ক্লাস না থাকে → মডাল বন্ধ
-                        if (!modal.classList.contains('open')) {
-                            forceResetScrollLock();
-                        }
-                    }
+            function watchModalsForClose() {
+                const modalOverlays = document.querySelectorAll('.modal-overlay');
+                modalOverlays.forEach(modal => {
+                    if (modal._scrollObserver) modal._scrollObserver.disconnect();
+                    const observer = new MutationObserver((mutations) => {
+                        mutations.forEach((mutation) => {
+                            if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
+                                if (!modal.classList.contains('open')) {
+                                    forceResetScrollLock();
+                                }
+                            }
+                        });
+                    });
+                    observer.observe(modal, { attributes: true });
+                    modal._scrollObserver = observer;
                 });
+            }
+
+            function observeNewModals() {
+                const observer = new MutationObserver(() => {
+                    watchModalsForClose();
+                });
+                observer.observe(document.body, { childList: true, subtree: true });
+            }
+
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') {
+                    setTimeout(forceResetScrollLock, 100);
+                }
             });
-            observer.observe(modal, { attributes: true });
-            modal._scrollObserver = observer;
-        });
-    }
 
-    // ডায়নামিকভাবে তৈরি হওয়া মডালগুলোর জন্যও ওয়াচ করতে থাকব (যেমন অ্যাডমিন প্যানেল)
-    function observeNewModals() {
-        const observer = new MutationObserver(() => {
+            document.addEventListener('click', function(e) {
+                if (e.target && e.target.classList && e.target.classList.contains('modal-overlay')) {
+                    setTimeout(forceResetScrollLock, 150);
+                }
+            });
+
             watchModalsForClose();
-        });
-        observer.observe(document.body, { childList: true, subtree: true });
-    }
+            observeNewModals();
 
-    // এসকেপ কী প্রেস করলেও যেন স্ক্রল লক রিসেট হয়
-    document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape') {
-            setTimeout(forceResetScrollLock, 100);
-        }
-    });
-
-    // মডালের ব্যাকগ্রাউন্ড ক্লিক করলেও স্ক্রল রিসেট (ডিফল্ট ক্লোজ সুইচ করে)
-    document.addEventListener('click', function(e) {
-        if (e.target && e.target.classList && e.target.classList.contains('modal-overlay')) {
-            setTimeout(forceResetScrollLock, 150);
-        }
-    });
-
-    // সব মডাল ওয়াচ শুরু
-    watchModalsForClose();
-    observeNewModals();
-
-    // ========== 2. DISABLE ZOOM (ওয়েবসাইট জুম ব্লক) ==========
-    // মেটা ভিউপোর্ট আপডেট: user-scalable=no এবং maximum-scale=1
-    function updateMetaForZoom() {
-        let viewportMeta = document.querySelector('meta[name="viewport"]');
-        if (viewportMeta) {
-            let content = viewportMeta.getAttribute('content') || '';
-            // প্রয়োজনীয় প্রপার্টি যোগ/আপডেট
-            let newContent = content
-                .replace(/user-scalable\s*=\s*[^\s,]+/gi, 'user-scalable=no')
-                .replace(/maximum-scale\s*=\s*[^\s,]+/gi, 'maximum-scale=1.0');
-            if (!/user-scalable/i.test(newContent)) newContent += ', user-scalable=no';
-            if (!/maximum-scale/i.test(newContent)) newContent += ', maximum-scale=1.0';
-            viewportMeta.setAttribute('content', newContent);
-        } else {
-            // না থাকলে নতুন মেটা তৈরি করুন
-            const meta = document.createElement('meta');
-            meta.name = 'viewport';
-            meta.content = 'width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0';
-            document.head.appendChild(meta);
-        }
-    }
-
-    // CSS দিয়ে টাচ-অ্যাকশন নিয়ন্ত্রণ (পিঞ্চ জুম আরো ব্লক)
-    function addZoomBlockCSS() {
-        const style = document.createElement('style');
-        style.textContent = `
-            /* সম্পূর্ণ সাইটে জুম ব্লক */
-            html, body {
-                touch-action: pan-x pan-y !important;
+            function updateMetaForZoom() {
+                let viewportMeta = document.querySelector('meta[name="viewport"]');
+                if (viewportMeta) {
+                    let content = viewportMeta.getAttribute('content') || '';
+                    let newContent = content
+                        .replace(/user-scalable\s*=\s*[^\s,]+/gi, 'user-scalable=no')
+                        .replace(/maximum-scale\s*=\s*[^\s,]+/gi, 'maximum-scale=1.0');
+                    if (!/user-scalable/i.test(newContent)) newContent += ', user-scalable=no';
+                    if (!/maximum-scale/i.test(newContent)) newContent += ', maximum-scale=1.0';
+                    viewportMeta.setAttribute('content', newContent);
+                } else {
+                    const meta = document.createElement('meta');
+                    meta.name = 'viewport';
+                    meta.content = 'width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0';
+                    document.head.appendChild(meta);
+                }
             }
-            /* কোনো এলিমেন্ট যেন জুম না করতে পারে */
-            * {
-                touch-action: pan-x pan-y !important;
-            }
-        `;
-        document.head.appendChild(style);
-    }
 
-    // অতিরিক্ত টাচ ইভেন্টে প্রিভেন্ট ডিফল্ট (শুধু মাল্টি-টাচ জুম ব্লক)
-    function preventPinchZoom() {
-        document.addEventListener('touchmove', function(e) {
-            // দুই বা ততোধিক আঙ্গুলের মুভমেন্ট (পিঞ্চ জুম) ব্লক
-            if (e.touches && e.touches.length >= 2) {
-                e.preventDefault();
+            function addZoomBlockCSS() {
+                const style = document.createElement('style');
+                style.textContent = `
+                    html, body {
+                        touch-action: pan-x pan-y !important;
+                    }
+                    * {
+                        touch-action: pan-x pan-y !important;
+                    }
+                `;
+                document.head.appendChild(style);
             }
-        }, { passive: false });
-    }
 
-    updateMetaForZoom();
-    addZoomBlockCSS();
-    preventPinchZoom();
-
-    // ========== 3. কিছু ত্রুটি দেখা দিলে বারবার চেক (সেফটি) ==========
-    setInterval(function() {
-        // কোনো ওপেন মডাল না থাকলেও যদি লক ক্লাস বা স্টাইল থেকে যায়, সরিয়ে ফেলো
-        const anyOpenModal = document.querySelector('.modal-overlay.open, #adminPanelOverlay, #adminAccessModal.open');
-        if (!anyOpenModal) {
-            if (document.body.classList.contains('modal-open') || 
-                document.body.style.overflow === 'hidden') {
-                forceResetScrollLock();
+            function preventPinchZoom() {
+                document.addEventListener('touchmove', function(e) {
+                    if (e.touches && e.touches.length >= 2) {
+                        e.preventDefault();
+                    }
+                }, { passive: false });
             }
-        }
-    }, 500);
-})();
-                                                                                                                                                       </script>
+
+            updateMetaForZoom();
+            addZoomBlockCSS();
+            preventPinchZoom();
+
+            setInterval(function() {
+                const anyOpenModal = document.querySelector('.modal-overlay.open, #adminPanelOverlay, #adminAccessModal.open');
+                if (!anyOpenModal) {
+                    if (document.body.classList.contains('modal-open') ||
+                        document.body.style.overflow === 'hidden') {
+                        forceResetScrollLock();
+                    }
+                }
+            }, 500);
+        })();
+    </script>
 </body>
 </html>
