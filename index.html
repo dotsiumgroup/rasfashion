@@ -2757,6 +2757,17 @@
             color: #fff;
             transform: scale(1.02);
         }
+        /* ===== NEW: Comment Control Button ===== */
+        #adminAccessModal .admin-choices .btn-comment-control {
+            background: var(--pink-light);
+            color: var(--primary);
+            border: 2px solid var(--primary);
+        }
+        #adminAccessModal .admin-choices .btn-comment-control:hover {
+            background: var(--primary);
+            color: #fff;
+            transform: scale(1.02);
+        }
 
         /* ===== ITEM CONTROL PANEL ===== */
         .item-control-stats {
@@ -3096,6 +3107,283 @@
             background: var(--muted);
         }
 
+        /* ===== COMMENT CONTROL PANEL ===== */
+        .comment-stats-row {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 0.4rem;
+            margin-bottom: 0.8rem;
+        }
+        .comment-stat-card {
+            background: #fff;
+            border-radius: 8px;
+            padding: 0.35rem 0.3rem;
+            text-align: center;
+            border: 1px solid var(--border);
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.02);
+            transition: transform 0.15s;
+        }
+        .comment-stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+        }
+        .comment-stat-card .stat-number {
+            font-weight: 800;
+            font-size: 0.85rem;
+            color: var(--primary);
+        }
+        .comment-stat-card .stat-label {
+            font-size: 0.48rem;
+            font-weight: 600;
+            color: var(--muted-foreground);
+            line-height: 1.2;
+            margin-top: 0.05rem;
+        }
+        .comment-stat-card .stat-icon {
+            font-size: 0.55rem;
+            margin-right: 0.1rem;
+        }
+        .comment-stat-card.total {
+            border-left: 3px solid var(--primary);
+        }
+        .comment-stat-card.pending {
+            border-left: 3px solid #f59e0b;
+        }
+        .comment-stat-card.processing {
+            border-left: 3px solid #3b82f6;
+        }
+        .comment-stat-card.replied {
+            border-left: 3px solid var(--green);
+        }
+        .comment-stat-card.actiondone {
+            border-left: 3px solid #8b5cf6;
+        }
+
+        .comment-search-row {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            margin-bottom: 0.6rem;
+        }
+        .comment-search-row input {
+            flex: 1;
+            padding: 0.3rem 0.5rem;
+            border: 1.5px solid var(--border);
+            border-radius: 6px;
+            font-size: 0.6rem;
+            outline: none;
+            background: #fff;
+            min-width: 0;
+        }
+        .comment-search-row input:focus {
+            border-color: var(--primary);
+        }
+        .comment-search-row .comment-refresh-btn {
+            background: var(--primary-10);
+            color: var(--primary);
+            border: 1.5px solid var(--border);
+            border-radius: 6px;
+            padding: 0.25rem 0.45rem;
+            font-size: 0.6rem;
+            cursor: pointer;
+            transition: all 0.15s;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+        .comment-search-row .comment-refresh-btn:hover {
+            background: var(--primary);
+            color: #fff;
+            border-color: var(--primary);
+            transform: scale(1.04);
+        }
+
+        .comment-row-compact {
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: var(--card);
+            margin-bottom: 0.4rem;
+            overflow: hidden;
+            transition: all 0.15s;
+        }
+        .comment-row-compact:hover {
+            border-color: rgba(196, 30, 90, 0.18);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+        }
+        .comment-row-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.3rem;
+            padding: 0.4rem 0.55rem;
+            cursor: pointer;
+            flex-wrap: wrap;
+            font-size: 0.63rem;
+            transition: background 0.12s;
+        }
+        .comment-row-header:hover {
+            background: #fdf8fa;
+        }
+        .comment-row-header .comment-short {
+            font-weight: 500;
+            font-size: 0.62rem;
+            flex: 1;
+            min-width: 80px;
+            color: var(--foreground);
+        }
+        .comment-row-header .comment-category-badge {
+            display: inline-block;
+            background: var(--primary-10);
+            color: var(--primary);
+            padding: 0.1rem 0.35rem;
+            border-radius: 4px;
+            font-size: 0.5rem;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+        .comment-row-header .comment-meta {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            flex-shrink: 0;
+        }
+        .comment-row-header .comment-date {
+            color: var(--muted-foreground);
+            font-size: 0.52rem;
+            white-space: nowrap;
+        }
+        .comment-detail-btn {
+            background: var(--primary-10);
+            color: var(--primary);
+            border: 1.5px solid rgba(196, 30, 90, 0.2);
+            padding: 0.2rem 0.55rem;
+            border-radius: 5px;
+            font-size: 0.58rem;
+            font-weight: 600;
+            cursor: pointer;
+            white-space: nowrap;
+            flex-shrink: 0;
+            transition: all 0.15s;
+            margin-left: auto;
+        }
+        .comment-detail-btn:hover {
+            background: var(--primary);
+            color: #fff;
+        }
+        .comment-row-detail {
+            display: none;
+            padding: 0.5rem 0.55rem;
+            border-top: 1px solid var(--border);
+            background: #fefcfd;
+            font-size: 0.6rem;
+        }
+        .comment-row-detail.show {
+            display: block;
+        }
+        .comment-row-detail .detail-grid-comment {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.25rem;
+            margin-bottom: 0.35rem;
+            font-size: 0.58rem;
+        }
+        @media(min-width:500px) {
+            .comment-row-detail .detail-grid-comment {
+                grid-template-columns: 1fr 1fr 1fr;
+            }
+        }
+        .comment-row-detail .detail-grid-comment span {
+            display: block;
+        }
+        .comment-row-detail .detail-grid-comment .dl {
+            color: var(--muted-foreground);
+            font-size: 0.52rem;
+        }
+        .comment-row-detail .detail-grid-comment .dv {
+            font-weight: 600;
+            font-size: 0.6rem;
+        }
+        .comment-row-detail .comment-status-progress {
+            margin: 0.3rem 0;
+        }
+        .comment-row-detail .comment-reply-display {
+            background: #f0fdf4;
+            border: 1px solid #bbf7d0;
+            border-radius: 6px;
+            padding: 0.4rem 0.5rem;
+            margin: 0.3rem 0;
+        }
+        .comment-row-detail .comment-reply-display .reply-label {
+            font-weight: 700;
+            color: var(--green);
+            font-size: 0.55rem;
+        }
+        .comment-row-detail .comment-reply-display .reply-msg {
+            font-size: 0.6rem;
+            margin-top: 0.1rem;
+        }
+        .comment-action-btn {
+            background: var(--primary);
+            color: #fff;
+            border: none;
+            padding: 0.25rem 0.7rem;
+            border-radius: 5px;
+            font-size: 0.58rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.15s;
+            margin-top: 0.3rem;
+        }
+        .comment-action-btn:hover {
+            background: var(--primary-hover);
+            transform: scale(1.03);
+        }
+
+        /* ===== COMMENT ACTION MODAL ===== */
+        .comment-action-modal .modal-full {
+            max-width: 480px;
+            height: auto;
+            max-height: 85vh;
+        }
+        .comment-action-modal .modal-scroll-body {
+            padding: 1rem 1.2rem 1.5rem;
+        }
+        .comment-action-modal .modal-scroll-body .action-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.3rem;
+            margin-bottom: 0.6rem;
+        }
+        .comment-action-modal .modal-scroll-body .action-group label {
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+            font-size: 0.65rem;
+            cursor: pointer;
+        }
+        .comment-action-modal .modal-scroll-body .action-group input[type="checkbox"] {
+            margin: 0;
+            flex-shrink: 0;
+        }
+        .comment-action-modal .modal-scroll-body .note-group textarea {
+            width: 100%;
+            padding: 0.4rem;
+            border: 1.5px solid var(--border);
+            border-radius: 6px;
+            font-size: 0.6rem;
+            resize: vertical;
+            min-height: 50px;
+        }
+        .comment-action-modal .modal-scroll-body .submit-btn {
+            width: 100%;
+            margin-top: 0.6rem;
+        }
+        .comment-action-modal .modal-scroll-body .reply-group {
+            display: none;
+        }
+        .comment-action-modal .modal-scroll-body .reply-group.show {
+            display: block;
+        }
+
         /* ===== RESPONSIVE ADMIN STATS ===== */
         @media (max-width: 600px) {
             .admin-stats-row {
@@ -3140,12 +3428,36 @@
                 order: 1;
                 flex-shrink: 0;
             }
+            .comment-stats-row {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 0.25rem;
+            }
+            .comment-stat-card .stat-number {
+                font-size: 0.7rem;
+            }
+            .comment-stat-card .stat-label {
+                font-size: 0.4rem;
+            }
+            .comment-search-row {
+                flex-wrap: wrap;
+            }
+            .comment-search-row input {
+                flex: 1 1 100%;
+                order: 2;
+            }
+            .comment-search-row .comment-refresh-btn {
+                order: 1;
+                flex-shrink: 0;
+            }
         }
         @media (max-width: 400px) {
             .admin-stats-row {
                 grid-template-columns: repeat(2, 1fr);
             }
             .item-control-stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .comment-stats-row {
                 grid-template-columns: repeat(2, 1fr);
             }
         }
@@ -3277,11 +3589,22 @@
                 <div style="background:var(--card);border:1px solid var(--border);border-radius:10px;padding:0.8rem;">
                     <h2 style="font-size:0.8rem;font-weight:800;color:var(--primary);margin-bottom:0.5rem;">📩 মেসেজ পাঠান</h2>
                     <div class="form-group"><label class="form-label">আপনার নাম *</label><input type="text" class="form-input" id="contactName" placeholder="আপনার পুরো নাম"></div>
-                    <div class="form-row"><div class="form-group"><label class="form-label">ফোন নম্বর *</label><input type="tel" class="form-input" id="contactPhone" placeholder="01XXXXXXXXX"></div><div class="form-group"><label class="form-label">ইমেইল</label><input type="email" class="form-input" id="contactEmail" placeholder="email@example.com"></div></div>
-                    <div class="form-group"><label class="form-label">বিষয়</label><select class="form-select" id="contactSubject"><option>পণ্যের তথ্য</option><option>অর্ডার সমস্যা</option><option>ডেলিভারি</option><option>রিটার্ন</option><option>অন্যান্য</option></select></div>
+                    <div class="form-row"><div class="form-group"><label class="form-label">ফোন নম্বর *</label><input type="tel" class="form-input" id="contactPhone" placeholder="01XXXXXXXXX"></div><div class="form-group"><label class="form-label">ইমেইল (ঐচ্ছিক)</label><input type="email" class="form-input" id="contactEmail" placeholder="email@example.com"></div></div>
+                    <div class="form-group"><label class="form-label">ক্যাটাগরি *</label>
+                        <select class="form-select" id="contactCategory">
+                            <option value="সাধারণ বার্তা">সাধারণ বার্তা</option>
+                            <option value="মতামত">মতামত</option>
+                            <option value="অভিযোগ">অভিযোগ</option>
+                            <option value="অন্যান্য">অন্যান্য</option>
+                        </select>
+                    </div>
+                    <div class="form-group"><label class="form-label">বিষয়</label><input type="text" class="form-input" id="contactSubject" placeholder="বিষয় লিখুন..."></div>
                     <div class="form-group"><label class="form-label">বার্তা *</label><textarea class="form-textarea" id="contactMessage" placeholder="লিখুন..."></textarea></div>
                     <button class="btn-primary" style="width:100%;" onclick="submitContactForm()">📩 পাঠান</button>
                 </div>
+                <hr style="margin:1.2rem 0;border-color:var(--border);">
+                <h2 style="font-size:0.85rem;font-weight:800;color:var(--primary);margin-bottom:0.6rem;">📋 আমার বার্তাসমূহ</h2>
+                <div id="myCommentsContainer"><div style="text-align:center;padding:1rem;color:var(--muted-foreground);font-size:0.68rem;">বার্তা লোড হচ্ছে...</div></div>
             </div>
         </div>
 
@@ -3296,7 +3619,7 @@
                         <button id="trackBtn" onclick="trackOrder()"><span class="btn-spinner"></span><span class="btn-text">🔍 ট্র্যাক</span></button>
                     </div>
                 </div>
-                <div id="trackResult" style="margin-top:0.7rem;display:none;"></div>
+                <div id="trackResult" style="margin-top:0.7rem;"></div>
             </div>
         </div>
 
@@ -3421,6 +3744,14 @@
         </div>
     </div>
 
+    <!-- Comment Action Modal -->
+    <div class="modal-overlay comment-action-modal" id="commentActionModal">
+        <div class="modal-full">
+            <div class="modal-sticky-header"><h2>💬 কমেন্ট অ্যাকশন</h2><button class="modal-close-btn" onclick="closeCommentActionModal()">✕</button></div>
+            <div class="modal-scroll-body" id="commentActionModalBody"></div>
+        </div>
+    </div>
+
     <!-- Toast -->
     <div class="toast" id="toast"></div>
 
@@ -3428,7 +3759,9 @@
         // ===== CONFIGURATION =====
         const GOOGLE_SHEETS_PRODUCT_API_URL = 'https://script.google.com/macros/s/AKfycbxwrUku1D64M_ZTR9Pf93r7rDjxuepv596bYXWRwL_ItymqOhYe9eAxOJbsIoZf4PvJrg/exec';
         const GOOGLE_SHEETS_ORDER_API_URL = 'https://script.google.com/macros/s/AKfycbz3buNp9_vtf0HsegThMbCrD6GPEMzMIy1vyQSiJzJfwwS2Ec-Zmx_ulFI1vA30SEoE/exec';
-        const GOOGLE_SHEETS_ITEM_API_URL = 'https://script.google.com/macros/s/AKfycbws_iBck9ES10X9UchHMwQ9FT8tumMFJML5bKuXmNmaXpCsYeDokYOnxUeurljiWdke/exec'; // NEW for Item Control
+        const GOOGLE_SHEETS_ITEM_API_URL = 'https://script.google.com/macros/s/AKfycbws_iBck9ES10X9UchHMwQ9FT8tumMFJML5bKuXmNmaXpCsYeDokYOnxUeurljiWdke/exec';
+        // NEW: Comment System Apps Script URL (separate project)
+        const GOOGLE_SHEETS_COMMENT_API_URL = 'https://script.google.com/macros/s/AKfycbzKx3XwP_y3YQVgL4VmOfcK6MkO4qD-3fUfS4Uf9Q8ZQ3xU6W3L2K1J/exec'; // Replace with actual URL after deployment
 
         const MAX_RETRY_ATTEMPTS = 3;
         const RETRY_DELAY_MS = 1500;
@@ -3461,6 +3794,11 @@
         let backPressCount = 0;
         let backPressTimer = null;
         let isUpdatingOrder = false;
+        let isUpdatingComment = false;
+
+        // ===== COMMENT SYSTEM STATE =====
+        let allComments = [];
+        let commentActionTarget = null;
 
         const CATEGORIES = ['Cosmetics', 'Skincare', 'Haircare', 'Fragrance', 'Jewelry', 'Clothing'];
         const CAT_LABELS = { Cosmetics: 'কসমেটিকস', Skincare: 'স্কিনকেয়ার', Haircare: 'হেয়ারকেয়ার', Fragrance: 'সুগন্ধি', Jewelry: 'জুয়েলারি', Clothing: 'পোশাক' };
@@ -3509,6 +3847,7 @@
             }
         }
 
+        // ===== PRODUCT FUNCTIONS =====
         async function fetchProductsFromSheetSingle() {
             try {
                 const getUrl = GOOGLE_SHEETS_PRODUCT_API_URL + '?action=getProducts&_=' + Date.now();
@@ -3743,6 +4082,55 @@
             }
         }
 
+        // ===== COMMENT API =====
+        async function submitCommentToSheet(commentData) {
+            const payload = {
+                action: 'submitComment',
+                ...commentData
+            };
+            const data = await apiPost(GOOGLE_SHEETS_COMMENT_API_URL, payload);
+            if (!data.ok) throw new Error(data.error || 'Comment submission failed');
+            return data;
+        }
+
+        async function getCommentsByLoginId(loginId) {
+            try {
+                const url = GOOGLE_SHEETS_COMMENT_API_URL + '?action=getCommentsByLoginId&loginId=' + encodeURIComponent(String(
+                    loginId)) + '&_=' + Date.now();
+                const data = await apiGet(url);
+                if (data.ok && Array.isArray(data.data)) return data.data;
+                return [];
+            } catch (err) {
+                console.warn('Fetch comments for user failed:', err.message);
+                return [];
+            }
+        }
+
+        async function getAllCommentsFromSheet() {
+            try {
+                const url = GOOGLE_SHEETS_COMMENT_API_URL + '?action=getComments&_=' + Date.now();
+                const data = await apiGet(url);
+                if (data.ok && Array.isArray(data.data)) return data.data;
+                return [];
+            } catch (err) {
+                console.warn('Fetch all comments failed:', err.message);
+                return [];
+            }
+        }
+
+        async function updateCommentStatus(loginId, timestamp, updates) {
+            const payload = {
+                action: 'updateCommentStatus',
+                loginId: loginId,
+                timestamp: timestamp,
+                updates: updates
+            };
+            const data = await apiPost(GOOGLE_SHEETS_COMMENT_API_URL, payload);
+            if (!data.ok) throw new Error(data.error || 'Comment status update failed');
+            return data;
+        }
+
+        // ===== PRODUCT FETCH =====
         function showErrorBanner() {
             document.getElementById('errorBannerOverlay').classList.add('show');
             document.getElementById('retryCountText').textContent =
@@ -3800,6 +4188,7 @@
             }
         }
 
+        // ===== CART & WISHLIST =====
         function saveCart() { localStorage.setItem('ras_cart', JSON.stringify(cart)); }
 
         function saveUser() { if (currentUser) localStorage.setItem('ras_user', JSON.stringify(currentUser));
@@ -3818,6 +4207,7 @@
                 !document.getElementById('profileModal').classList.contains('open') &&
                 !document.getElementById('adminAccessModal')?.classList.contains('open') &&
                 !document.getElementById('adminActionModal')?.classList.contains('open') &&
+                !document.getElementById('commentActionModal')?.classList.contains('open') &&
                 !document.getElementById('itemEditModal')?.classList.contains('open') &&
                 !document.getElementById('itemDeleteModal')?.classList.contains('open') &&
                 !document.getElementById('footerModal')?.classList.contains('open')) {
@@ -4010,8 +4400,12 @@
             if (page === 'home') { renderHomeProducts();
                 initSlideshow();
                 restoreScrollPosition('home'); }
-            if (page === 'contact') renderContactInfo();
+            if (page === 'contact') { renderContactInfo();
+                renderMyComments(); }
             if (page === 'wishlist') renderWishlist();
+            if (page === 'track') {
+                renderTrackOrders();
+            }
             if (prevPage && prevPage !== page) {
                 if (!navigationStack.includes(prevPage)) {
                     navigationStack.push(prevPage);
@@ -4373,126 +4767,195 @@
             <div style="display:flex;gap:0.4rem;background:var(--secondary);border-radius:8px;padding:0.5rem;align-items:center;font-size:0.65rem;"><i class="fab fa-whatsapp" style="color:#25D366;"></i><div><strong>WhatsApp</strong><p style="font-size:0.6rem;">+880 1567-901178</p></div></div>`;
         }
 
-        function submitContactForm() {
+        // ===== CONTACT FORM WITH LOGIN REQUIREMENT =====
+        async function submitContactForm() {
+            if (!currentUser) {
+                pendingAction = () => submitContactForm();
+                openLoginModal();
+                return;
+            }
             const name = document.getElementById('contactName').value.trim();
             const phone = document.getElementById('contactPhone').value.trim();
-            const msg = document.getElementById('contactMessage').value.trim();
-            if (!name || !phone || !msg) { showToast('সব তথ্য দিন', 'error'); return; }
-            showToast('✅ বার্তা পাঠানো হয়েছে!', 'success');
-            ['contactName', 'contactPhone', 'contactEmail', 'contactMessage'].forEach(id => document.getElementById(id).value =
-                '');
+            const email = document.getElementById('contactEmail').value.trim();
+            const category = document.getElementById('contactCategory').value;
+            const subject = document.getElementById('contactSubject').value.trim();
+            const message = document.getElementById('contactMessage').value.trim();
+            if (!name || !phone || !message) { showToast('নাম, ফোন ও বার্তা দিন', 'error'); return; }
+            const btn = document.querySelector('#page-contact .btn-primary');
+            setBtnLoading(btn, true);
+            try {
+                await submitCommentToSheet({
+                    loginId: String(currentUser.phone || currentUser.email || ''),
+                    name: name,
+                    phone: phone,
+                    email: email,
+                    category: category,
+                    subject: subject,
+                    message: message
+                });
+                showToast('✅ বার্তা পাঠানো হয়েছে!', 'success');
+                ['contactName', 'contactPhone', 'contactEmail', 'contactSubject', 'contactMessage'].forEach(id =>
+                    document.getElementById(id).value = '');
+                renderMyComments();
+            } catch (err) {
+                showToast('❌ বার্তা পাঠাতে ব্যর্থ: ' + err.message, 'error');
+            }
+            setBtnLoading(btn, false);
         }
 
-        function buildStatusProgress(order) {
-            if (order.cancelled) {
-                let html =
-                    `<div class="cancelled-message-box">
-                    <div class="cancel-title">❌ অর্ডারটি বাতিল করা হয়েছে</div>`;
-                if (order.note && order.note.trim() !== '') {
-                    html +=
-                        `<div class="order-note-attractive" style="text-align:left;margin:0.4rem 0;">
-                        <span class="note-label"><i class="fas fa-pencil-alt"></i> নোট:</span> ${order.note}
-                    </div>`;
-                }
-                html +=
-                    `<div class="cancel-sub" style="font-size:0.6rem;margin-top:0.2rem;">
-                    <p>পুনরায় অর্ডারটি চালু করতে নিচের WhatsApp এ যোগাযোগ করুন।</p>
-                </div>
-                <a href="https://wa.me/8801567901178" target="_blank" class="cancelled-wa-btn">
-                    <i class="fab fa-whatsapp"></i> WhatsApp এ যোগাযোগ করুন
-                </a>
-                </div>`;
-                return html;
+        // ===== RENDER MY COMMENTS =====
+        async function renderMyComments() {
+            const container = document.getElementById('myCommentsContainer');
+            if (!currentUser) {
+                container.innerHTML =
+                    '<div style="text-align:center;padding:1rem;color:var(--muted-foreground);font-size:0.68rem;">বার্তা দেখতে লগইন করুন</div>';
+                return;
             }
-            const STEPS = ['অর্ডার প্রাপ্তি', 'অর্ডার কনফার্ম', 'প্যাকেজিং', 'ডেলিভারির জন্য পাঠানো', 'ডেলিভারি সম্পন্ন'];
+            container.innerHTML = '<div class="inline-loader"><div class="spinner-small"></div> বার্তা লোড হচ্ছে...</div>';
+            try {
+                const comments = await getCommentsByLoginId(String(currentUser.phone || currentUser.email || ''));
+                if (!comments.length) {
+                    container.innerHTML =
+                        '<div style="text-align:center;padding:1rem;color:var(--muted-foreground);font-size:0.68rem;">কোনো বার্তা নেই</div>';
+                    return;
+                }
+                container.innerHTML = comments.map((c, i) => {
+                    const did = 'myc-' + i;
+                    const statusHTML = buildCommentStatusProgress(c);
+                    const replyHTML = c.replyMessage && c.replyMessage.trim() !== '' ?
+                        `<div class="comment-reply-display"><span class="reply-label">💬 রিপ্লাই:</span><div class="reply-msg">${c.replyMessage}</div></div>` :
+                        '';
+                    return `
+                    <div class="comment-row-compact">
+                        <div class="comment-row-header">
+                            <span class="comment-short">${c.message ? c.message.substring(0,40) + (c.message.length>40?'...':'') : ''}</span>
+                            <span class="comment-category-badge">${c.category}</span>
+                            <span class="comment-date">${c.timestamp ? c.timestamp.split(' ')[0] : ''}</span>
+                            <button class="comment-detail-btn" onclick="toggleCommentDetail('${did}',this)">বিস্তারিত</button>
+                        </div>
+                        <div class="comment-row-detail" id="${did}">
+                            <div class="detail-grid-comment">
+                                <span><span class="dl">নাম:</span> <span class="dv">${c.name}</span></span>
+                                <span><span class="dl">ফোন:</span> <span class="dv">${c.phone || ''}</span></span>
+                                <span><span class="dl">ইমেইল:</span> <span class="dv">${c.email || ''}</span></span>
+                                <span><span class="dl">ক্যাটাগরি:</span> <span class="dv">${c.category}</span></span>
+                                <span><span class="dl">বিষয়:</span> <span class="dv">${c.subject || ''}</span></span>
+                                <span><span class="dl">তারিখ:</span> <span class="dv">${c.timestamp || ''}</span></span>
+                            </div>
+                            <div><span class="dl">বার্তা:</span> <span class="dv">${c.message}</span></div>
+                            <div class="comment-status-progress">${statusHTML}</div>
+                            ${replyHTML}
+                        </div>
+                    </div>`;
+                }).join('');
+            } catch (err) {
+                container.innerHTML =
+                    '<div style="text-align:center;padding:1rem;color:var(--muted-foreground);font-size:0.68rem;">বার্তা লোড করতে সমস্যা হয়েছে</div>';
+            }
+        }
+
+        function toggleCommentDetail(did, btn) {
+            const d = document.getElementById(did);
+            if (d) { d.classList.toggle('show');
+                btn.textContent = d.classList.contains('show') ? 'সংক্ষেপ' : 'বিস্তারিত'; }
+        }
+
+        function buildCommentStatusProgress(c) {
+            const cat = c.category || 'সাধারণ বার্তা';
+            let steps = [];
+            if (cat === 'সাধারণ বার্তা' || cat === 'অন্যান্য') {
+                steps = ['বার্তা পাঠানো', 'বার্তা পড়া', 'রিপ্লাই প্রদান'];
+            } else if (cat === 'মতামত') {
+                steps = ['বার্তা পাঠানো', 'বার্তা পড়া', 'মতামত গ্রহণ', 'রিপ্লাই প্রদান'];
+            } else if (cat === 'অভিযোগ') {
+                steps = ['বার্তা পাঠানো', 'বার্তা পড়া', 'একশন গ্রহণ', 'রিপ্লাই প্রদান', 'একশন সম্পন্ন'];
+            } else {
+                steps = ['বার্তা পাঠানো', 'বার্তা পড়া', 'রিপ্লাই প্রদান'];
+            }
             let h = '<div class="status-progress">';
-            for (let i = 0; i < STEPS.length; i++) {
+            for (let i = 0; i < steps.length; i++) {
                 let cls = 'pending';
-                let displayNum = i + 1;
+                let statusVal = 'FALSE';
                 if (i === 0) {
                     cls = 'completed';
-                } else if (i === 1 && order.statusConfirmed === 'DONE') {
-                    cls = 'completed';
-                } else if (i === 2 && order.statusPackaging === 'DONE') {
-                    cls = 'completed';
-                } else if (i === 3 && order.statusShipped === 'DONE') {
-                    cls = 'completed';
-                } else if (i === 4 && order.statusDelivered === 'DONE') {
-                    cls = 'completed';
+                } else if (i === 1) {
+                    statusVal = c.readStatus || 'FALSE';
+                } else if (i === 2) {
+                    if (cat === 'মতামত') statusVal = c.opinionReceived || 'FALSE';
+                    else if (cat === 'অভিযোগ') statusVal = c.actionTaken || 'FALSE';
+                    else statusVal = c.replyGiven || 'FALSE';
+                } else if (i === 3) {
+                    if (cat === 'মতামত') statusVal = c.replyGiven || 'FALSE';
+                    else if (cat === 'অভিযোগ') statusVal = c.replyGiven || 'FALSE';
+                } else if (i === 4) {
+                    if (cat === 'অভিযোগ') statusVal = c.actionCompleted || 'FALSE';
                 }
+                if (statusVal === 'DONE') cls = 'completed';
                 if (cls === 'pending' && i !== 0) {
-                    let prevCompleted = false;
-                    if (i === 1) prevCompleted = true;
-                    else if (i === 2) prevCompleted = order.statusConfirmed === 'DONE';
-                    else if (i === 3) prevCompleted = order.statusPackaging === 'DONE';
-                    else if (i === 4) prevCompleted = order.statusShipped === 'DONE';
-                    if (prevCompleted) cls = 'current';
+                    let prevDone = true;
+                    for (let j = 1; j < i; j++) {
+                        let pv = 'FALSE';
+                        if (j === 1) pv = c.readStatus || 'FALSE';
+                        else if (j === 2) {
+                            if (cat === 'মতামত') pv = c.opinionReceived || 'FALSE';
+                            else if (cat === 'অভিযোগ') pv = c.actionTaken || 'FALSE';
+                            else pv = c.replyGiven || 'FALSE';
+                        } else if (j === 3) {
+                            if (cat === 'মতামত') pv = c.replyGiven || 'FALSE';
+                            else if (cat === 'অভিযোগ') pv = c.replyGiven || 'FALSE';
+                        } else if (j === 4) {
+                            if (cat === 'অভিযোগ') pv = c.actionCompleted || 'FALSE';
+                        }
+                        if (pv !== 'DONE') prevDone = false;
+                    }
+                    if (prevDone) cls = 'current';
                 }
                 if (i === 0) cls = 'completed';
                 h +=
-                    `<div class="status-step ${cls}"><div class="step-circle">${cls === 'completed' ? '✔' : (cls === 'current' ? '●' : i+1)}</div><div class="step-line"></div><span class="step-label">${STEPS[i]}</span></div>`;
+                    `<div class="status-step ${cls}"><div class="step-circle">${cls === 'completed' ? '✔' : (cls === 'current' ? '●' : i+1)}</div><div class="step-line"></div><span class="step-label">${steps[i]}</span></div>`;
             }
             h += '</div>';
-            if (order.note && order.note.trim() !== '') {
-                h +=
-                    `<div class="order-note-attractive">
-                    <span class="note-label"><i class="fas fa-pencil-alt"></i> নোট:</span> ${order.note}
-                </div>`;
-            }
             return h;
         }
 
-        function parseItemsSummary(summary) {
-            if (!summary) return [];
-            const parts = summary.split(';').filter(Boolean);
-            return parts.map(part => {
-                const match = part.match(/^(.+?)\s+x(\d+)\s+@৳([\d,]+)$/);
-                if (match) {
-                    return { name: match[1].trim(), qty: parseInt(match[2]), unitPrice: parseFloat(match[3].replace(/,/g,
-                            '')), totalPrice: parseInt(match[2]) * parseFloat(match[3].replace(/,/g, '')) };
+        // ===== TRACK ORDER: AUTO LOAD FOR LOGGED-IN USER =====
+        async function renderTrackOrders() {
+            const res = document.getElementById('trackResult');
+            if (currentUser) {
+                const loginId = String(currentUser.phone || currentUser.email || '');
+                if (loginId.trim() !== '') {
+                    res.innerHTML = '<div class="inline-loader"><div class="spinner-small"></div> আপনার অর্ডার লোড হচ্ছে...</div>';
+                    try {
+                        let matched = await fetchOrdersForUser(loginId);
+                        const seen = new Set();
+                        matched = matched.filter(o => {
+                            if (seen.has(o.orderId)) return false;
+                            seen.add(o.orderId);
+                            return true;
+                        });
+                        if (matched.length) {
+                            res.innerHTML = buildOrderResultsHTML(matched);
+                        } else {
+                            res.innerHTML =
+                                '<div style="text-align:center;padding:1rem;background:#fff;border-radius:8px;font-size:0.68rem;color:var(--muted-foreground);">আপনার কোনো অর্ডার নেই</div>';
+                        }
+                    } catch (err) {
+                        console.error('Auto load orders error:', err);
+                        res.innerHTML =
+                            '<div style="text-align:center;padding:1rem;background:#fff;border-radius:8px;font-size:0.68rem;color:var(--muted-foreground);">অর্ডার লোড করতে সমস্যা হয়েছে</div>';
+                    }
+                } else {
+                    res.innerHTML =
+                        '<div style="text-align:center;padding:1rem;background:#fff;border-radius:8px;font-size:0.68rem;color:var(--muted-foreground);">লগইন আইডি পাওয়া যায়নি</div>';
                 }
-                return { name: part.trim(), qty: 1, unitPrice: 0, totalPrice: 0 };
-            });
+            } else {
+                res.innerHTML =
+                    '<div style="text-align:center;padding:1rem;background:#fff;border-radius:8px;font-size:0.68rem;color:var(--muted-foreground);">অর্ডার দেখতে লগইন করুন</div>';
+            }
         }
 
-        async function trackOrder() {
-            const input = document.getElementById('trackInput').value.trim();
-            const res = document.getElementById('trackResult');
-            const btn = document.getElementById('trackBtn');
-            res.style.display = 'block';
-            if (!input) { res.innerHTML =
-                    '<div style="text-align:center;padding:0.8rem;background:#fff;border-radius:8px;font-size:0.68rem;"><h3>⚠️ অর্ডার আইডি, ফোন নম্বর অথবা লগইন আইডি দিন</h3></div>'; return; }
-
-            setBtnLoading(btn, true);
-            res.innerHTML = '<div class="inline-loader"><div class="spinner-small"></div> অর্ডার খোঁজা হচ্ছে...</div>';
-
-            let matched = [];
-            try {
-                if (input.toUpperCase().startsWith('RAS-')) {
-                    matched = await fetchOrderById(input);
-                } else if (input.startsWith('01') && input.length >= 11) {
-                    matched = await fetchOrdersByPhone(input);
-                } else {
-                    matched = await fetchOrdersForUser(input);
-                }
-
-                const seen = new Set();
-                matched = matched.filter(o => {
-                    if (seen.has(o.orderId)) return false;
-                    seen.add(o.orderId);
-                    return true;
-                });
-            } catch (err) {
-                console.error('Track order fetch error:', err);
-                matched = [];
-            }
-
-            setBtnLoading(btn, false);
-
-            if (!matched.length) { res.innerHTML =
-                    '<div style="text-align:center;padding:1rem;background:#fff;border-radius:8px;font-size:0.68rem;"><h3>❌ অর্ডার পাওয়া যায়নি</h3></div>'; return; }
-
-            res.innerHTML = matched.map((o, i) => {
+        function buildOrderResultsHTML(orders) {
+            return orders.map((o, i) => {
                 const did = 'td-' + i;
                 const items = parseItemsSummary(o.itemsSummary);
                 const itemsHTML = items.length ? `
@@ -4553,9 +5016,121 @@
             }).join('');
         }
 
+        function parseItemsSummary(summary) {
+            if (!summary) return [];
+            const parts = summary.split(';').filter(Boolean);
+            return parts.map(part => {
+                const match = part.match(/^(.+?)\s+x(\d+)\s+@৳([\d,]+)$/);
+                if (match) {
+                    return { name: match[1].trim(), qty: parseInt(match[2]), unitPrice: parseFloat(match[3].replace(/,/g,
+                            '')), totalPrice: parseInt(match[2]) * parseFloat(match[3].replace(/,/g, '')) };
+                }
+                return { name: part.trim(), qty: 1, unitPrice: 0, totalPrice: 0 };
+            });
+        }
+
+        async function trackOrder() {
+            const input = document.getElementById('trackInput').value.trim();
+            const res = document.getElementById('trackResult');
+            const btn = document.getElementById('trackBtn');
+            res.style.display = 'block';
+            if (!input) { res.innerHTML =
+                    '<div style="text-align:center;padding:0.8rem;background:#fff;border-radius:8px;font-size:0.68rem;"><h3>⚠️ অর্ডার আইডি, ফোন নম্বর অথবা লগইন আইডি দিন</h3></div>'; return; }
+
+            setBtnLoading(btn, true);
+            res.innerHTML = '<div class="inline-loader"><div class="spinner-small"></div> অর্ডার খোঁজা হচ্ছে...</div>';
+
+            let matched = [];
+            try {
+                if (input.toUpperCase().startsWith('RAS-')) {
+                    matched = await fetchOrderById(input);
+                } else if (input.startsWith('01') && input.length >= 11) {
+                    matched = await fetchOrdersByPhone(input);
+                } else {
+                    matched = await fetchOrdersForUser(input);
+                }
+                const seen = new Set();
+                matched = matched.filter(o => {
+                    if (seen.has(o.orderId)) return false;
+                    seen.add(o.orderId);
+                    return true;
+                });
+            } catch (err) {
+                console.error('Track order fetch error:', err);
+                matched = [];
+            }
+
+            setBtnLoading(btn, false);
+
+            if (!matched.length) { res.innerHTML =
+                    '<div style="text-align:center;padding:1rem;background:#fff;border-radius:8px;font-size:0.68rem;"><h3>❌ অর্ডার পাওয়া যায়নি</h3></div>'; return; }
+
+            res.innerHTML = buildOrderResultsHTML(matched);
+        }
+
         function toggleOrderDetail(did, btn) { const d = document.getElementById(did); if (d) { d.classList.toggle('show');
                 btn.textContent = d.classList.contains('show') ? 'সংক্ষেপ' : 'বিস্তারিত'; } }
 
+        function buildStatusProgress(order) {
+            if (order.cancelled) {
+                let html =
+                    `<div class="cancelled-message-box">
+                    <div class="cancel-title">❌ অর্ডারটি বাতিল করা হয়েছে</div>`;
+                if (order.note && order.note.trim() !== '') {
+                    html +=
+                        `<div class="order-note-attractive" style="text-align:left;margin:0.4rem 0;">
+                        <span class="note-label"><i class="fas fa-pencil-alt"></i> নোট:</span> ${order.note}
+                    </div>`;
+                }
+                html +=
+                    `<div class="cancel-sub" style="font-size:0.6rem;margin-top:0.2rem;">
+                    <p>পুনরায় অর্ডারটি চালু করতে নিচের WhatsApp এ যোগাযোগ করুন।</p>
+                </div>
+                <a href="https://wa.me/8801567901178" target="_blank" class="cancelled-wa-btn">
+                    <i class="fab fa-whatsapp"></i> WhatsApp এ যোগাযোগ করুন
+                </a>
+                </div>`;
+                return html;
+            }
+            const STEPS = ['অর্ডার প্রাপ্তি', 'অর্ডার কনফার্ম', 'প্যাকেজিং', 'ডেলিভারির জন্য পাঠানো', 'ডেলিভারি সম্পন্ন'];
+            let h = '<div class="status-progress">';
+            for (let i = 0; i < STEPS.length; i++) {
+                let cls = 'pending';
+                let displayNum = i + 1;
+                if (i === 0) {
+                    cls = 'completed';
+                } else if (i === 1 && order.statusConfirmed === 'DONE') {
+                    cls = 'completed';
+                } else if (i === 2 && order.statusPackaging === 'DONE') {
+                    cls = 'completed';
+                } else if (i === 3 && order.statusShipped === 'DONE') {
+                    cls = 'completed';
+                } else if (i === 4 && order.statusDelivered === 'DONE') {
+                    cls = 'completed';
+                }
+                if (cls === 'pending' && i !== 0) {
+                    let prevCompleted = false;
+                    if (i === 1) prevCompleted = true;
+                    else if (i === 2) prevCompleted = order.statusConfirmed === 'DONE';
+                    else if (i === 3) prevCompleted = order.statusPackaging === 'DONE';
+                    else if (i === 4) prevCompleted = order.statusShipped === 'DONE';
+                    if (prevCompleted) cls = 'current';
+                }
+                if (i === 0) cls = 'completed';
+                h +=
+                    `<div class="status-step ${cls}"><div class="step-circle">${cls === 'completed' ? '✔' : (cls === 'current' ? '●' : i+1)}</div><div class="step-line"></div><span class="step-label">${STEPS[i]}</span></div>`;
+            }
+            h += '</div>';
+            if (order.note && order.note.trim() !== '') {
+                h +=
+                    `<div class="order-note-attractive">
+                    <span class="note-label"><i class="fas fa-pencil-alt"></i> নোট:</span> ${order.note}
+                </div>`;
+            }
+            return h;
+        }
+
+        // ===== SLIDESHOW =====
         function initSlideshow() {
             const imgs = document.querySelectorAll('.slideshow-image');
             const dots = document.querySelectorAll('.slideshow-dot');
@@ -4875,7 +5450,6 @@
                 showAdminChoiceModal();
                 return;
             }
-            // Show password modal
             const modal = document.getElementById('adminAccessModal');
             const body = document.getElementById('adminAccessModalBody');
             body.innerHTML = `
@@ -4920,6 +5494,7 @@
                     <div class="admin-choices">
                         <button class="btn-item-control" onclick="openItemControlPanel()">📦 আইটেম কন্ট্রোল</button>
                         <button class="btn-order-control" onclick="openOrderControlPanel()">📋 অর্ডার কন্ট্রোল</button>
+                        <button class="btn-comment-control" onclick="openCommentControlPanel()">💬 কমেন্ট কন্ট্রোল</button>
                     </div>
                 </div>
             `;
@@ -5082,7 +5657,6 @@
                 <button class="admin-action-btn-single" onclick="openAdminActionModal('${o.orderId}')">⚙️ অ্যাকশন</button>
                 `;
 
-                // NEW LAYOUT: status badge on the bottom line next to detail button
                 return `
                 <div class="admin-order-row">
                     <div class="admin-order-summary" onclick="event.stopPropagation();toggleOrderDetail('${did}',this.querySelector('.order-detail-btn'))">
@@ -5425,7 +5999,6 @@
             unlockBodyScroll();
         }
 
-        // ===== ITEM EDIT MODAL =====
         async function openEditItemModal(itemId) {
             const item = allItems.find(i => String(i.id) === String(itemId));
             if (!item) { showToast('❌ আইটেম পাওয়া যায়নি', 'error'); return; }
@@ -5694,6 +6267,229 @@
             }
         }
 
+        // ===== COMMENT CONTROL PANEL =====
+        let allCommentsData = [];
+
+        async function openCommentControlPanel() {
+            closeAdminAccess();
+            document.body.classList.add('modal-open');
+            const overlay = document.createElement('div');
+            overlay.className = 'admin-panel-overlay';
+            overlay.id = 'adminPanelOverlay';
+            overlay.innerHTML = `
+            <div class="admin-panel-header">
+                <button class="admin-back-btn" onclick="closeAdminPanel()"><i class="fas fa-arrow-left"></i></button>
+                <h2 style="font-size:0.9rem;">👑 এডমিন প্যানেল — কমেন্ট কন্ট্রোল</h2>
+            </div>
+            <div class="admin-panel-body" id="adminPanelContent">
+                <div class="inline-loader"><div class="spinner-small"></div> কমেন্ট লোড হচ্ছে...</div>
+            </div>`;
+            document.body.appendChild(overlay);
+            await loadCommentControlPanel();
+        }
+
+        async function loadCommentControlPanel() {
+            try {
+                allCommentsData = await getAllCommentsFromSheet();
+            } catch (err) {
+                console.error('Failed to fetch comments:', err);
+                allCommentsData = [];
+            }
+            const content = document.getElementById('adminPanelContent');
+
+            const totalComments = allCommentsData.length;
+            const pendingComments = allCommentsData.filter(c => c.readStatus !== 'DONE');
+            const processingComments = allCommentsData.filter(c => c.readStatus === 'DONE' && c.replyGiven !== 'DONE');
+            const repliedComments = allCommentsData.filter(c => c.replyGiven === 'DONE');
+            const actionDoneComments = allCommentsData.filter(c => c.actionCompleted === 'DONE');
+
+            const statsHTML = `
+            <div class="comment-stats-row">
+                <div class="comment-stat-card total">
+                    <div class="stat-number">${totalComments}</div>
+                    <div class="stat-label"><span class="stat-icon">📩</span> মোট কমেন্ট</div>
+                </div>
+                <div class="comment-stat-card pending">
+                    <div class="stat-number">${pendingComments.length}</div>
+                    <div class="stat-label"><span class="stat-icon">⏳</span> প্রক্রিয়াধীন</div>
+                </div>
+                <div class="comment-stat-card processing">
+                    <div class="stat-number">${processingComments.length}</div>
+                    <div class="stat-label"><span class="stat-icon">⚙️</span> প্রসেসিং</div>
+                </div>
+                <div class="comment-stat-card replied">
+                    <div class="stat-number">${repliedComments.length}</div>
+                    <div class="stat-label"><span class="stat-icon">💬</span> রিপ্লাই সম্পন্ন</div>
+                </div>
+                <div class="comment-stat-card actiondone">
+                    <div class="stat-number">${actionDoneComments.length}</div>
+                    <div class="stat-label"><span class="stat-icon">✅</span> একশন সম্পন্ন</div>
+                </div>
+            </div>`;
+
+            const searchHTML = `
+            <div class="comment-search-row">
+                <input type="text" id="commentSearchInput" placeholder="নাম, ফোন, ইমেইল বা বার্তা দিয়ে সার্চ করুন..." oninput="filterComments()">
+                <button class="comment-refresh-btn" id="commentRefreshBtn" onclick="refreshComments()"><i class="fas fa-sync-alt"></i> রিফ্রেশ</button>
+            </div>`;
+
+            if (!allCommentsData.length) {
+                content.innerHTML = statsHTML + searchHTML +
+                    '<div style="text-align:center;padding:2rem;font-size:0.75rem;">কোন কমেন্ট নেই</div>';
+                return;
+            }
+
+            const commentsHTML = allCommentsData.map((c, i) => {
+                const did = 'cadmin-' + i;
+                const statusHTML = buildCommentStatusProgress(c);
+                const replyHTML = c.replyMessage && c.replyMessage.trim() !== '' ?
+                    `<div class="comment-reply-display"><span class="reply-label">💬 রিপ্লাই:</span><div class="reply-msg">${c.replyMessage}</div></div>` :
+                    '';
+
+                const detailHTML = `
+                <div class="detail-grid-comment">
+                    <span><span class="dl">নাম:</span> <span class="dv">${c.name}</span></span>
+                    <span><span class="dl">ফোন:</span> <span class="dv">${c.phone || ''}</span></span>
+                    <span><span class="dl">ইমেইল:</span> <span class="dv">${c.email || ''}</span></span>
+                    <span><span class="dl">ক্যাটাগরি:</span> <span class="dv">${c.category}</span></span>
+                    <span><span class="dl">বিষয়:</span> <span class="dv">${c.subject || ''}</span></span>
+                    <span><span class="dl">লগইন আইডি:</span> <span class="dv">${c.loginId}</span></span>
+                    <span><span class="dl">তারিখ:</span> <span class="dv">${c.timestamp || ''}</span></span>
+                </div>
+                <div><span class="dl">বার্তা:</span> <span class="dv">${c.message}</span></div>
+                <div class="comment-status-progress">${statusHTML}</div>
+                ${replyHTML}
+                <button class="comment-action-btn" onclick="openCommentActionModal('${c.loginId}','${c.timestamp}','${c.category}')">⚙️ অ্যাকশন</button>
+                `;
+
+                return `
+                <div class="comment-row-compact">
+                    <div class="comment-row-header">
+                        <span class="comment-short">${c.message ? c.message.substring(0,40) + (c.message.length>40?'...':'') : ''}</span>
+                        <span class="comment-category-badge">${c.category}</span>
+                        <span class="comment-date">${c.timestamp ? c.timestamp.split(' ')[0] : ''}</span>
+                        <button class="comment-detail-btn" onclick="toggleCommentDetail('${did}',this)">বিস্তারিত</button>
+                    </div>
+                    <div class="comment-row-detail" id="${did}">${detailHTML}</div>
+                </div>`;
+            }).join('');
+
+            content.innerHTML = statsHTML + searchHTML + commentsHTML;
+            document.getElementById('commentSearchInput')?.addEventListener('input', filterComments);
+        }
+
+        function filterComments() {
+            const query = document.getElementById('commentSearchInput')?.value?.toLowerCase().trim() || '';
+            const allRows = document.querySelectorAll('.comment-row-compact');
+            allRows.forEach(row => {
+                const text = row.textContent.toLowerCase();
+                row.style.display = text.includes(query) ? '' : 'none';
+            });
+        }
+
+        async function refreshComments() {
+            const btn = document.getElementById('commentRefreshBtn');
+            if (btn) { btn.disabled = true;
+                btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>'; }
+            try {
+                await loadCommentControlPanel();
+                showToast('✅ কমেন্ট রিফ্রেশ করা হয়েছে', 'success');
+            } catch (err) {
+                showToast('❌ রিফ্রেশ ব্যর্থ', 'error');
+            }
+            if (btn) { btn.disabled = false;
+                btn.innerHTML = '<i class="fas fa-sync-alt"></i> রিফ্রেশ'; }
+        }
+
+        // ===== COMMENT ACTION MODAL =====
+        function openCommentActionModal(loginId, timestamp, category) {
+            commentActionTarget = { loginId, timestamp, category };
+            const modal = document.getElementById('commentActionModal');
+            const body = document.getElementById('commentActionModalBody');
+
+            const showOpinion = (category === 'মতামত');
+            const showActionTaken = (category === 'অভিযোগ');
+            const showActionCompleted = (category === 'অভিযোগ');
+
+            body.innerHTML = `
+            <div style="margin-bottom:0.5rem;">
+                <p style="font-size:0.7rem;font-weight:600;">কমেন্ট: <span style="color:var(--primary);">${loginId}</span></p>
+                <p style="font-size:0.6rem;color:var(--muted-foreground);">ক্যাটাগরি: ${category}</p>
+            </div>
+            <div class="action-group">
+                <label><input type="checkbox" id="commentReadStatus"> বার্তা পড়া</label>
+                ${showOpinion ? `<label><input type="checkbox" id="commentOpinionReceived"> মতামত গ্রহণ</label>` : ''}
+                ${showActionTaken ? `<label><input type="checkbox" id="commentActionTaken"> একশন গ্রহণ</label>` : ''}
+                <label><input type="checkbox" id="commentReplyGiven" onchange="toggleReplyField()"> রিপ্লাই দেওয়া</label>
+                ${showActionCompleted ? `<label><input type="checkbox" id="commentActionCompleted"> একশন সম্পন্ন</label>` : ''}
+            </div>
+            <div class="reply-group" id="replyGroup">
+                <label class="form-label">রিপ্লাই বার্তা *</label>
+                <textarea class="form-textarea" id="commentReplyMessage" placeholder="রিপ্লাই লিখুন..."></textarea>
+            </div>
+            <button class="btn-primary submit-btn" id="commentActionSubmitBtn" onclick="submitCommentAction()"><span class="btn-spinner"></span><span class="btn-text">আপডেট করুন</span></button>
+            `;
+            modal.classList.add('open');
+            lockBodyScroll();
+            document.getElementById('replyGroup')?.classList.remove('show');
+        }
+
+        function closeCommentActionModal() {
+            document.getElementById('commentActionModal').classList.remove('open');
+            unlockBodyScroll();
+            commentActionTarget = null;
+        }
+
+        function toggleReplyField() {
+            const checked = document.getElementById('commentReplyGiven').checked;
+            const group = document.getElementById('replyGroup');
+            if (group) {
+                group.classList.toggle('show', checked);
+            }
+        }
+
+        async function submitCommentAction() {
+            if (isUpdatingComment) return;
+            isUpdatingComment = true;
+            if (!commentActionTarget) { isUpdatingComment = false; return; }
+            const btn = document.getElementById('commentActionSubmitBtn');
+            setBtnLoading(btn, true);
+
+            const readStatus = document.getElementById('commentReadStatus').checked;
+            const opinionReceived = document.getElementById('commentOpinionReceived')?.checked || false;
+            const actionTaken = document.getElementById('commentActionTaken')?.checked || false;
+            const replyGiven = document.getElementById('commentReplyGiven').checked;
+            const actionCompleted = document.getElementById('commentActionCompleted')?.checked || false;
+            const replyMessage = document.getElementById('commentReplyMessage').value.trim();
+
+            if (replyGiven && !replyMessage) {
+                showToast('❌ রিপ্লাই বার্তা লিখুন', 'error');
+                setBtnLoading(btn, false);
+                isUpdatingComment = false;
+                return;
+            }
+
+            const updates = {
+                readStatus: readStatus,
+                opinionReceived: opinionReceived,
+                actionTaken: actionTaken,
+                replyGiven: replyGiven,
+                actionCompleted: actionCompleted,
+                replyMessage: replyMessage
+            };
+
+            try {
+                await updateCommentStatus(commentActionTarget.loginId, commentActionTarget.timestamp, updates);
+                showToast('✅ কমেন্ট আপডেট সফল', 'success');
+                closeCommentActionModal();
+                await loadCommentControlPanel();
+            } catch (err) {
+                showToast('❌ আপডেট ব্যর্থ: ' + err.message, 'error');
+            }
+            setBtnLoading(btn, false);
+            isUpdatingComment = false;
+        }
+
         // ===== BACK BUTTON HANDLING =====
         function handleBackButton(e) {
             const anyModal = document.querySelector('.modal-overlay.open, #adminPanelOverlay');
@@ -5712,6 +6508,8 @@
                     closeAdminPanel();
                 } else if (document.getElementById('adminActionModal').classList.contains('open')) {
                     closeAdminActionModal();
+                } else if (document.getElementById('commentActionModal').classList.contains('open')) {
+                    closeCommentActionModal();
                 } else if (document.getElementById('itemEditModal').classList.contains('open')) {
                     closeItemEditModal();
                 } else if (document.getElementById('itemDeleteModal').classList.contains('open')) {
@@ -5772,6 +6570,8 @@
                 closeFooterModal(); });
         document.getElementById('adminActionModal').addEventListener('click', e => { if (e.target === e.currentTarget)
                 closeAdminActionModal(); });
+        document.getElementById('commentActionModal').addEventListener('click', e => { if (e.target === e.currentTarget)
+                closeCommentActionModal(); });
         document.getElementById('adminAccessModal').addEventListener('click', e => { if (e.target === e.currentTarget)
                 closeAdminAccess(); });
         document.getElementById('itemEditModal').addEventListener('click', e => { if (e.target === e.currentTarget)
@@ -5788,6 +6588,7 @@
                 closeAdminPanel();
                 closeFooterModal();
                 closeAdminActionModal();
+                closeCommentActionModal();
                 closeItemEditModal();
                 closeItemDeleteModal();
                 document.getElementById('mobileNav').classList.remove('open');
