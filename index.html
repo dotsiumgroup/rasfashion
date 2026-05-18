@@ -35,6 +35,9 @@
             --font: 'Hind Siliguri', system-ui, sans-serif;
             --green: #25a85a;
             --green-light: #e6f9ef;
+            --admin-z: 600;
+            --modal-z: 5000;
+            --toast-z: 9999;
         }
         *,
         *::before,
@@ -180,7 +183,6 @@
             pointer-events: none;
             font-size: 0.7rem;
         }
-        /* Search button replacement */
         .nav-search .search-submit {
             position: absolute;
             right: 0.3rem;
@@ -227,7 +229,6 @@
             align-items: center;
             gap: 0.3rem;
         }
-        /* Wishlist button - now similar to cart button */
         .wish-header-btn {
             position: relative;
             padding: 0.3rem;
@@ -388,37 +389,6 @@
             border-radius: 0 0 14px 14px;
             box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
         }
-        .mobile-nav-panel input {
-            width: 100%;
-            padding: 0.5rem 2rem 0.5rem 0.8rem;
-            border: 1.5px solid var(--border);
-            border-radius: 8px;
-            font-size: 0.72rem;
-            margin-bottom: 0.6rem;
-            outline: none;
-            position: relative;
-        }
-        .mobile-nav-panel .mobile-search-wrap {
-            position: relative;
-        }
-        .mobile-nav-panel .mobile-search-submit {
-            position: absolute;
-            right: 0.4rem;
-            top: 50%;
-            transform: translateY(-50%);
-            background: transparent;
-            border: none;
-            color: var(--primary);
-            opacity: 0.5;
-            font-size: 0.7rem;
-            cursor: pointer;
-            padding: 0.2rem 0.4rem;
-            border-radius: 4px;
-            transition: opacity 0.15s;
-        }
-        .mobile-nav-panel .mobile-search-submit:hover {
-            opacity: 1;
-        }
         .mobile-nav-panel a {
             display: block;
             padding: 0.5rem 0.8rem;
@@ -544,7 +514,7 @@
             display: none;
             width: 18px;
             height: 18px;
-            border: 2px solid rgba(255,255,255,0.3);
+            border: 2px solid rgba(255, 255, 255, 0.3);
             border-top-color: #fff;
             border-radius: 50%;
             animation: spin 0.6s linear infinite;
@@ -727,6 +697,20 @@
         .stock-badge-card.out {
             background: #b0b0b0;
             color: #fff;
+        }
+        .batch-badge-card {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            background: var(--gold);
+            color: #fff;
+            font-size: 0.4rem;
+            font-weight: 700;
+            padding: 0.12rem 0.45rem 0.1rem 0.6rem;
+            border-radius: 0 12px 0 0;
+            letter-spacing: 0.02em;
+            z-index: 3;
+            box-shadow: 1px -1px 4px rgba(0, 0, 0, 0.06);
         }
         .best-badge {
             position: absolute;
@@ -1164,7 +1148,7 @@
             position: fixed;
             inset: 0;
             background: rgba(0, 0, 0, 0.5);
-            z-index: 500;
+            z-index: var(--modal-z);
             align-items: center;
             justify-content: center;
             padding: 0.3rem;
@@ -1509,7 +1493,7 @@
             display: none;
             width: 16px;
             height: 16px;
-            border: 2px solid rgba(255,255,255,0.3);
+            border: 2px solid rgba(255, 255, 255, 0.3);
             border-top-color: #fff;
             border-radius: 50%;
             animation: spin 0.6s linear infinite;
@@ -1822,7 +1806,6 @@
             border-color: var(--primary);
             transform: scale(1.08);
         }
-        /* Product detail page: two-column layout on desktop */
         .product-detail-wrapper {
             display: grid;
             grid-template-columns: 1fr;
@@ -2146,7 +2129,7 @@
             position: fixed;
             bottom: 3.5rem;
             right: 0.8rem;
-            z-index: 9999;
+            z-index: var(--toast-z);
             background: var(--foreground);
             color: #fff;
             padding: 0.45rem 0.8rem;
@@ -2301,10 +2284,12 @@
             display: inline-block;
             margin-right: 0.4rem;
         }
+
+        /* ===== ADMIN PANEL OVERLAY ===== */
         .admin-panel-overlay {
             position: fixed;
             inset: 0;
-            z-index: 600;
+            z-index: var(--admin-z);
             background: #fff;
             overflow-y: auto;
         }
@@ -2320,7 +2305,7 @@
             gap: 1rem;
         }
         .admin-back-btn {
-            background: rgba(255,255,255,0.2);
+            background: rgba(255, 255, 255, 0.2);
             border: none;
             color: #fff;
             width: 36px;
@@ -2353,6 +2338,19 @@
             flex-wrap: wrap;
             font-size: 0.65rem;
         }
+        .admin-order-summary .left-group {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            flex: 1;
+        }
+        .admin-order-summary .right-group {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            flex-wrap: wrap;
+        }
         .admin-order-detail {
             display: none;
             padding: 0.6rem 0.8rem;
@@ -2363,7 +2361,6 @@
         .admin-order-detail.show {
             display: block;
         }
-        /* New admin action button */
         .admin-action-btn-single {
             background: var(--primary);
             color: #fff;
@@ -2380,6 +2377,266 @@
         .admin-action-btn-single:hover {
             background: var(--primary-hover);
             transform: scale(1.03);
+        }
+
+        /* ===== ADMIN ACTION MODAL (z-index: 5000) ===== */
+        .admin-action-modal .modal-full {
+            max-width: 480px;
+            height: auto;
+            max-height: 85vh;
+        }
+        .admin-action-modal .modal-scroll-body {
+            padding: 1rem 1.2rem 1.5rem;
+        }
+        .admin-action-modal .modal-scroll-body .action-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.3rem;
+            margin-bottom: 0.6rem;
+        }
+        .admin-action-modal .modal-scroll-body .action-group label {
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+            font-size: 0.65rem;
+            cursor: pointer;
+        }
+        .admin-action-modal .modal-scroll-body .action-group input[type="radio"] {
+            margin: 0;
+            flex-shrink: 0;
+        }
+        .admin-action-modal .modal-scroll-body .action-group input[type="checkbox"] {
+            margin: 0;
+            flex-shrink: 0;
+        }
+        .admin-action-modal .modal-scroll-body .note-group textarea {
+            width: 100%;
+            padding: 0.4rem;
+            border: 1.5px solid var(--border);
+            border-radius: 6px;
+            font-size: 0.6rem;
+            resize: vertical;
+            min-height: 50px;
+        }
+        .admin-action-modal .modal-scroll-body .submit-btn {
+            width: 100%;
+            margin-top: 0.6rem;
+        }
+
+        /* ===== ADMIN STATS CARDS ===== */
+        .admin-stats-row {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 0.4rem;
+            margin-bottom: 0.8rem;
+        }
+        .admin-stat-card {
+            background: #fff;
+            border-radius: 8px;
+            padding: 0.35rem 0.3rem;
+            text-align: center;
+            border: 1px solid var(--border);
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.02);
+            transition: transform 0.15s;
+        }
+        .admin-stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+        }
+        .admin-stat-card .stat-number {
+            font-weight: 800;
+            font-size: 0.85rem;
+            color: var(--primary);
+        }
+        .admin-stat-card .stat-label {
+            font-size: 0.48rem;
+            font-weight: 600;
+            color: var(--muted-foreground);
+            line-height: 1.2;
+            margin-top: 0.05rem;
+        }
+        .admin-stat-card .stat-icon {
+            font-size: 0.55rem;
+            margin-right: 0.1rem;
+        }
+        .admin-stat-card.total {
+            border-left: 3px solid var(--primary);
+        }
+        .admin-stat-card.pending {
+            border-left: 3px solid #f59e0b;
+        }
+        .admin-stat-card.processing {
+            border-left: 3px solid #3b82f6;
+        }
+        .admin-stat-card.delivered {
+            border-left: 3px solid var(--green);
+        }
+        .admin-stat-card.cancelled {
+            border-left: 3px solid var(--destructive);
+        }
+
+        /* ===== ADMIN SEARCH BAR ===== */
+        .admin-search-row {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            margin-bottom: 0.6rem;
+        }
+        .admin-search-row input {
+            flex: 1;
+            padding: 0.3rem 0.5rem;
+            border: 1.5px solid var(--border);
+            border-radius: 6px;
+            font-size: 0.6rem;
+            outline: none;
+            background: #fff;
+            min-width: 0;
+        }
+        .admin-search-row input:focus {
+            border-color: var(--primary);
+        }
+        .admin-search-row .admin-refresh-btn {
+            background: var(--primary-10);
+            color: var(--primary);
+            border: 1.5px solid var(--border);
+            border-radius: 6px;
+            padding: 0.25rem 0.45rem;
+            font-size: 0.6rem;
+            cursor: pointer;
+            transition: all 0.15s;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+        .admin-search-row .admin-refresh-btn:hover {
+            background: var(--primary);
+            color: #fff;
+            border-color: var(--primary);
+            transform: scale(1.04);
+        }
+        .admin-search-row .admin-refresh-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* ===== ORDER STATUS BADGE (admin row) ===== */
+        .order-status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.2rem;
+            font-size: 0.45rem;
+            font-weight: 700;
+            padding: 0.1rem 0.35rem;
+            border-radius: 20px;
+            white-space: nowrap;
+            flex-shrink: 0;
+            text-transform: uppercase;
+            letter-spacing: 0.02em;
+        }
+        .order-status-badge.new {
+            background: #e0f2fe;
+            color: #0369a1;
+        }
+        .order-status-badge.confirmed {
+            background: #dbeafe;
+            color: #1d4ed8;
+        }
+        .order-status-badge.packaging {
+            background: #fef3c7;
+            color: #b45309;
+        }
+        .order-status-badge.shipped {
+            background: #d1fae5;
+            color: #047857;
+        }
+        .order-status-badge.delivered {
+            background: #d1fae5;
+            color: #047857;
+        }
+        .order-status-badge.cancelled {
+            background: #fee2e2;
+            color: #b91c1c;
+        }
+
+        /* ===== ATTRACTIVE NOTE DISPLAY ===== */
+        .order-note-attractive {
+            background: linear-gradient(135deg, #fff8e1, #fff3e0);
+            border-left: 4px solid var(--gold);
+            border-radius: 6px;
+            padding: 0.5rem 0.7rem;
+            margin: 0.4rem 0;
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: #4a3000;
+            box-shadow: 0 1px 6px rgba(201, 161, 53, 0.08);
+        }
+        .order-note-attractive i {
+            color: var(--gold);
+            margin-right: 0.3rem;
+        }
+        .order-note-attractive .note-label {
+            font-weight: 800;
+            color: var(--gold);
+            font-size: 0.65rem;
+        }
+
+        /* ===== CANCELLED ORDER WHATSAPP BUTTON ===== */
+        .cancelled-wa-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            background: #25D366;
+            color: #fff;
+            padding: 0.3rem 0.7rem;
+            border-radius: 20px;
+            font-size: 0.6rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.15s;
+            text-decoration: none;
+            box-shadow: 0 2px 8px rgba(37, 211, 102, 0.25);
+            margin: 0.3rem 0;
+            border: none;
+        }
+        .cancelled-wa-btn:hover {
+            transform: scale(1.04);
+            box-shadow: 0 4px 14px rgba(37, 211, 102, 0.35);
+        }
+        .cancelled-wa-btn i {
+            font-size: 0.7rem;
+        }
+        .cancelled-message-box {
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            border-radius: 8px;
+            padding: 0.6rem;
+            margin: 0.4rem 0;
+            text-align: center;
+        }
+        .cancelled-message-box .cancel-title {
+            font-size: 0.8rem;
+            font-weight: 800;
+            color: var(--destructive);
+        }
+        .cancelled-message-box .cancel-sub {
+            font-size: 0.6rem;
+            color: var(--muted-foreground);
+            margin-top: 0.2rem;
+        }
+
+        /* ===== SHORTCUT NOTES DROPDOWN ===== */
+        .shortcut-notes-dropdown {
+            width: 100%;
+            padding: 0.3rem 0.4rem;
+            border: 1.5px solid var(--border);
+            border-radius: 6px;
+            font-size: 0.6rem;
+            background: var(--background);
+            outline: none;
+            margin-bottom: 0.3rem;
+        }
+        .shortcut-notes-dropdown:focus {
+            border-color: var(--primary);
         }
         .footer-modal .modal-full {
             max-width: 500px;
@@ -2457,58 +2714,451 @@
             align-items: center;
             gap: 0.25rem;
         }
-        /* Admin action modal */
-        .admin-action-modal .modal-full {
-            max-width: 480px;
+
+        /* ===== ADMIN ACCESS MODAL ===== */
+        #adminAccessModal .modal-full {
+            max-width: 400px;
             height: auto;
-            max-height: 85vh;
+            max-height: 70vh;
         }
-        .admin-action-modal .modal-scroll-body {
-            padding: 1rem 1.2rem 1.5rem;
-        }
-        .admin-action-modal .modal-scroll-body .action-group {
+        #adminAccessModal .admin-choices {
             display: flex;
             flex-direction: column;
-            gap: 0.3rem;
-            margin-bottom: 0.6rem;
+            gap: 0.6rem;
+            padding: 0.5rem 0;
         }
-        .admin-action-modal .modal-scroll-body .action-group label {
+        #adminAccessModal .admin-choices button {
+            width: 100%;
+            padding: 0.6rem;
+            border-radius: 8px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        #adminAccessModal .admin-choices .btn-item-control {
+            background: var(--primary-10);
+            color: var(--primary);
+            border: 2px solid var(--primary);
+        }
+        #adminAccessModal .admin-choices .btn-item-control:hover {
+            background: var(--primary);
+            color: #fff;
+            transform: scale(1.02);
+        }
+        #adminAccessModal .admin-choices .btn-order-control {
+            background: var(--gold-bg);
+            color: var(--gold);
+            border: 2px solid var(--gold);
+        }
+        #adminAccessModal .admin-choices .btn-order-control:hover {
+            background: var(--gold);
+            color: #fff;
+            transform: scale(1.02);
+        }
+
+        /* ===== ITEM CONTROL PANEL ===== */
+        .item-control-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.4rem;
+            margin-bottom: 0.8rem;
+        }
+        .item-control-stats .stat-card {
+            background: #fff;
+            border-radius: 8px;
+            padding: 0.35rem 0.3rem;
+            text-align: center;
+            border: 1px solid var(--border);
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.02);
+        }
+        .item-control-stats .stat-card .stat-number {
+            font-weight: 800;
+            font-size: 0.85rem;
+            color: var(--primary);
+        }
+        .item-control-stats .stat-card .stat-label {
+            font-size: 0.48rem;
+            font-weight: 600;
+            color: var(--muted-foreground);
+            line-height: 1.2;
+            margin-top: 0.05rem;
+        }
+        .item-control-stats .stat-card.total {
+            border-left: 3px solid var(--primary);
+        }
+        .item-control-stats .stat-card.instock {
+            border-left: 3px solid var(--green);
+        }
+        .item-control-stats .stat-card.outstock {
+            border-left: 3px solid var(--destructive);
+        }
+
+        .item-control-search-row {
             display: flex;
             align-items: center;
-            gap: 0.3rem;
-            font-size: 0.65rem;
-            cursor: pointer;
+            gap: 0.4rem;
+            margin-bottom: 0.6rem;
+            flex-wrap: wrap;
         }
-        .admin-action-modal .modal-scroll-body .action-group input[type="radio"] {
-            margin: 0;
-            flex-shrink: 0;
-        }
-        .admin-action-modal .modal-scroll-body .action-group input[type="checkbox"] {
-            margin: 0;
-            flex-shrink: 0;
-        }
-        .admin-action-modal .modal-scroll-body .note-group textarea {
-            width: 100%;
-            padding: 0.4rem;
+        .item-control-search-row input {
+            flex: 1;
+            min-width: 120px;
+            padding: 0.3rem 0.5rem;
             border: 1.5px solid var(--border);
             border-radius: 6px;
             font-size: 0.6rem;
-            resize: vertical;
-            min-height: 50px;
+            outline: none;
+            background: #fff;
         }
-        .admin-action-modal .modal-scroll-body .submit-btn {
+        .item-control-search-row input:focus {
+            border-color: var(--primary);
+        }
+        .item-control-search-row .item-add-btn {
+            background: var(--primary);
+            color: #fff;
+            padding: 0.3rem 0.8rem;
+            border-radius: 6px;
+            font-size: 0.6rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.15s;
+            white-space: nowrap;
+            border: none;
+        }
+        .item-control-search-row .item-add-btn:hover {
+            background: var(--primary-hover);
+            transform: scale(1.04);
+        }
+
+        .item-row-compact {
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: var(--card);
+            margin-bottom: 0.4rem;
+            overflow: hidden;
+            transition: all 0.15s;
+        }
+        .item-row-compact:hover {
+            border-color: rgba(196, 30, 90, 0.18);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+        }
+        .item-row-header {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            padding: 0.4rem 0.55rem;
+            cursor: pointer;
+            flex-wrap: wrap;
+            font-size: 0.6rem;
+            transition: background 0.12s;
+        }
+        .item-row-header:hover {
+            background: #fdf8fa;
+        }
+        .item-row-header .item-thumb {
+            width: 36px;
+            height: 48px;
+            object-fit: cover;
+            border-radius: 4px;
+            flex-shrink: 0;
+            background: var(--pink-light);
+        }
+        .item-row-header .item-thumb-placeholder {
+            width: 36px;
+            height: 48px;
+            background: var(--pink-light);
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.5rem;
+            color: var(--muted-foreground);
+            flex-shrink: 0;
+        }
+        .item-row-header .item-name-display {
+            font-weight: 600;
+            font-size: 0.62rem;
+            flex: 1;
+            min-width: 80px;
+        }
+        .item-row-header .item-id-display {
+            font-size: 0.55rem;
+            color: var(--muted-foreground);
+        }
+        .item-row-header .item-batch-display {
+            font-size: 0.55rem;
+            color: var(--gold);
+            font-weight: 700;
+        }
+        .item-row-header .item-detail-btn {
+            background: var(--primary-10);
+            color: var(--primary);
+            border: 1.5px solid rgba(196, 30, 90, 0.2);
+            padding: 0.2rem 0.55rem;
+            border-radius: 5px;
+            font-size: 0.58rem;
+            font-weight: 600;
+            cursor: pointer;
+            white-space: nowrap;
+            flex-shrink: 0;
+            transition: all 0.15s;
+            margin-left: auto;
+        }
+        .item-row-header .item-detail-btn:hover {
+            background: var(--primary);
+            color: #fff;
+        }
+        .item-row-detail {
+            display: none;
+            padding: 0.5rem 0.55rem;
+            border-top: 1px solid var(--border);
+            background: #fefcfd;
+            font-size: 0.6rem;
+        }
+        .item-row-detail.show {
+            display: block;
+        }
+        .item-row-detail .detail-grid-item {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.25rem;
+            margin-bottom: 0.35rem;
+            font-size: 0.58rem;
+        }
+        @media(min-width:500px) {
+            .item-row-detail .detail-grid-item {
+                grid-template-columns: 1fr 1fr 1fr;
+            }
+        }
+        .item-row-detail .detail-grid-item span {
+            display: block;
+        }
+        .item-row-detail .detail-grid-item .dl {
+            color: var(--muted-foreground);
+            font-size: 0.52rem;
+        }
+        .item-row-detail .detail-grid-item .dv {
+            font-weight: 600;
+            font-size: 0.6rem;
+        }
+        .item-row-detail .item-action-row {
+            display: flex;
+            gap: 0.4rem;
+            margin-top: 0.4rem;
+            flex-wrap: wrap;
+        }
+        .item-row-detail .item-action-row .item-edit-btn {
+            background: var(--primary);
+            color: #fff;
+            padding: 0.25rem 0.7rem;
+            border-radius: 5px;
+            font-size: 0.58rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.15s;
+            border: none;
+        }
+        .item-row-detail .item-action-row .item-edit-btn:hover {
+            background: var(--primary-hover);
+            transform: scale(1.03);
+        }
+        .item-row-detail .item-action-row .item-delete-btn {
+            background: var(--destructive);
+            color: #fff;
+            padding: 0.25rem 0.7rem;
+            border-radius: 5px;
+            font-size: 0.58rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.15s;
+            border: none;
+        }
+        .item-row-detail .item-action-row .item-delete-btn:hover {
+            background: #b71c1c;
+            transform: scale(1.03);
+        }
+
+        /* ===== ITEM EDIT / ADD MODAL (full screen) ===== */
+        .item-edit-modal .modal-full {
+            max-width: 100%;
             width: 100%;
-            margin-top: 0.6rem;
+            height: 100vh;
+            max-height: 100vh;
+            border-radius: 0;
+        }
+        .item-edit-modal .modal-scroll-body {
+            padding: 0.8rem 1.2rem 5rem;
+        }
+        .item-edit-modal .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.4rem;
+        }
+        @media(max-width:600px) {
+            .item-edit-modal .form-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        .item-edit-modal .form-grid .full-width {
+            grid-column: 1 / -1;
+        }
+        .item-edit-modal .form-group .hint {
+            font-size: 0.5rem;
+            color: var(--muted-foreground);
+            margin-top: 0.1rem;
+        }
+        .item-edit-modal .form-group .inline-check {
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+            font-size: 0.62rem;
+        }
+        .item-edit-modal .form-group .inline-check input[type="checkbox"] {
+            margin: 0;
+            flex-shrink: 0;
+        }
+        .item-edit-modal .form-group .specs-hint {
+            font-size: 0.5rem;
+            color: var(--muted-foreground);
+            background: var(--secondary);
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+            display: inline-block;
+            margin-bottom: 0.2rem;
+        }
+        .item-edit-modal .form-group .tags-hint {
+            font-size: 0.5rem;
+            color: var(--muted-foreground);
+            background: var(--secondary);
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+            display: inline-block;
+            margin-bottom: 0.2rem;
+        }
+
+        /* ===== ITEM DELETE CONFIRM MODAL ===== */
+        .item-delete-modal .modal-full {
+            max-width: 440px;
+            height: auto;
+            max-height: 80vh;
+        }
+        .item-delete-modal .modal-scroll-body {
+            padding: 1rem 1.2rem 1.5rem;
+        }
+        .item-delete-modal .delete-info {
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            border-radius: 8px;
+            padding: 0.5rem;
+            font-size: 0.55rem;
+            margin: 0.5rem 0;
+        }
+        .item-delete-modal .delete-info .di-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.1rem 0;
+            border-bottom: 1px dotted rgba(214, 48, 49, 0.1);
+        }
+        .item-delete-modal .delete-info .di-row:last-child {
+            border-bottom: none;
+        }
+        .item-delete-modal .delete-actions {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 0.8rem;
+        }
+        .item-delete-modal .delete-actions button {
+            flex: 1;
+            padding: 0.45rem;
+            border-radius: 6px;
+            font-weight: 700;
+            font-size: 0.65rem;
+            border: none;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+        .item-delete-modal .delete-actions .btn-yes {
+            background: var(--destructive);
+            color: #fff;
+        }
+        .item-delete-modal .delete-actions .btn-yes:hover {
+            background: #b71c1c;
+            transform: scale(1.02);
+        }
+        .item-delete-modal .delete-actions .btn-no {
+            background: var(--secondary);
+            color: var(--foreground);
+            border: 1.5px solid var(--border);
+        }
+        .item-delete-modal .delete-actions .btn-no:hover {
+            background: var(--muted);
+        }
+
+        /* ===== RESPONSIVE ADMIN STATS ===== */
+        @media (max-width: 600px) {
+            .admin-stats-row {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 0.25rem;
+            }
+            .admin-stat-card .stat-number {
+                font-size: 0.7rem;
+            }
+            .admin-stat-card .stat-label {
+                font-size: 0.4rem;
+            }
+            .admin-search-row {
+                flex-wrap: wrap;
+            }
+            .admin-search-row input {
+                flex: 1 1 100%;
+                order: 2;
+            }
+            .admin-search-row .admin-refresh-btn {
+                order: 1;
+                flex-shrink: 0;
+            }
+            .item-control-stats {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 0.25rem;
+            }
+            .item-control-stats .stat-card .stat-number {
+                font-size: 0.7rem;
+            }
+            .item-control-stats .stat-card .stat-label {
+                font-size: 0.4rem;
+            }
+            .item-control-search-row {
+                flex-wrap: wrap;
+            }
+            .item-control-search-row input {
+                flex: 1 1 100%;
+                order: 2;
+            }
+            .item-control-search-row .item-add-btn {
+                order: 1;
+                flex-shrink: 0;
+            }
+        }
+        @media (max-width: 400px) {
+            .admin-stats-row {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .item-control-stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
         }
     </style>
 </head>
 <body>
-    <!-- Existing HTML structure unchanged except where noted -->
+    <!-- Global Loader -->
     <div class="global-loader" id="globalLoader">
         <div class="spinner"></div>
         <div class="loader-text">✨ RAS Fashion লোড হচ্ছে...</div>
     </div>
 
+    <!-- Error Banner -->
     <div class="error-banner-overlay" id="errorBannerOverlay">
         <div class="error-banner">
             <div class="error-icon">⚠️</div>
@@ -2519,6 +3169,7 @@
         </div>
     </div>
 
+    <!-- Navbar -->
     <nav class="navbar">
         <div class="inner">
             <a class="nav-logo" onclick="navigate('home')"><img src="https://i.imgur.com/XfScOKb.png" alt="RAS Fashion"><span>RAS Fashion</span></a>
@@ -2535,23 +3186,20 @@
             </div>
             <div class="nav-right">
                 <div class="toggle-wrapper">
-                    <!-- Wishlist button styled like cart button -->
                     <button class="wish-header-btn" onclick="navigate('wishlist')" id="wishHeaderBtn" title="পছন্দের তালিকা"><i class="fas fa-heart"></i><span class="wish-count" id="wishHeaderCount">0</span></button>
                 </div>
                 <button class="cart-btn" onclick="navigate('cart')"><i class="fas fa-shopping-cart"></i><span class="cart-badge" id="cartBadge" style="display:none">0</span></button>
                 <button class="login-btn" id="loginBtnNav" onclick="openLoginModal()">লগইন</button>
-                <button class="mobile-search-btn" onclick="toggleMobileSearch()"><i class="fas fa-search"></i></button>
+                <button class="mobile-search-btn" onclick="doSearch()"><i class="fas fa-search"></i></button>
                 <button class="profile-icon-btn" id="profileIconNav" style="display:none;" onclick="openProfileModal()" title="প্রোফাইল">👤</button>
                 <button class="mobile-menu-btn" onclick="toggleMobileMenu()"><i class="fas fa-bars"></i></button>
             </div>
         </div>
     </nav>
+
+    <!-- Mobile Nav -->
     <div class="mobile-nav" id="mobileNav" onclick="closeMobileMenu(event)">
         <div class="mobile-nav-panel">
-            <div class="mobile-search-wrap">
-                <input type="text" placeholder="পণ্য খুঁজুন..." id="mobileSearchInput" oninput="handleNavSearch(this.value)" onkeypress="if(event.key==='Enter'){doSearch();toggleMobileMenu()}">
-                <button class="mobile-search-submit" onclick="doSearch();toggleMobileMenu()"><i class="fas fa-search"></i></button>
-            </div>
             <a onclick="navigate('home')" id="mnl-home" class="active">🏠 হোম</a>
             <a onclick="navigate('shop')" id="mnl-shop">🛍️ শপ</a>
             <a onclick="navigate('contact')" id="mnl-contact">📞 যোগাযোগ</a>
@@ -2561,7 +3209,9 @@
         </div>
     </div>
 
+    <!-- MAIN PAGES -->
     <main>
+        <!-- HOME -->
         <div class="page active" id="page-home">
             <div class="banner-slider">
                 <div class="slideshow-container" id="slideshowContainer">
@@ -2589,19 +3239,22 @@
             <section class="social-section"><h2>💖 আমাদের সাথে কানেক্ট থাকুন</h2><p>নতুন প্রোডাক্ট, অফার ও বিউটি টিপস সবার আগে জানুন!</p><div class="social-btns"><a href="https://facebook.com/rasfashion" target="_blank" class="social-btn fb-btn"><i class="fab fa-facebook-f"></i> Facebook</a><a href="https://wa.me/8801567901178" target="_blank" class="social-btn wa-btn"><i class="fab fa-whatsapp"></i> WhatsApp</a></div></section>
         </div>
 
+        <!-- SHOP -->
         <div class="page" id="page-shop">
             <button class="page-back-btn" onclick="navigateBack()" title="পূর্বের পৃষ্ঠায় ফিরুন"><i class="fas fa-arrow-left"></i></button>
             <div style="background:var(--secondary);padding:1.2rem 0;margin-bottom:0.8rem;"><div class="container"><h1 style="font-size:0.95rem;font-weight:800;">🛍️ সব পণ্য</h1><p style="font-size:0.65rem;color:var(--muted-foreground);" id="shopCount">মোট পণ্য লোড হচ্ছে...</p></div></div>
             <div class="container" style="padding-bottom:2rem;">
-                <div style="position:relative;margin-bottom:0.5rem;"><i class="fas fa-search" style="position:absolute;left:0.55rem;top:50%;transform:translateY(-50%);color:var(--primary);opacity:0.45;font-size:0.65rem;"></i><input type="text" id="shopSearch" placeholder="পণ্য খুঁজুন..." oninput="filterProducts()" style="padding-left:1.8rem;width:100%;padding:0.4rem 0.5rem 0.4rem 1.8rem;border:1.5px solid var(--border);border-radius:7px;font-size:0.68rem;"></div>
+                <div style="position:relative;margin-bottom:0.5rem;"><i class="fas fa-search" style="position:absolute;left:0.55rem;top:50%;transform:translateY(-50%);color:var(--primary);opacity:0.45;font-size:0.65rem;"></i><input type="text" id="shopSearch" placeholder="পণ্য খুঁজুন..." oninput="filterProducts()" style="padding-left:1.8rem;width:100%;padding:0.4rem 0.5rem 0.4rem 1.8rem;border:1.5px solid var(--border);border-radius:7px;font-size:0.68rem;" onkeypress="if(event.key==='Enter'){event.preventDefault();document.activeElement?.blur();}"></div>
                 <div id="shopFilters" style="display:flex;flex-wrap:wrap;gap:0.3rem;align-items:center;"></div>
                 <div class="prod-grid" id="shopGrid" style="margin-top:0.7rem;"></div>
                 <div id="noResults" style="display:none;text-align:center;padding:2rem;color:var(--muted-foreground);font-size:0.7rem;">🔍 কোনো পণ্য পাওয়া যায়নি — ট্রেন্ডিং দেখুন</div>
             </div>
         </div>
 
+        <!-- PRODUCT DETAIL -->
         <div class="page" id="page-product"><div class="container" id="productDetailContent" style="padding-bottom:2rem;"></div></div>
 
+        <!-- CART -->
         <div class="page" id="page-cart">
             <button class="page-back-btn" onclick="navigateBack()" title="পূর্বের পৃষ্ঠায় ফিরুন"><i class="fas fa-arrow-left"></i></button>
             <div class="container" style="padding:1.2rem 0;">
@@ -2614,6 +3267,7 @@
             </div>
         </div>
 
+        <!-- CONTACT -->
         <div class="page" id="page-contact">
             <button class="page-back-btn" onclick="navigateBack()" title="পূর্বের পৃষ্ঠায় ফিরুন"><i class="fas fa-arrow-left"></i></button>
             <div class="container" style="padding:1.5rem 0;max-width:550px;margin:0 auto;">
@@ -2631,6 +3285,7 @@
             </div>
         </div>
 
+        <!-- TRACK ORDER -->
         <div class="page" id="page-track">
             <button class="page-back-btn" onclick="navigateBack()" title="পূর্বের পৃষ্ঠায় ফিরুন"><i class="fas fa-arrow-left"></i></button>
             <div class="container" style="padding:1.5rem 0;max-width:620px;margin:0 auto;">
@@ -2645,6 +3300,7 @@
             </div>
         </div>
 
+        <!-- WISHLIST -->
         <div class="page" id="page-wishlist">
             <button class="page-back-btn" onclick="navigateBack()" title="পূর্বের পৃষ্ঠায় ফিরুন"><i class="fas fa-arrow-left"></i></button>
             <div class="container" style="padding:1.2rem 0;">
@@ -2660,6 +3316,7 @@
         </div>
     </main>
 
+    <!-- FOOTER -->
     <footer>
         <div class="container">
             <div class="footer-top">
@@ -2687,18 +3344,44 @@
         </div>
     </footer>
 
+    <!-- WhatsApp Float -->
     <a href="https://wa.me/8801567901178" target="_blank" class="wa-float"><i class="fab fa-whatsapp"></i><span>চ্যাট করুন</span></a>
+
+    <!-- Admin Float Button -->
     <button class="admin-float" id="adminFloatBtn" onclick="openAdminAccess()"><i class="fas fa-shield-alt"></i><span>এডমিন</span></button>
 
+    <!-- MODALS -->
+    <!-- Checkout Modal -->
     <div class="modal-overlay" id="checkoutModal">
         <div class="modal-full">
             <div class="modal-sticky-header"><h2>📦 অর্ডার ফর্ম</h2><button class="modal-close-btn" onclick="closeCheckoutModal()">✕ বন্ধ করুন</button></div>
             <div class="modal-scroll-body" id="checkoutModalBody"></div>
         </div>
     </div>
-    <div class="modal-overlay" id="loginModal"><div class="modal-full" style="max-width:400px;height:auto;max-height:80vh;"><div class="modal-sticky-header"><h2>👤 লগইন</h2><button class="modal-close-btn" onclick="closeLoginModal()">✕</button></div><div class="modal-scroll-body"><div class="form-group"><label class="form-label">আপনার নাম *</label><input type="text" class="form-input" id="loginName" placeholder="আপনার পুরো নাম"></div><div class="form-group"><label class="form-label">ফোন নম্বর / ইমেইল *</label><input type="text" class="form-input" id="loginUser" placeholder="01XXXXXXXXX বা email"></div><div class="form-group"><label class="form-label">পাসওয়ার্ড *   <b>(যেমন: 1234 লিখুন)</b></label><input type="password" class="form-input" id="loginPass" placeholder="পাসওয়ার্ড"></div><button class="btn-primary" style="width:100%;" onclick="doLogin()">লগইন</button><p style="text-align:center;font-size:0.58rem;color:var(--muted-foreground);margin-top:0.3rem;">নতুন অ্যাকাউন্ট? তথ্য দিয়ে লগইন করলেই হয়ে যাবে।</p></div></div></div>
-    <div class="modal-overlay" id="profileModal"><div class="modal-full" style="max-width:460px;height:auto;max-height:85vh;"><div class="modal-sticky-header"><h2>👤 আমার প্রোফাইল</h2><button class="modal-close-btn" onclick="closeProfileModal()">✕</button></div><div class="modal-scroll-body" id="profileModalBody"><div class="inline-loader"><div class="spinner-small"></div> লোড হচ্ছে...</div></div></div></div>
 
+    <!-- Login Modal -->
+    <div class="modal-overlay" id="loginModal">
+        <div class="modal-full" style="max-width:400px;height:auto;max-height:80vh;">
+            <div class="modal-sticky-header"><h2>👤 লগইন</h2><button class="modal-close-btn" onclick="closeLoginModal()">✕</button></div>
+            <div class="modal-scroll-body">
+                <div class="form-group"><label class="form-label">আপনার নাম *</label><input type="text" class="form-input" id="loginName" placeholder="আপনার পুরো নাম"></div>
+                <div class="form-group"><label class="form-label">ফোন নম্বর / ইমেইল *</label><input type="text" class="form-input" id="loginUser" placeholder="01XXXXXXXXX বা email"></div>
+                <div class="form-group"><label class="form-label">পাসওয়ার্ড * <b>(যেমন: 1234 লিখুন)</b></label><input type="password" class="form-input" id="loginPass" placeholder="পাসওয়ার্ড"></div>
+                <button class="btn-primary" style="width:100%;" onclick="doLogin()">লগইন</button>
+                <p style="text-align:center;font-size:0.58rem;color:var(--muted-foreground);margin-top:0.3rem;">নতুন অ্যাকাউন্ট? তথ্য দিয়ে লগইন করলেই হয়ে যাবে।</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Profile Modal -->
+    <div class="modal-overlay" id="profileModal">
+        <div class="modal-full" style="max-width:460px;height:auto;max-height:85vh;">
+            <div class="modal-sticky-header"><h2>👤 আমার প্রোফাইল</h2><button class="modal-close-btn" onclick="closeProfileModal()">✕</button></div>
+            <div class="modal-scroll-body" id="profileModalBody"><div class="inline-loader"><div class="spinner-small"></div> লোড হচ্ছে...</div></div>
+        </div>
+    </div>
+
+    <!-- Footer Modal -->
     <div class="modal-overlay footer-modal" id="footerModal">
         <div class="modal-full">
             <div class="modal-sticky-header"><h2 id="footerModalTitle">শর্তাবলী</h2><button class="modal-close-btn" onclick="closeFooterModal()">✕</button></div>
@@ -2706,7 +3389,7 @@
         </div>
     </div>
 
-    <!-- Admin Action Modal -->
+    <!-- Admin Action Modal (z-index: 5000) -->
     <div class="modal-overlay admin-action-modal" id="adminActionModal">
         <div class="modal-full">
             <div class="modal-sticky-header"><h2>⚙️ অর্ডার আপডেট</h2><button class="modal-close-btn" onclick="closeAdminActionModal()">✕</button></div>
@@ -2714,12 +3397,38 @@
         </div>
     </div>
 
+    <!-- Admin Access Modal (z-index: 5000) -->
+    <div class="modal-overlay" id="adminAccessModal">
+        <div class="modal-full" style="max-width:420px;height:auto;max-height:75vh;">
+            <div class="modal-sticky-header"><h2>👑 এডমিন প্যানেল</h2><button class="modal-close-btn" onclick="closeAdminAccess()">✕</button></div>
+            <div class="modal-scroll-body" id="adminAccessModalBody"></div>
+        </div>
+    </div>
+
+    <!-- Item Edit Modal (full screen) -->
+    <div class="modal-overlay item-edit-modal" id="itemEditModal">
+        <div class="modal-full">
+            <div class="modal-sticky-header"><h2 id="itemEditTitle">✏️ আইটেম এডিট</h2><button class="modal-close-btn" onclick="closeItemEditModal()">✕</button></div>
+            <div class="modal-scroll-body" id="itemEditModalBody"></div>
+        </div>
+    </div>
+
+    <!-- Item Delete Confirm Modal -->
+    <div class="modal-overlay item-delete-modal" id="itemDeleteModal">
+        <div class="modal-full">
+            <div class="modal-sticky-header"><h2>⚠️ আইটেম ডিলিট</h2><button class="modal-close-btn" onclick="closeItemDeleteModal()">✕</button></div>
+            <div class="modal-scroll-body" id="itemDeleteModalBody"></div>
+        </div>
+    </div>
+
+    <!-- Toast -->
     <div class="toast" id="toast"></div>
 
     <script>
         // ===== CONFIGURATION =====
         const GOOGLE_SHEETS_PRODUCT_API_URL = 'https://script.google.com/macros/s/AKfycbxwrUku1D64M_ZTR9Pf93r7rDjxuepv596bYXWRwL_ItymqOhYe9eAxOJbsIoZf4PvJrg/exec';
         const GOOGLE_SHEETS_ORDER_API_URL = 'https://script.google.com/macros/s/AKfycbz3buNp9_vtf0HsegThMbCrD6GPEMzMIy1vyQSiJzJfwwS2Ec-Zmx_ulFI1vA30SEoE/exec';
+        const GOOGLE_SHEETS_ITEM_API_URL = 'https://script.google.com/macros/s/AKfycbws_iBck9ES10X9UchHMwQ9FT8tumMFJML5bKuXmNmaXpCsYeDokYOnxUeurljiWdke/exec'; // NEW for Item Control
 
         const MAX_RETRY_ATTEMPTS = 3;
         const RETRY_DELAY_MS = 1500;
@@ -2751,6 +3460,7 @@
         let navigationStack = [];
         let backPressCount = 0;
         let backPressTimer = null;
+        let isUpdatingOrder = false;
 
         const CATEGORIES = ['Cosmetics', 'Skincare', 'Haircare', 'Fragrance', 'Jewelry', 'Clothing'];
         const CAT_LABELS = { Cosmetics: 'কসমেটিকস', Skincare: 'স্কিনকেয়ার', Haircare: 'হেয়ারকেয়ার', Fragrance: 'সুগন্ধি', Jewelry: 'জুয়েলারি', Clothing: 'পোশাক' };
@@ -2831,8 +3541,10 @@
                 newArrival: p.newArrival === true || p.newArrival === 'true' || p.newArrival === 'TRUE' || p.newArrival === 1,
                 deal: p.deal === true || p.deal === 'true' || p.deal === 'TRUE' || p.deal === 1,
                 bestseller: p.bestseller === true || p.bestseller === 'true' || p.bestseller === 'TRUE' || p.bestseller === 1,
-                tags: Array.isArray(p.tags) ? p.tags : (typeof p.tags === 'string' ? p.tags.split(',').map(t => t.trim()).filter(Boolean) : []),
-                specs: Array.isArray(p.specs) ? p.specs : (typeof p.specs === 'string' ? p.specs.split('|').map(s => s.trim()).filter(Boolean) : []),
+                tags: Array.isArray(p.tags) ? p.tags : (typeof p.tags === 'string' ? p.tags.split(',').map(t => t.trim())
+                    .filter(Boolean) : []),
+                specs: Array.isArray(p.specs) ? p.specs : (typeof p.specs === 'string' ? p.specs.split('|').map(s => s
+                    .trim()).filter(Boolean) : []),
                 batch: p.batch || null
             }));
         }
@@ -2863,7 +3575,8 @@
 
         async function fetchOrdersForUser(loginId) {
             try {
-                const url = GOOGLE_SHEETS_ORDER_API_URL + '?action=getOrdersByLoginId&loginId=' + encodeURIComponent(String(loginId)) + '&_=' + Date.now();
+                const url = GOOGLE_SHEETS_ORDER_API_URL + '?action=getOrdersByLoginId&loginId=' + encodeURIComponent(String(
+                    loginId)) + '&_=' + Date.now();
                 const data = await apiGet(url);
                 if (data.ok && Array.isArray(data.orders)) return data.orders;
                 return [];
@@ -2875,7 +3588,8 @@
 
         async function fetchOrdersByPhone(phone) {
             try {
-                const url = GOOGLE_SHEETS_ORDER_API_URL + '?action=getOrdersByPhone&phone=' + encodeURIComponent(String(phone)) + '&_=' + Date.now();
+                const url = GOOGLE_SHEETS_ORDER_API_URL + '?action=getOrdersByPhone&phone=' + encodeURIComponent(String(
+                    phone)) + '&_=' + Date.now();
                 const data = await apiGet(url);
                 if (data.ok && Array.isArray(data.orders)) return data.orders;
                 return [];
@@ -2887,7 +3601,8 @@
 
         async function fetchOrderById(orderId) {
             try {
-                const url = GOOGLE_SHEETS_ORDER_API_URL + '?action=getOrderById&orderId=' + encodeURIComponent(String(orderId)) + '&_=' + Date.now();
+                const url = GOOGLE_SHEETS_ORDER_API_URL + '?action=getOrderById&orderId=' + encodeURIComponent(String(
+                    orderId)) + '&_=' + Date.now();
                 const data = await apiGet(url);
                 if (data.ok && Array.isArray(data.orders)) return data.orders;
                 return [];
@@ -2931,7 +3646,6 @@
             return data;
         }
 
-        // New: update multiple status columns and note
         async function updateOrderStatusFull(orderId, updates) {
             const payload = {
                 action: 'updateOrderStatusFull',
@@ -2941,6 +3655,92 @@
             const data = await apiPost(GOOGLE_SHEETS_ORDER_API_URL, payload);
             if (!data.ok) throw new Error(data.error || 'Status update failed');
             return data;
+        }
+
+        // ===== ITEM CONTROL API =====
+        async function fetchAllItemsFromSheet() {
+            try {
+                const url = GOOGLE_SHEETS_ITEM_API_URL + '?action=getItems&_=' + Date.now();
+                const data = await apiGet(url);
+                if (data.ok && Array.isArray(data.items)) return data.items;
+                throw new Error(data.error || 'Invalid items data');
+            } catch (e1) {
+                try {
+                    const data = await apiPost(GOOGLE_SHEETS_ITEM_API_URL, { action: 'getItems' });
+                    if (data.ok && Array.isArray(data.items)) return data.items;
+                    throw new Error(data.error || 'Invalid items data');
+                } catch (e2) {
+                    const proxyUrl = CORS_PROXY_URL + encodeURIComponent(GOOGLE_SHEETS_ITEM_API_URL);
+                    const data = await apiGet(proxyUrl);
+                    if (data.ok && Array.isArray(data.items)) return data.items;
+                    throw new Error('All item fetch strategies failed');
+                }
+            }
+        }
+
+        async function addItemToSheet(itemData) {
+            const payload = {
+                action: 'addItem',
+                ...itemData
+            };
+            const data = await apiPost(GOOGLE_SHEETS_ITEM_API_URL, payload);
+            if (!data.ok) throw new Error(data.error || 'Add item failed');
+            return data;
+        }
+
+        async function editItemInSheet(itemId, itemData) {
+            const payload = {
+                action: 'editItem',
+                id: itemId,
+                ...itemData
+            };
+            const data = await apiPost(GOOGLE_SHEETS_ITEM_API_URL, payload);
+            if (!data.ok) throw new Error(data.error || 'Edit item failed');
+            return data;
+        }
+
+        async function deleteItemFromSheet(itemId) {
+            const payload = {
+                action: 'deleteItem',
+                id: itemId
+            };
+            const data = await apiPost(GOOGLE_SHEETS_ITEM_API_URL, payload);
+            if (!data.ok) throw new Error(data.error || 'Delete item failed');
+            return data;
+        }
+
+        async function getNextItemId() {
+            try {
+                const url = GOOGLE_SHEETS_ITEM_API_URL + '?action=getNextId&_=' + Date.now();
+                const data = await apiGet(url);
+                if (data.ok) return data.nextId;
+                throw new Error(data.error || 'Failed to get next ID');
+            } catch (e) {
+                try {
+                    const data = await apiPost(GOOGLE_SHEETS_ITEM_API_URL, { action: 'getNextId' });
+                    if (data.ok) return data.nextId;
+                    throw new Error(data.error || 'Failed to get next ID');
+                } catch (e2) {
+                    throw e2;
+                }
+            }
+        }
+
+        async function getNextBatchNumber() {
+            try {
+                const url = GOOGLE_SHEETS_ITEM_API_URL + '?action=getNextBatch&_=' + Date.now();
+                const data = await apiGet(url);
+                if (data.ok) return data.nextBatch;
+                throw new Error(data.error || 'Failed to get next batch');
+            } catch (e) {
+                try {
+                    const data = await apiPost(GOOGLE_SHEETS_ITEM_API_URL, { action: 'getNextBatch' });
+                    if (data.ok) return data.nextBatch;
+                    throw new Error(data.error || 'Failed to get next batch');
+                } catch (e2) {
+                    throw e2;
+                }
+            }
         }
 
         function showErrorBanner() {
@@ -3001,6 +3801,7 @@
         }
 
         function saveCart() { localStorage.setItem('ras_cart', JSON.stringify(cart)); }
+
         function saveUser() { if (currentUser) localStorage.setItem('ras_user', JSON.stringify(currentUser));
             else localStorage.removeItem('ras_user'); }
 
@@ -3010,11 +3811,16 @@
             b.style.display = t > 0 ? 'flex' : 'none'; }
 
         function lockBodyScroll() { document.body.classList.add('modal-open'); }
+
         function unlockBodyScroll() {
             if (!document.getElementById('checkoutModal').classList.contains('open') &&
                 !document.getElementById('loginModal').classList.contains('open') &&
                 !document.getElementById('profileModal').classList.contains('open') &&
-                !document.getElementById('adminAccessModal')?.classList.contains('open')) {
+                !document.getElementById('adminAccessModal')?.classList.contains('open') &&
+                !document.getElementById('adminActionModal')?.classList.contains('open') &&
+                !document.getElementById('itemEditModal')?.classList.contains('open') &&
+                !document.getElementById('itemDeleteModal')?.classList.contains('open') &&
+                !document.getElementById('footerModal')?.classList.contains('open')) {
                 document.body.classList.remove('modal-open');
             }
         }
@@ -3044,7 +3850,8 @@
         function updateAdminFloat() {
             const adminFloat = document.getElementById('adminFloatBtn');
             if (currentUser) {
-                const phone = String(currentUser.phone || '').replace(/[০-৯]/g, d => String.fromCharCode(d.charCodeAt(0) - 2504)).trim();
+                const phone = String(currentUser.phone || '').replace(/[০-৯]/g, d => String.fromCharCode(d.charCodeAt(
+                    0) - 2504)).trim();
                 const adminPhones = ['01788922078', '01788922078'];
                 if (adminPhones.includes(phone) || adminPhones.includes(currentUser.phone)) {
                     adminFloat.style.display = 'flex';
@@ -3075,6 +3882,7 @@
             const hasImage = product.image && product.image.trim() !== '';
             const shortName = product.nameEn || product.name || 'P';
             const initials = shortName.split(' ').map(w => w.charAt(0)).join('').substring(0, 2).toUpperCase();
+            const batchDisplay = product.batch ? `<span class="batch-badge-card">📦 ${product.batch}</span>` : '';
             return `
             <div class="prod-card ${extraClass}" onclick="navigate('product','${product.id}')">
               <div class="prod-img-wrap">
@@ -3083,6 +3891,7 @@
                 ${product.badge==='best'?'<span class="best-badge">⭐ সেরা</span>':''}
                 ${discount>0?`<span class="discount-badge-card">-${discount}%</span>`:''}
                 <span class="stock-badge-card ${stockClass}">${stockLabel}</span>
+                ${batchDisplay}
               </div>
               <button class="wish-btn ${isWished?'wished':''}" onclick="toggleWish(event,'${product.id}')"><i class="${isWished?'fas':'far'} fa-heart"></i></button>
               <div class="prod-body"><div class="prod-name">${product.name}</div><div class="prod-desc">${product.desc}</div>
@@ -3092,18 +3901,25 @@
 
         function renderHomeProducts() {
             const trendingHTML = products.filter(p => p.trending).slice(0, 6).map(p => createProductCard(p)).join('');
-            document.getElementById('trendingGrid').innerHTML = trendingHTML || '<p style="text-align:center;color:var(--muted-foreground);">🔜 ট্রেন্ডিং পণ্য লোড হচ্ছে...</p>';
+            document.getElementById('trendingGrid').innerHTML = trendingHTML ||
+                '<p style="text-align:center;color:var(--muted-foreground);">🔜 ট্রেন্ডিং পণ্য লোড হচ্ছে...</p>';
             const newHTML = products.filter(p => p.newArrival).slice(0, 6).map(p => createProductCard(p)).join('');
-            document.getElementById('newArrivalsGrid').innerHTML = newHTML || '<p style="text-align:center;color:var(--muted-foreground);">🔜 নতুন পণ্য লোড হচ্ছে...</p>';
+            document.getElementById('newArrivalsGrid').innerHTML = newHTML ||
+                '<p style="text-align:center;color:var(--muted-foreground);">🔜 নতুন পণ্য লোড হচ্ছে...</p>';
             const dealsHTML = products.filter(p => p.deal).slice(0, 2).map(p => createProductCard(p, 'deal-card')).join('');
-            document.getElementById('dealsGrid').innerHTML = dealsHTML || '<p style="text-align:center;color:var(--muted-foreground);">🔜 ডিল লোড হচ্ছে...</p>';
+            document.getElementById('dealsGrid').innerHTML = dealsHTML ||
+                '<p style="text-align:center;color:var(--muted-foreground);">🔜 ডিল লোড হচ্ছে...</p>';
             const bestHTML = products.map(p => createProductCard(p)).join('');
-            document.getElementById('bestGrid').innerHTML = bestHTML || '<p style="text-align:center;color:var(--muted-foreground);">🔜 বেস্ট সেলার লোড হচ্ছে...</p>';
-            document.getElementById('homeCatGrid').innerHTML = CATEGORIES.map(cat => `<a class="cat-item" onclick="navigateShopCategory('${cat}')"><div class="cat-icon">${CAT_EMOJIS[cat]}</div><span class="cat-label">${CAT_LABELS[cat]}</span></a>`).join('');
+            document.getElementById('bestGrid').innerHTML = bestHTML ||
+                '<p style="text-align:center;color:var(--muted-foreground);">🔜 বেস্ট সেলার লোড হচ্ছে...</p>';
+            document.getElementById('homeCatGrid').innerHTML = CATEGORIES.map(cat =>
+                `<a class="cat-item" onclick="navigateShopCategory('${cat}')"><div class="cat-icon">${CAT_EMOJIS[cat]}</div><span class="cat-label">${CAT_LABELS[cat]}</span></a>`
+            ).join('');
         }
 
         function renderShop() {
-            document.getElementById('shopFilters').innerHTML = `<button class="filter-btn active" data-cat="all" onclick="setCategory('all',this)">সব</button>${CATEGORIES.map(cat=>`<button class="filter-btn" data-cat="${cat}" onclick="setCategory('${cat}',this)">${CAT_LABELS[cat]}</button>`).join('')}<select onchange="sortProducts(this.value)" style="margin-left:auto;padding:0.2rem 0.4rem;border:1.5px solid var(--border);border-radius:6px;font-size:0.62rem;background:var(--background);"><option value="default">ডিফল্ট</option><option value="price-asc">দাম: কম→বেশি</option><option value="price-desc">দাম: বেশি→কম</option></select>`;
+            document.getElementById('shopFilters').innerHTML =
+                `<button class="filter-btn active" data-cat="all" onclick="setCategory('all',this)">সব</button>${CATEGORIES.map(cat=>`<button class="filter-btn" data-cat="${cat}" onclick="setCategory('${cat}',this)">${CAT_LABELS[cat]}</button>`).join('')}<select onchange="sortProducts(this.value)" style="margin-left:auto;padding:0.2rem 0.4rem;border:1.5px solid var(--border);border-radius:6px;font-size:0.62rem;background:var(--background);"><option value="default">ডিফল্ট</option><option value="price-asc">দাম: কম→বেশি</option><option value="price-desc">দাম: বেশি→কম</option></select>`;
             filterProducts();
         }
 
@@ -3115,7 +3931,8 @@
             const dp = Array.from({ length: len1 + 1 }, () => Array(len2 + 1).fill(0));
             for (let i = 0; i <= len1; i++) dp[i][0] = i;
             for (let j = 0; j <= len2; j++) dp[0][j] = j;
-            for (let i = 1; i <= len1; i++) { for (let j = 1; j <= len2; j++) { const cost = str1[i - 1] === str2[j - 1] ? 0 : 1;
+            for (let i = 1; i <= len1; i++) { for (let j = 1; j <= len2; j++) { const cost = str1[i - 1] === str2[j - 1] ?
+                        0 : 1;
                     dp[i][j] = Math.min(dp[i - 1][j] + 1, dp[i][j - 1] + 1, dp[i - 1][j - 1] + cost); } }
             const distance = dp[len1][len2],
                 maxLen = Math.max(len1, len2);
@@ -3132,7 +3949,8 @@
 
         function fuzzyFilterProducts(prods, query) {
             if (!query) return prods;
-            return prods.map(p => ({ ...p, sim: maxWordSimilarity(query, p.name + ' ' + p.nameEn + ' ' + p.desc) })).filter(p => p.sim > 0.3).sort((a, b) => b.sim - a.sim);
+            return prods.map(p => ({ ...p, sim: maxWordSimilarity(query, p.name + ' ' + p.nameEn + ' ' + p.desc) }))
+                .filter(p => p.sim > 0.3).sort((a, b) => b.sim - a.sim);
         }
 
         function filterProducts() {
@@ -3153,7 +3971,8 @@
                 noRes.style.display = 'block';
                 noRes.innerHTML = '🔍 কোনো পণ্য পাওয়া যায়নি — ট্রেন্ডিং দেখাচ্ছি';
             }
-            document.getElementById('shopCount').textContent = prods.length ? `মোট ${prods.length}টি পণ্য` : 'ট্রেন্ডিং পণ্য দেখানো হচ্ছে';
+            document.getElementById('shopCount').textContent = prods.length ? `মোট ${prods.length}টি পণ্য` :
+                'ট্রেন্ডিং পণ্য দেখানো হচ্ছে';
         }
 
         function setCategory(cat, btn) { filterCategory = cat;
@@ -3170,7 +3989,6 @@
                 return;
             }
             const prevPage = currentPage;
-            // Save scroll position only for home
             if (prevPage && prevPage !== page && prevPage === 'home') {
                 saveScrollPosition(prevPage);
             }
@@ -3182,7 +4000,8 @@
             const navMap = { home: 'nl-home', shop: 'nl-shop', contact: 'nl-contact', track: 'nl-track' };
             const navEl = document.getElementById(navMap[page]); if (navEl) navEl.classList.add('active');
             document.querySelectorAll('.mobile-nav-panel a[class]').forEach(a => a.classList.remove('active'));
-            const mnlMap = { home: 'mnl-home', shop: 'mnl-shop', contact: 'mnl-contact', track: 'mnl-track', wishlist: 'mnl-wishlist' };
+            const mnlMap = { home: 'mnl-home', shop: 'mnl-shop', contact: 'mnl-contact', track: 'mnl-track',
+                wishlist: 'mnl-wishlist' };
             const mnlEl = document.getElementById(mnlMap[page]); if (mnlEl) mnlEl.classList.add('active');
             document.getElementById('mobileNav').classList.remove('open');
             if (page === 'shop') renderShop();
@@ -3190,7 +4009,6 @@
             if (page === 'product' && productId) renderProductDetail(productId);
             if (page === 'home') { renderHomeProducts();
                 initSlideshow();
-                // Restore home scroll position if any
                 restoreScrollPosition('home'); }
             if (page === 'contact') renderContactInfo();
             if (page === 'wishlist') renderWishlist();
@@ -3199,13 +4017,11 @@
                     navigationStack.push(prevPage);
                 }
             }
-            // No automatic scroll restore for other pages
         }
 
         function navigateBack() {
             if (navigationStack.length > 0) {
                 const prev = navigationStack.pop();
-                // Save only home
                 if (currentPage === 'home') saveScrollPosition(currentPage);
                 navigate(prev);
             } else {
@@ -3215,17 +4031,22 @@
 
         function navigateShopCategory(cat) { filterCategory = cat;
             navigate('shop');
-            setTimeout(() => { document.querySelectorAll('#shopFilters .filter-btn').forEach(b => b.classList.toggle('active', b.dataset.cat === cat)); }, 50); }
+            setTimeout(() => { document.querySelectorAll('#shopFilters .filter-btn').forEach(b => b.classList.toggle(
+                    'active', b.dataset.cat === cat)); }, 50); }
 
         function renderProductDetail(id) {
             const p = products.find(x => x.id === id);
-            if (!p) { document.getElementById('productDetailContent').innerHTML = '<div style="text-align:center;padding:2rem;"><h2 style="font-size:0.85rem;">পণ্য পাওয়া যায়নি</h2></div>'; return; }
+            if (!p) { document.getElementById('productDetailContent').innerHTML =
+                    '<div style="text-align:center;padding:2rem;"><h2 style="font-size:0.85rem;">পণ্য পাওয়া যায়নি</h2></div>'; return; }
             currentProduct = p;
             const discount = p.originalPrice ? Math.round((1 - p.price / p.originalPrice) * 100) : 0;
             const similar = products.filter(x => x.category === p.category && x.id !== p.id).slice(0, 4);
             const hasImage = p.image && p.image.trim() !== '';
             const shortName = p.nameEn || p.name || 'P';
             const initials = shortName.split(' ').map(w => w.charAt(0)).join('').substring(0, 2).toUpperCase();
+            const batchDisplay = p.batch ?
+                `<div style="background:var(--gold-bg);border:1px solid var(--gold);border-radius:6px;padding:0.25rem 0.5rem;display:inline-block;font-size:0.65rem;font-weight:700;color:var(--gold);">📦 ব্যাচ: ${p.batch}</div>` :
+                '';
             document.getElementById('productDetailContent').innerHTML = `
             <div class="product-detail-wrapper">
               <div class="product-detail-image">
@@ -3235,6 +4056,7 @@
               </div>
               <div class="product-detail-info">
                 <h1>${p.name}</h1>
+                ${batchDisplay}
                 <div class="desc">${p.desc}</div>
                 <div class="price-block">
                   ৳${p.price.toLocaleString('bn-BD')}
@@ -3273,7 +4095,7 @@
         }
 
         function buyNow(id) {
-            if (!currentUser) { pendingAction = ()=>buyNow(id);
+            if (!currentUser) { pendingAction = () => buyNow(id);
                 openLoginModal(); return; }
             const p = products.find(x => x.id === id);
             if (!p || !p.inStock) return;
@@ -3360,7 +4182,7 @@
         }
 
         function openCheckoutModal() {
-            if (!currentUser) { pendingAction = ()=>openCheckoutModal();
+            if (!currentUser) { pendingAction = () => openCheckoutModal();
                 openLoginModal(); return; }
             if (!cart.length) { showToast('কার্ট খালি!', 'error'); return; }
             const items = cart.map(c => ({ ...c, product: products.find(p => p.id === c.id) })).filter(c => c.product);
@@ -3412,7 +4234,8 @@
             }).join('')}<div id="checkoutPromoDiscountRow" style="display:none;" class="summary-row"><span>প্রোমো ছাড়</span><span id="checkoutPromoDiscount">-৳0</span></div><div class="summary-row total"><span>সর্বমোট (ক্যাশ অন ডেলিভারি)</span><span id="checkoutTotal">৳${subtotal.toLocaleString('bn-BD')}</span></div></div>
             <button class="btn-primary" id="placeOrderBtn" style="width:100%;margin-top:0.5rem;margin-bottom:3rem;font-size:0.75rem;padding:0.6rem;" onclick="placeOrder()"><span class="btn-spinner"></span><span class="btn-text">✅ অর্ডার নিশ্চিত করুন</span></button>`;
             if (savedAddr) setTimeout(() => { updateDivision();
-                setTimeout(() => { const d = document.getElementById('orderDistrict'); if (d) for (let o of d.options) if (o.value === savedAddr.district) { o.selected = true;
+                setTimeout(() => { const d = document.getElementById('orderDistrict'); if (d) for (let o of d.options) if (o
+                        .value === savedAddr.district) { o.selected = true;
                         break; }
                     updateDistrict();
                     updateDeliveryChargeDisplay(); }, 150); }, 100);
@@ -3438,7 +4261,8 @@
             const t = document.getElementById('orderThana');
             t.disabled = !dist;
             t.innerHTML = '<option>থানা নির্বাচন করুন</option>';
-            if (div && dist && BD_DATA[div].districts[dist]) BD_DATA[div].districts[dist].forEach(tn => t.innerHTML += `<option>${tn}</option>`);
+            if (div && dist && BD_DATA[div].districts[dist]) BD_DATA[div].districts[dist].forEach(tn => t.innerHTML +=
+                `<option>${tn}</option>`);
         }
 
         function applyPromo() {
@@ -3449,8 +4273,10 @@
             const totalEl = document.getElementById('checkoutTotal');
             const items = cart.map(c => ({ ...c, product: products.find(p => p.id === c.id) })).filter(c => c.product);
             const subtotal = items.reduce((s, c) => s + c.product.price * c.qty, 0);
-            if (code === 'CHOICE10' || code === 'FIRST10') { appliedPromo = { code, discountPercent: 10 }; } else if (code === 'ROSE20') { appliedPromo = { code, discountPercent: 20 }; } else { appliedPromo = null;
-                msg.innerHTML = '<span style="color:red;">❌ কোড সঠিক নয়</span>'; if (discountRow) discountRow.style.display = 'none'; if (totalEl) totalEl.textContent = '৳' + subtotal.toLocaleString('bn-BD'); return; }
+            if (code === 'CHOICE10' || code === 'FIRST10') { appliedPromo = { code, discountPercent: 10 }; } else if (code ===
+                'ROSE20') { appliedPromo = { code, discountPercent: 20 }; } else { appliedPromo = null;
+                msg.innerHTML = '<span style="color:red;">❌ কোড সঠিক নয়</span>'; if (discountRow) discountRow.style.display =
+                    'none'; if (totalEl) totalEl.textContent = '৳' + subtotal.toLocaleString('bn-BD'); return; }
             const discount = Math.round(subtotal * (appliedPromo.discountPercent / 100));
             const newTotal = subtotal - discount;
             msg.innerHTML = '<span style="color:green;">✔ ' + appliedPromo.discountPercent + '% ছাড় প্রয়োগ হয়েছে!</span>';
@@ -3553,22 +4379,38 @@
             const msg = document.getElementById('contactMessage').value.trim();
             if (!name || !phone || !msg) { showToast('সব তথ্য দিন', 'error'); return; }
             showToast('✅ বার্তা পাঠানো হয়েছে!', 'success');
-            ['contactName', 'contactPhone', 'contactEmail', 'contactMessage'].forEach(id => document.getElementById(id).value = '');
+            ['contactName', 'contactPhone', 'contactEmail', 'contactMessage'].forEach(id => document.getElementById(id).value =
+                '');
         }
 
         function buildStatusProgress(order) {
-            // Cancelled check based on statusConfirmed === 'FALSE'
             if (order.cancelled) {
-                return `<div style="text-align:center;padding:0.5rem;background:#fef2f2;border-radius:6px;color:var(--destructive);font-weight:700;font-size:0.65rem;">❌ এই অর্ডারটি বাতিল করা হয়েছে</div>`;
+                let html =
+                    `<div class="cancelled-message-box">
+                    <div class="cancel-title">❌ অর্ডারটি বাতিল করা হয়েছে</div>`;
+                if (order.note && order.note.trim() !== '') {
+                    html +=
+                        `<div class="order-note-attractive" style="text-align:left;margin:0.4rem 0;">
+                        <span class="note-label"><i class="fas fa-pencil-alt"></i> নোট:</span> ${order.note}
+                    </div>`;
+                }
+                html +=
+                    `<div class="cancel-sub" style="font-size:0.6rem;margin-top:0.2rem;">
+                    <p>পুনরায় অর্ডারটি চালু করতে নিচের WhatsApp এ যোগাযোগ করুন।</p>
+                </div>
+                <a href="https://wa.me/8801567901178" target="_blank" class="cancelled-wa-btn">
+                    <i class="fab fa-whatsapp"></i> WhatsApp এ যোগাযোগ করুন
+                </a>
+                </div>`;
+                return html;
             }
-            // Status index: 0 = order received (always done), 1 = confirmed, 2 = packaging, 3 = shipped, 4 = delivered
             const STEPS = ['অর্ডার প্রাপ্তি', 'অর্ডার কনফার্ম', 'প্যাকেজিং', 'ডেলিভারির জন্য পাঠানো', 'ডেলিভারি সম্পন্ন'];
             let h = '<div class="status-progress">';
             for (let i = 0; i < STEPS.length; i++) {
                 let cls = 'pending';
                 let displayNum = i + 1;
                 if (i === 0) {
-                    cls = 'completed'; // Always completed
+                    cls = 'completed';
                 } else if (i === 1 && order.statusConfirmed === 'DONE') {
                     cls = 'completed';
                 } else if (i === 2 && order.statusPackaging === 'DONE') {
@@ -3578,24 +4420,24 @@
                 } else if (i === 4 && order.statusDelivered === 'DONE') {
                     cls = 'completed';
                 }
-                // Current step: the first non-completed step
                 if (cls === 'pending' && i !== 0) {
-                    // Check if previous step is completed
                     let prevCompleted = false;
-                    if (i === 1) prevCompleted = true; // step0 always completed
+                    if (i === 1) prevCompleted = true;
                     else if (i === 2) prevCompleted = order.statusConfirmed === 'DONE';
                     else if (i === 3) prevCompleted = order.statusPackaging === 'DONE';
                     else if (i === 4) prevCompleted = order.statusShipped === 'DONE';
                     if (prevCompleted) cls = 'current';
                 }
-                // For step0, always completed
                 if (i === 0) cls = 'completed';
-                h += `<div class="status-step ${cls}"><div class="step-circle">${cls === 'completed' ? '✔' : (cls === 'current' ? '●' : i+1)}</div><div class="step-line"></div><span class="step-label">${STEPS[i]}</span></div>`;
+                h +=
+                    `<div class="status-step ${cls}"><div class="step-circle">${cls === 'completed' ? '✔' : (cls === 'current' ? '●' : i+1)}</div><div class="step-line"></div><span class="step-label">${STEPS[i]}</span></div>`;
             }
             h += '</div>';
-            // Display note if exists
-            if (order.note) {
-                h += `<div style="font-size:0.52rem;color:var(--muted-foreground);background:#f5f2f4;padding:0.3rem;border-radius:4px;margin-top:0.3rem;">📝 নোট: ${order.note}</div>`;
+            if (order.note && order.note.trim() !== '') {
+                h +=
+                    `<div class="order-note-attractive">
+                    <span class="note-label"><i class="fas fa-pencil-alt"></i> নোট:</span> ${order.note}
+                </div>`;
             }
             return h;
         }
@@ -3606,7 +4448,8 @@
             return parts.map(part => {
                 const match = part.match(/^(.+?)\s+x(\d+)\s+@৳([\d,]+)$/);
                 if (match) {
-                    return { name: match[1].trim(), qty: parseInt(match[2]), unitPrice: parseFloat(match[3].replace(/,/g, '')), totalPrice: parseInt(match[2]) * parseFloat(match[3].replace(/,/g, '')) };
+                    return { name: match[1].trim(), qty: parseInt(match[2]), unitPrice: parseFloat(match[3].replace(/,/g,
+                            '')), totalPrice: parseInt(match[2]) * parseFloat(match[3].replace(/,/g, '')) };
                 }
                 return { name: part.trim(), qty: 1, unitPrice: 0, totalPrice: 0 };
             });
@@ -3617,7 +4460,8 @@
             const res = document.getElementById('trackResult');
             const btn = document.getElementById('trackBtn');
             res.style.display = 'block';
-            if (!input) { res.innerHTML = '<div style="text-align:center;padding:0.8rem;background:#fff;border-radius:8px;font-size:0.68rem;"><h3>⚠️ অর্ডার আইডি, ফোন নম্বর অথবা লগইন আইডি দিন</h3></div>'; return; }
+            if (!input) { res.innerHTML =
+                    '<div style="text-align:center;padding:0.8rem;background:#fff;border-radius:8px;font-size:0.68rem;"><h3>⚠️ অর্ডার আইডি, ফোন নম্বর অথবা লগইন আইডি দিন</h3></div>'; return; }
 
             setBtnLoading(btn, true);
             res.innerHTML = '<div class="inline-loader"><div class="spinner-small"></div> অর্ডার খোঁজা হচ্ছে...</div>';
@@ -3645,34 +4489,11 @@
 
             setBtnLoading(btn, false);
 
-            if (!matched.length) { res.innerHTML = '<div style="text-align:center;padding:1rem;background:#fff;border-radius:8px;font-size:0.68rem;"><h3>❌ অর্ডার পাওয়া যায়নি</h3></div>'; return; }
+            if (!matched.length) { res.innerHTML =
+                    '<div style="text-align:center;padding:1rem;background:#fff;border-radius:8px;font-size:0.68rem;"><h3>❌ অর্ডার পাওয়া যায়নি</h3></div>'; return; }
 
             res.innerHTML = matched.map((o, i) => {
                 const did = 'td-' + i;
-                if (o.cancelled) {
-                    return `
-                <div class="order-row-compact">
-                    <div class="order-row-header">
-                        <span class="order-id">📦 ${o.orderId}</span>
-                        <span class="order-name">${o.name}</span>
-                        <span class="order-meta">
-                            <span class="order-phone">📞 ${o.phone}</span>
-                            <span class="order-date">📅 ${o.date}</span>
-                        </span>
-                        <span class="order-total">৳${(o.total || 0).toLocaleString('bn-BD')}</span>
-                        <button class="order-detail-btn" onclick="toggleOrderDetail('${did}',this)">বিস্তারিত</button>
-                    </div>
-                    <div class="order-row-detail" id="${did}">
-                        <div style="text-align:center;padding:0.8rem;background:#fef2f2;border-radius:6px;color:var(--destructive);font-weight:700;font-size:0.7rem;">
-                            ❌ অর্ডারটি বাতিল করা হয়েছে
-                        </div>
-                        <div style="text-align:center;font-size:0.62rem;margin-top:0.4rem;">
-                            <p>পুনরায় অর্ডারটি সক্রিয় করতে <a href="https://wa.me/8801567901178" target="_blank" style="color:var(--primary);text-decoration:underline;"><i class="fab fa-whatsapp"></i> WhatsApp</a> এ যোগাযোগ করুন।</p>
-                        </div>
-                    </div>
-                </div>`;
-                }
-
                 const items = parseItemsSummary(o.itemsSummary);
                 const itemsHTML = items.length ? `
                 <div class="order-items-summary">
@@ -3764,7 +4585,9 @@
                 container.classList.add('paused'); }
 
             function toggle() { slideshowPlaying ? pause() : start(); }
-            container.onclick = (e) => { if (e.target.classList.contains('banner-fashion-btn') || e.target.closest('.banner-fashion-btn') || e.target.classList.contains('banner-pharma-btn') || e.target.closest('.banner-pharma-btn')) return;
+            container.onclick = (e) => { if (e.target.classList.contains('banner-fashion-btn') || e.target.closest(
+                        '.banner-fashion-btn') || e.target.classList.contains('banner-pharma-btn') || e.target.closest(
+                        '.banner-pharma-btn')) return;
                 toggle(); };
             dots.forEach(d => d.onclick = (e) => { e.stopPropagation();
                 show(parseInt(d.dataset.index)); if (slideshowPlaying) start(); });
@@ -3792,20 +4615,20 @@
             if (currentPage === 'wishlist') {
                 renderWishlist();
             }
-            if (currentPage === 'home' || currentPage === 'shop' || currentPage === 'product') {
-            }
         }
 
-        function addToCart(event, id) { event.stopPropagation(); const p = products.find(x => x.id === id); if (!p || !p.inStock) return; const existing = cart.find(c => c.id === id); if (existing) existing.qty = Math.min(existing.qty + 1, 10);
+        function addToCart(event, id) { event.stopPropagation(); const p = products.find(x => x.id === id); if (!p || !p
+                .inStock) return; const existing = cart.find(c => c.id === id); if (existing) existing.qty = Math.min(
+                existing.qty + 1, 10);
             else cart.push({ id, qty: 1 });
             saveCart();
             updateCartBadge();
             showToast('✅ কার্টে যোগ হয়েছে!', 'success'); }
 
         function toggleMobileMenu() { document.getElementById('mobileNav').classList.toggle('open'); }
-        function closeMobileMenu(e) { if (e.target === document.getElementById('mobileNav')) document.getElementById('mobileNav').classList.remove('open'); }
-        function toggleMobileSearch() { const n = document.getElementById('mobileNav');
-            n.classList.toggle('open'); if (n.classList.contains('open')) setTimeout(() => document.getElementById('mobileSearchInput')?.focus(), 100); }
+
+        function closeMobileMenu(e) { if (e.target === document.getElementById('mobileNav')) document.getElementById(
+                'mobileNav').classList.remove('open'); }
 
         function openLoginModal() { document.getElementById('loginModal').classList.add('open');
             lockBodyScroll(); }
@@ -3819,7 +4642,8 @@
             const user = document.getElementById('loginUser').value.trim();
             const pass = document.getElementById('loginPass').value.trim();
             if (!name || !user || !pass) { showToast('সব তথ্য পূরণ করুন', 'error'); return; }
-            currentUser = { name, phone: user, email: user, password: pass, savedAddress: currentUser?.savedAddress || null };
+            currentUser = { name, phone: user, email: user, password: pass, savedAddress: currentUser?.savedAddress ||
+                    null };
             saveUser();
             updateNavProfile();
             closeLoginModal();
@@ -3834,7 +4658,8 @@
             lockBodyScroll();
             document.getElementById('profileModal').classList.add('open');
             const addr = currentUser.savedAddress;
-            const addrDisplay = addr ? `${addr.address}, ${addr.thana}, ${addr.district}, ${addr.division}` : 'ঠিকানা সেভ করা হয়নি';
+            const addrDisplay = addr ? `${addr.address}, ${addr.thana}, ${addr.district}, ${addr.division}` :
+                'ঠিকানা সেভ করা হয়নি';
 
             fetchOrdersForUser(String(currentUser.phone || currentUser.email)).then(myOrders => {
                 document.getElementById('profileModalBody').innerHTML = `
@@ -3853,7 +4678,8 @@
                 ${myOrders.length?myOrders.slice(0,10).map(o=>`<div class="profile-order-mini"><span><strong>${o.orderId}</strong></span><span>${o.date}</span><span>${o.name}</span><span>📞${o.phone}</span><span>${o.address}</span></div>`).join(''):'<p style="font-size:0.6rem;color:var(--muted-foreground);">এখনো কোনো অর্ডার নেই।</p>'}
                 <hr><button style="background:var(--destructive);color:#fff;width:100%;padding:0.45rem;border-radius:8px;font-weight:600;font-size:0.65rem;margin-bottom:2rem;" onclick="logoutUser()">🚪 লগআউট</button>`;
                 if (addr) setTimeout(() => { updateProfDivision();
-                    setTimeout(() => { const d = document.getElementById('profDistrict'); if (d && addr.district) { for (let o of d.options) if (o.value === addr.district) { o.selected = true;
+                    setTimeout(() => { const d = document.getElementById('profDistrict'); if (d && addr.district) { for (
+                                let o of d.options) if (o.value === addr.district) { o.selected = true;
                                 break; }
                             updateProfDistrict(); } }, 150); }, 100);
             }).catch(() => {
@@ -3864,25 +4690,29 @@
         function closeProfileModal() { document.getElementById('profileModal').classList.remove('open');
             unlockBodyScroll(); }
 
-        function updateProfileName() { const n = document.getElementById('profileName').value.trim(); if (!n) { showToast('নাম লিখুন', 'error'); return; }
+        function updateProfileName() { const n = document.getElementById('profileName').value.trim(); if (!n) { showToast(
+                    'নাম লিখুন', 'error'); return; }
             currentUser.name = n;
             saveUser();
             updateNavProfile();
             showToast('✅ নাম আপডেট!', 'success'); }
 
         function toggleAddressEdit() { document.getElementById('addrEditPanel')?.classList.toggle('open'); }
+
         function updateProfDivision() {
             const d = document.getElementById('profDivision').value;
             const s = document.getElementById('profDistrict');
             s.innerHTML = '<option>নির্বাচন</option>';
             if (d && BD_DATA[d]) Object.keys(BD_DATA[d].districts).forEach(dn => s.innerHTML += `<option>${dn}</option>`);
         }
+
         function updateProfDistrict() {
             const d = document.getElementById('profDivision').value;
             const dst = document.getElementById('profDistrict').value;
             const s = document.getElementById('profThana');
             s.innerHTML = '<option>নির্বাচন</option>';
-            if (d && dst && BD_DATA[d].districts[dst]) BD_DATA[d].districts[dst].forEach(t => s.innerHTML += `<option>${t}</option>`);
+            if (d && dst && BD_DATA[d].districts[dst]) BD_DATA[d].districts[dst].forEach(t => s.innerHTML +=
+                `<option>${t}</option>`);
         }
 
         function saveProfileAddress() {
@@ -3890,7 +4720,8 @@
             const dst = document.getElementById('profDistrict').value;
             const t = document.getElementById('profThana').value;
             const a = document.getElementById('profAddress').value.trim();
-            if (!d || !dst || !t || !a || dst === 'নির্বাচন' || t === 'নির্বাচন') { showToast('সব তথ্য পূরণ করুন', 'error'); return; }
+            if (!d || !dst || !t || !a || dst === 'নির্বাচন' || t === 'নির্বাচন') { showToast('সব তথ্য পূরণ করুন',
+                    'error'); return; }
             currentUser.savedAddress = { division: d, district: dst, thana: t, address: a };
             saveUser();
             closeProfileModal();
@@ -3908,11 +4739,11 @@
             localStorage.removeItem('ras_admin_expiry'); }
 
         function handleNavSearch(val) { searchQuery = val.toLowerCase(); }
+
         function doSearch() {
             if (document.getElementById('mobileNav').classList.contains('open')) {
                 document.getElementById('mobileNav').classList.remove('open');
             }
-            // Close keyboard by blurring active element
             if (document.activeElement) {
                 document.activeElement.blur();
             }
@@ -3920,11 +4751,9 @@
             setTimeout(() => {
                 const inp = document.getElementById('shopSearch');
                 if (inp) {
-                    inp.value = document.getElementById('navSearch')?.value || document.getElementById('mobileSearchInput')?.value ||
-                        '';
+                    inp.value = document.getElementById('navSearch')?.value || '';
                     filterProducts();
                 }
-                // Ensure keyboard is closed
                 if (document.activeElement) {
                     document.activeElement.blur();
                 }
@@ -3941,7 +4770,6 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        // Only home page scroll is saved
         function saveScrollPosition(page) {
             if (page === 'home') {
                 pageScrollPositions[page] = window.scrollY;
@@ -4044,34 +4872,29 @@
         // ===== ADMIN PANEL FUNCTIONS =====
         function openAdminAccess() {
             if (adminAccessGranted && adminAccessExpiry && Date.now() < adminAccessExpiry) {
-                openAdminPanel();
+                showAdminChoiceModal();
                 return;
             }
+            // Show password modal
             const modal = document.getElementById('adminAccessModal');
-            if (!modal) {
-                const overlay = document.createElement('div');
-                overlay.className = 'modal-overlay';
-                overlay.id = 'adminAccessModal';
-                overlay.innerHTML = `
-                <div class="modal-full" style="max-width:400px;height:auto;max-height:70vh;">
-                    <div class="modal-sticky-header"><h2>👑 এডমিন এক্সেস</h2><button class="modal-close-btn" onclick="closeAdminAccess()">✕</button></div>
-                    <div class="modal-scroll-body">
-                        <p style="font-size:0.7rem;margin-bottom:1rem;">স্বাগতম প্রিয় এডমিন। অর্ডার পরিচালনা করতে এডমিন পাসওয়ার্ড দিন।</p>
-                        <div class="form-group">
-                            <label class="form-label">এডমিন পাসওয়ার্ড</label>
-                            <input type="password" class="form-input" id="adminPassword" placeholder="পাসওয়ার্ড">
-                        </div>
-                        <button class="btn-primary" style="width:100%;" onclick="verifyAdminPassword()">যাচাই করুন</button>
+            const body = document.getElementById('adminAccessModalBody');
+            body.innerHTML = `
+                <div style="padding:0.5rem 0;">
+                    <p style="font-size:0.7rem;margin-bottom:1rem;">এডমিন প্যানেল অ্যাক্সেস করতে পাসওয়ার্ড দিন।</p>
+                    <div class="form-group">
+                        <label class="form-label">এডমিন পাসওয়ার্ড</label>
+                        <input type="password" class="form-input" id="adminPassword" placeholder="পাসওয়ার্ড">
                     </div>
-                </div>`;
-                document.body.appendChild(overlay);
-            }
-            document.getElementById('adminAccessModal').classList.add('open');
+                    <button class="btn-primary" style="width:100%;" onclick="verifyAdminPassword()">যাচাই করুন</button>
+                    <div style="margin-top:0.5rem;font-size:0.55rem;color:var(--muted-foreground);text-align:center;">কোনো পাসওয়ার্ড নেই? এডমিনকে যোগাযোগ করুন।</div>
+                </div>
+            `;
+            modal.classList.add('open');
             lockBodyScroll();
         }
 
         function closeAdminAccess() {
-            document.getElementById('adminAccessModal')?.classList.remove('open');
+            document.getElementById('adminAccessModal').classList.remove('open');
             unlockBodyScroll();
         }
 
@@ -4082,55 +4905,120 @@
                 adminAccessExpiry = Date.now() + 15 * 24 * 60 * 60 * 1000;
                 localStorage.setItem('ras_admin_expiry', String(adminAccessExpiry));
                 closeAdminAccess();
-                openAdminPanel();
+                showAdminChoiceModal();
             } else {
                 showToast('❌ ভুল পাসওয়ার্ড', 'error');
             }
         }
 
-        async function openAdminPanel() {
-            if (!adminAccessGranted) {
-                const savedExpiry = localStorage.getItem('ras_admin_expiry');
-                if (savedExpiry && Date.now() < parseInt(savedExpiry)) {
-                    adminAccessGranted = true;
-                    adminAccessExpiry = parseInt(savedExpiry);
-                } else {
-                    openAdminAccess();
-                    return;
-                }
-            }
-            if (!adminAccessGranted) return;
+        function showAdminChoiceModal() {
+            const modal = document.getElementById('adminAccessModal');
+            const body = document.getElementById('adminAccessModalBody');
+            body.innerHTML = `
+                <div style="padding:0.5rem 0;">
+                    <p style="font-size:0.7rem;text-align:center;margin-bottom:1rem;color:var(--muted-foreground);">আপনি কোন প্যানেলে প্রবেশ করতে চান?</p>
+                    <div class="admin-choices">
+                        <button class="btn-item-control" onclick="openItemControlPanel()">📦 আইটেম কন্ট্রোল</button>
+                        <button class="btn-order-control" onclick="openOrderControlPanel()">📋 অর্ডার কন্ট্রোল</button>
+                    </div>
+                </div>
+            `;
+            modal.classList.add('open');
+            lockBodyScroll();
+        }
+
+        function openOrderControlPanel() {
+            closeAdminAccess();
             document.body.classList.add('modal-open');
-            const overlay = document.getElementById('adminPanelOverlay');
-            if (overlay) overlay.remove();
-            const panel = document.createElement('div');
-            panel.className = 'admin-panel-overlay';
-            panel.id = 'adminPanelOverlay';
-            panel.innerHTML = `
+            const overlay = document.createElement('div');
+            overlay.className = 'admin-panel-overlay';
+            overlay.id = 'adminPanelOverlay';
+            overlay.innerHTML = `
             <div class="admin-panel-header">
                 <button class="admin-back-btn" onclick="closeAdminPanel()"><i class="fas fa-arrow-left"></i></button>
-                <h2 style="font-size:0.9rem;">👑 এডমিন প্যানেল</h2>
+                <h2 style="font-size:0.9rem;">👑 এডমিন প্যানেল — অর্ডার কন্ট্রোল</h2>
             </div>
             <div class="admin-panel-body" id="adminPanelContent">
                 <div class="inline-loader"><div class="spinner-small"></div> অর্ডার লোড হচ্ছে...</div>
             </div>`;
-            document.body.appendChild(panel);
+            document.body.appendChild(overlay);
             loadAdminOrders();
+        }
+
+        function openItemControlPanel() {
+            closeAdminAccess();
+            document.body.classList.add('modal-open');
+            const overlay = document.createElement('div');
+            overlay.className = 'admin-panel-overlay';
+            overlay.id = 'adminPanelOverlay';
+            overlay.innerHTML = `
+            <div class="admin-panel-header">
+                <button class="admin-back-btn" onclick="closeAdminPanel()"><i class="fas fa-arrow-left"></i></button>
+                <h2 style="font-size:0.9rem;">👑 এডমিন প্যানেল — আইটেম কন্ট্রোল</h2>
+            </div>
+            <div class="admin-panel-body" id="adminPanelContent">
+                <div class="inline-loader"><div class="spinner-small"></div> আইটেম লোড হচ্ছে...</div>
+            </div>`;
+            document.body.appendChild(overlay);
+            loadItemControlPanel();
         }
 
         function closeAdminPanel() {
             document.getElementById('adminPanelOverlay')?.remove();
             document.body.classList.remove('modal-open');
+            unlockBodyScroll();
         }
 
+        // ===== ORDER CONTROL =====
         async function loadAdminOrders() {
             adminOrders = await fetchAllOrders();
             const content = document.getElementById('adminPanelContent');
+
+            const totalOrders = adminOrders.length;
+            const pendingOrders = adminOrders.filter(o => !o.cancelled && o.statusConfirmed !== 'DONE' && o
+            .statusDelivered !== 'DONE');
+            const processingOrders = adminOrders.filter(o => !o.cancelled && o.statusConfirmed === 'DONE' && o
+            .statusDelivered !== 'DONE');
+            const deliveredOrders = adminOrders.filter(o => o.statusDelivered === 'DONE');
+            const cancelledOrders = adminOrders.filter(o => o.cancelled === true || o.statusConfirmed === 'FALSE');
+
+            const statsHTML = `
+            <div class="admin-stats-row">
+                <div class="admin-stat-card total">
+                    <div class="stat-number">${totalOrders}</div>
+                    <div class="stat-label"><span class="stat-icon">📦</span> মোট অর্ডার প্রাপ্তি</div>
+                </div>
+                <div class="admin-stat-card pending">
+                    <div class="stat-number">${pendingOrders.length}</div>
+                    <div class="stat-label"><span class="stat-icon">⏳</span> প্রক্রিয়াধীন রয়েছে</div>
+                </div>
+                <div class="admin-stat-card processing">
+                    <div class="stat-number">${processingOrders.length}</div>
+                    <div class="stat-label"><span class="stat-icon">⚙️</span> প্রসেসিং হচ্ছে</div>
+                </div>
+                <div class="admin-stat-card delivered">
+                    <div class="stat-number">${deliveredOrders.length}</div>
+                    <div class="stat-label"><span class="stat-icon">✅</span> ডেলিভারি সম্পন্ন</div>
+                </div>
+                <div class="admin-stat-card cancelled">
+                    <div class="stat-number">${cancelledOrders.length}</div>
+                    <div class="stat-label"><span class="stat-icon">🚫</span> ডেলিভারি বাতিল</div>
+                </div>
+            </div>`;
+
+            const searchHTML = `
+            <div class="admin-search-row">
+                <input type="text" id="adminSearchInput" placeholder="নাম, ফোন নম্বর বা অর্ডার আইডি দিয়ে সার্চ করুন..." oninput="filterAdminOrders()">
+                <button class="admin-refresh-btn" id="adminRefreshBtn" onclick="refreshAdminOrders()"><i class="fas fa-sync-alt"></i> রিফ্রেশ</button>
+            </div>`;
+
             if (!adminOrders.length) {
-                content.innerHTML = '<div style="text-align:center;padding:2rem;font-size:0.75rem;">কোন অর্ডার নেই</div>';
+                content.innerHTML = statsHTML + searchHTML +
+                    '<div style="text-align:center;padding:2rem;font-size:0.75rem;">কোন অর্ডার নেই</div>';
                 return;
             }
-            content.innerHTML = adminOrders.map((o, i) => {
+
+            const ordersHTML = adminOrders.map((o, i) => {
                 const did = 'admin-' + i;
                 const items = parseItemsSummary(o.itemsSummary);
                 const itemIds = o.itemIds ? o.itemIds.split(',') : [];
@@ -4146,7 +5034,8 @@
                 }));
                 const itemsHTML = itemsWithDetails.map(item => {
                     const hasImg = item.image && item.image.trim();
-                    const initials = item.name.split(' ').map(w => w.charAt(0)).join('').substring(0, 2).toUpperCase();
+                    const initials = item.name.split(' ').map(w => w.charAt(0)).join('').substring(0, 2)
+                        .toUpperCase();
                     return `
                     <div style="display:flex;align-items:center;gap:0.4rem;padding:0.3rem 0;border-bottom:1px dotted var(--border);">
                         ${hasImg ? `<img src="${item.image}" style="width:30px;height:40px;object-fit:cover;border-radius:3px;" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">` : ''}
@@ -4157,6 +5046,25 @@
                         <span style="font-weight:700;font-size:0.55rem;color:var(--primary);">৳${(item.totalPrice || item.unitPrice * item.qty)}</span>
                     </div>`;
                 }).join('');
+
+                let statusText = 'নতুন';
+                let statusClass = 'new';
+                if (o.cancelled || o.statusConfirmed === 'FALSE') {
+                    statusText = 'বাতিল';
+                    statusClass = 'cancelled';
+                } else if (o.statusDelivered === 'DONE') {
+                    statusText = 'ডেলিভারি সম্পন্ন';
+                    statusClass = 'delivered';
+                } else if (o.statusShipped === 'DONE') {
+                    statusText = 'প্রেরণ';
+                    statusClass = 'shipped';
+                } else if (o.statusPackaging === 'DONE') {
+                    statusText = 'প্যাকেজিং';
+                    statusClass = 'packaging';
+                } else if (o.statusConfirmed === 'DONE') {
+                    statusText = 'কনফার্ম';
+                    statusClass = 'confirmed';
+                }
 
                 const detailHTML = `
                 <div class="detail-grid" style="grid-template-columns:1fr 1fr 1fr;">
@@ -4174,18 +5082,51 @@
                 <button class="admin-action-btn-single" onclick="openAdminActionModal('${o.orderId}')">⚙️ অ্যাকশন</button>
                 `;
 
+                // NEW LAYOUT: status badge on the bottom line next to detail button
                 return `
                 <div class="admin-order-row">
-                    <div class="admin-order-summary" onclick="this.querySelector('button')?.click();">
-                        <span style="font-weight:700;">${o.orderId}</span>
-                        <span>${o.name}</span>
-                        <span>📞${o.phone}</span>
-                        <span style="font-weight:700;">৳${(o.total||0).toLocaleString('bn-BD')}</span>
-                        <button class="order-detail-btn" onclick="event.stopPropagation();toggleOrderDetail('${did}',this)">বিস্তারিত</button>
+                    <div class="admin-order-summary" onclick="event.stopPropagation();toggleOrderDetail('${did}',this.querySelector('.order-detail-btn'))">
+                        <div class="left-group">
+                            <span style="font-weight:700;">${o.orderId}</span>
+                            <span>${o.name}</span>
+                            <span>📞${o.phone}</span>
+                            <span style="font-weight:700;">৳${(o.total||0).toLocaleString('bn-BD')}</span>
+                        </div>
+                        <div class="right-group">
+                            <span class="order-status-badge ${statusClass}">${statusText}</span>
+                            <button class="order-detail-btn" onclick="event.stopPropagation();toggleOrderDetail('${did}',this)">বিস্তারিত</button>
+                        </div>
                     </div>
                     <div class="admin-order-detail" id="${did}">${detailHTML}</div>
                 </div>`;
             }).join('');
+
+            content.innerHTML = statsHTML + searchHTML + ordersHTML;
+            document.getElementById('adminSearchInput')?.addEventListener('input', filterAdminOrders);
+        }
+
+        function filterAdminOrders() {
+            const query = document.getElementById('adminSearchInput')?.value?.toLowerCase().trim() || '';
+            const allRows = document.querySelectorAll('.admin-order-row');
+            allRows.forEach(row => {
+                const text = row.textContent.toLowerCase();
+                row.style.display = text.includes(query) ? '' : 'none';
+            });
+        }
+
+        async function refreshAdminOrders() {
+            const btn = document.getElementById('adminRefreshBtn');
+            if (btn) { btn.disabled = true;
+                btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>'; }
+            try {
+                adminOrders = await fetchAllOrders();
+                await loadAdminOrders();
+                showToast('✅ অর্ডার রিফ্রেশ করা হয়েছে', 'success');
+            } catch (err) {
+                showToast('❌ রিফ্রেশ ব্যর্থ', 'error');
+            }
+            if (btn) { btn.disabled = false;
+                btn.innerHTML = '<i class="fas fa-sync-alt"></i> রিফ্রেশ'; }
         }
 
         let adminActionOrderId = null;
@@ -4194,7 +5135,6 @@
             adminActionOrderId = orderId;
             const modal = document.getElementById('adminActionModal');
             const body = document.getElementById('adminActionModalBody');
-            // Find current order to pre-fill
             const order = adminOrders.find(o => o.orderId === orderId);
             const confirmChecked = order && order.statusConfirmed === 'DONE' ? 'checked' : '';
             const cancelChecked = order && order.statusConfirmed === 'FALSE' ? 'checked' : '';
@@ -4202,6 +5142,19 @@
             const shippedChecked = order && order.statusShipped === 'DONE' ? 'checked' : '';
             const deliveredChecked = order && order.statusDelivered === 'DONE' ? 'checked' : '';
             const note = order ? (order.note || '') : '';
+
+            const shortcutOptions = [
+                { value: '', label: 'অন্যান্য (কাস্টম লিখুন)' },
+                { value: 'ট্রানজেকশন আইডি মেলেনি, দয়া করে সঠিক ট্রানজেকশন আইডি পাঠান।', label: 'ট্রানজেকশন সমস্যা' },
+                { value: 'গ্রাহক অর্ডার বাতিল করতে চেয়েছেন।', label: 'গ্রাহক বাতিল করেছেন' },
+                { value: 'পণ্য স্টকে নেই, তাই অর্ডার বাতিল করা হয়েছে।', label: 'স্টক শেষ' },
+                { value: 'ডেলিভারি চার্জ পরিশোধ করেননি, তাই অর্ডার বাতিল।', label: 'ডেলিভারি চার্জ পরিশোধ না' },
+                { value: 'ভুল অর্ডার দেওয়া হয়েছে, তাই বাতিল করা হয়েছে।', label: 'ভুল অর্ডার' },
+                { value: 'গ্রাহক আর অর্ডারটি নিতে চান না।', label: 'গ্রাহক অর্ডার নিতে চান না' },
+                { value: 'ডেলিভারি এড্রেস ভুল ছিল, সংশোধন করতে হবে।', label: 'ঠিকানা ভুল' },
+                { value: 'গ্রাহকের সাথে যোগাযোগ করা যায়নি।', label: 'যোগাযোগ করা যায়নি' },
+                { value: 'ডেলিভারি রিজন বাইরে চলে যাওয়ায় বাতিল।', label: 'অন্যান্য কারণে বাতিল' }
+            ];
 
             body.innerHTML = `
             <div style="margin-bottom:0.5rem;">
@@ -4217,10 +5170,14 @@
                 <label><input type="checkbox" id="adminDelivered" ${deliveredChecked}> ডেলিভারি সম্পন্ন হয়েছে</label>
             </div>
             <div class="note-group">
+                <label class="form-label">শর্টকাট নোট</label>
+                <select class="shortcut-notes-dropdown" id="shortcutNoteSelect" onchange="applyShortcutNote()">
+                    ${shortcutOptions.map(opt => `<option value="${opt.value}">${opt.label}</option>`).join('')}
+                </select>
                 <label class="form-label">নোট</label>
                 <textarea id="adminNote" placeholder="নোট লিখুন...">${note}</textarea>
             </div>
-            <button class="btn-primary submit-btn" onclick="submitAdminAction()">আপডেট করুন</button>
+            <button class="btn-primary submit-btn" id="adminActionSubmitBtn" onclick="submitAdminAction()"><span class="btn-spinner"></span><span class="btn-text">আপডেট করুন</span></button>
             `;
             modal.classList.add('open');
             lockBodyScroll();
@@ -4240,18 +5197,39 @@
             } else {
                 options.style.opacity = '0.5';
                 options.style.pointerEvents = 'none';
-                // Uncheck checkboxes when cancel is selected
                 document.getElementById('adminPackaging').checked = false;
                 document.getElementById('adminShipped').checked = false;
                 document.getElementById('adminDelivered').checked = false;
             }
         }
 
+        function applyShortcutNote() {
+            const select = document.getElementById('shortcutNoteSelect');
+            const noteArea = document.getElementById('adminNote');
+            if (select && noteArea) {
+                const val = select.value;
+                if (val !== '') {
+                    noteArea.value = val;
+                } else {
+                    if (!noteArea.value.trim()) {
+                        noteArea.value = '';
+                    }
+                }
+            }
+        }
+
         async function submitAdminAction() {
+            if (isUpdatingOrder) return;
+            isUpdatingOrder = true;
             const orderId = adminActionOrderId;
-            if (!orderId) return;
+            if (!orderId) { isUpdatingOrder = false; return; }
+            const btn = document.getElementById('adminActionSubmitBtn');
+            setBtnLoading(btn, true);
+
             const statusRadio = document.querySelector('input[name="adminStatus"]:checked');
-            if (!statusRadio) { showToast('অর্ডার কনফার্ম বা বাতিল নির্বাচন করুন', 'error'); return; }
+            if (!statusRadio) { showToast('অর্ডার কনফার্ম বা বাতিল নির্বাচন করুন', 'error');
+                setBtnLoading(btn, false);
+                isUpdatingOrder = false; return; }
             const isConfirm = statusRadio.value === 'confirm';
             const isCancel = statusRadio.value === 'cancel';
             const packaging = document.getElementById('adminPackaging').checked;
@@ -4278,10 +5256,441 @@
                 await updateOrderStatusFull(orderId, updates);
                 showToast('✅ অর্ডার আপডেট সফল', 'success');
                 closeAdminActionModal();
-                // Reload admin panel
                 await loadAdminOrders();
             } catch (err) {
                 showToast('❌ আপডেট ব্যর্থ: ' + err.message, 'error');
+            }
+            setBtnLoading(btn, false);
+            isUpdatingOrder = false;
+        }
+
+        // ===== ITEM CONTROL PANEL =====
+        let allItems = [];
+
+        async function loadItemControlPanel() {
+            try {
+                allItems = await fetchAllItemsFromSheet();
+            } catch (err) {
+                console.error('Failed to fetch items:', err);
+                allItems = [];
+            }
+            const content = document.getElementById('adminPanelContent');
+
+            const totalItems = allItems.length;
+            const inStockItems = allItems.filter(i => i.inStock === true || i.inStock === 'true' || i.inStock === 'TRUE' || i
+                .inStock === 1);
+            const outStockItems = allItems.filter(i => i.inStock !== true && i.inStock !== 'true' && i.inStock !== 'TRUE' && i
+                .inStock !== 1);
+
+            const statsHTML = `
+            <div class="item-control-stats">
+                <div class="stat-card total">
+                    <div class="stat-number">${totalItems}</div>
+                    <div class="stat-label">📦 মোট আইটেম</div>
+                </div>
+                <div class="stat-card instock">
+                    <div class="stat-number">${inStockItems.length}</div>
+                    <div class="stat-label">✅ স্টক আইটেম</div>
+                </div>
+                <div class="stat-card outstock">
+                    <div class="stat-number">${outStockItems.length}</div>
+                    <div class="stat-label">❌ স্টক আউট আইটেম</div>
+                </div>
+            </div>`;
+
+            const searchHTML = `
+            <div class="item-control-search-row">
+                <input type="text" id="itemSearchInput" placeholder="নাম, ইংরেজি নাম, ব্যাচ বা আইডি দিয়ে সার্চ করুন..." oninput="filterItems()">
+                <button class="item-add-btn" onclick="openAddItemModal()">➕ নতুন আইটেম যুক্ত করুন</button>
+                <button class="admin-refresh-btn" onclick="refreshItems()" style="margin-left:0.3rem;"><i class="fas fa-sync-alt"></i> রিফ্রেশ</button>
+            </div>`;
+
+            if (!allItems.length) {
+                content.innerHTML = statsHTML + searchHTML +
+                    '<div style="text-align:center;padding:2rem;font-size:0.75rem;">কোন আইটেম নেই</div>';
+                return;
+            }
+
+            const itemsHTML = allItems.map((item, i) => {
+                const did = 'item-' + i;
+                const hasImage = item.image && item.image.trim() !== '';
+                const shortName = item.nameEn || item.name || 'P';
+                const initials = shortName.split(' ').map(w => w.charAt(0)).join('').substring(0, 2).toUpperCase();
+                const stockLabel = (item.inStock === true || item.inStock === 'true' || item.inStock === 'TRUE' || item
+                    .inStock === 1) ? '✅ স্টকে' : '❌ স্টক আউট';
+
+                const detailHTML = `
+                <div class="detail-grid-item">
+                    <span><span class="dl">আইডি:</span> <span class="dv">${item.id}</span></span>
+                    <span><span class="dl">নাম:</span> <span class="dv">${item.name}</span></span>
+                    <span><span class="dl">ইংরেজি নাম:</span> <span class="dv">${item.nameEn || ''}</span></span>
+                    <span><span class="dl">দাম:</span> <span class="dv" style="color:var(--primary);">৳${item.price}</span></span>
+                    <span><span class="dl">আগের দাম:</span> <span class="dv">${item.originalPrice ? '৳'+item.originalPrice : '-'}</span></span>
+                    <span><span class="dl">ক্যাটাগরি:</span> <span class="dv">${item.category || ''}</span></span>
+                    <span><span class="dl">স্টক:</span> <span class="dv">${stockLabel}</span></span>
+                    <span><span class="dl">ব্যাচ:</span> <span class="dv" style="color:var(--gold);font-weight:700;">${item.batch || ''}</span></span>
+                    <span><span class="dl">কোম্পানি:</span> <span class="dv">${item.company || ''}</span></span>
+                    <span><span class="dl">কোয়ালিটি:</span> <span class="dv">${item.quality || ''}</span></span>
+                    <span><span class="dl">ব্যবহার:</span> <span class="dv">${item.usage || ''}</span></span>
+                    <span><span class="dl">ট্রেন্ডিং:</span> <span class="dv">${item.trending ? 'TRUE' : 'FALSE'}</span></span>
+                    <span><span class="dl">নতুন:</span> <span class="dv">${item.newArrival ? 'TRUE' : 'FALSE'}</span></span>
+                    <span><span class="dl">ডিল:</span> <span class="dv">${item.deal ? 'TRUE' : 'FALSE'}</span></span>
+                    <span><span class="dl">বেস্ট সেলার:</span> <span class="dv">${item.bestseller ? 'TRUE' : 'FALSE'}</span></span>
+                    <span><span class="dl">ব্যাজ:</span> <span class="dv">${item.badge || ''}</span></span>
+                    <span><span class="dl">ট্যাগ:</span> <span class="dv">${Array.isArray(item.tags) ? item.tags.join(', ') : item.tags || ''}</span></span>
+                    <span><span class="dl">স্পেসিফিকেশন:</span> <span class="dv">${Array.isArray(item.specs) ? item.specs.join(' | ') : item.specs || ''}</span></span>
+                    <span><span class="dl">ছবি:</span> <span class="dv">${item.image ? '✅ আছে' : '❌ নেই'}</span></span>
+                    <span><span class="dl">বিস্তারিত বিবরণ:</span> <span class="dv">${item.description || ''}</span></span>
+                </div>
+                <div class="item-action-row">
+                    <button class="item-edit-btn" onclick="openEditItemModal('${item.id}')">✏️ এডিট</button>
+                    <button class="item-delete-btn" onclick="openDeleteItemModal('${item.id}')">🗑️ ডিলিট</button>
+                </div>
+                `;
+
+                return `
+                <div class="item-row-compact">
+                    <div class="item-row-header">
+                        ${hasImage ? `<img src="${item.image}" class="item-thumb" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">` : ''}
+                        <span class="item-thumb-placeholder" style="display:${hasImage ? 'none' : 'flex'};">${initials}</span>
+                        <span class="item-name-display">${item.name}</span>
+                        <span class="item-id-display">আইডি: ${item.id}</span>
+                        <span class="item-batch-display">📦 ${item.batch || ''}</span>
+                        <button class="item-detail-btn" onclick="event.stopPropagation();toggleItemDetail('${did}',this)">বিস্তারিত</button>
+                    </div>
+                    <div class="item-row-detail" id="${did}">${detailHTML}</div>
+                </div>`;
+            }).join('');
+
+            content.innerHTML = statsHTML + searchHTML + itemsHTML;
+            document.getElementById('itemSearchInput')?.addEventListener('input', filterItems);
+        }
+
+        function filterItems() {
+            const query = document.getElementById('itemSearchInput')?.value?.toLowerCase().trim() || '';
+            const allRows = document.querySelectorAll('.item-row-compact');
+            allRows.forEach(row => {
+                const text = row.textContent.toLowerCase();
+                row.style.display = text.includes(query) ? '' : 'none';
+            });
+        }
+
+        async function refreshItems() {
+            const btn = document.querySelector('.item-control-search-row .admin-refresh-btn');
+            if (btn) { btn.disabled = true;
+                btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>'; }
+            try {
+                allItems = await fetchAllItemsFromSheet();
+                await loadItemControlPanel();
+                showToast('✅ আইটেম রিফ্রেশ করা হয়েছে', 'success');
+            } catch (err) {
+                showToast('❌ রিফ্রেশ ব্যর্থ', 'error');
+            }
+            if (btn) { btn.disabled = false;
+                btn.innerHTML = '<i class="fas fa-sync-alt"></i> রিফ্রেশ'; }
+        }
+
+        function toggleItemDetail(did, btn) {
+            const d = document.getElementById(did);
+            if (d) {
+                d.classList.toggle('show');
+                btn.textContent = d.classList.contains('show') ? 'সংক্ষেপ' : 'বিস্তারিত';
+            }
+        }
+
+        // ===== ITEM ADD MODAL =====
+        let nextItemId = null;
+        let nextBatchNumber = null;
+
+        async function openAddItemModal() {
+            try {
+                nextItemId = await getNextItemId();
+                nextBatchNumber = await getNextBatchNumber();
+            } catch (err) {
+                console.error('Failed to get next ID/batch:', err);
+                showToast('❌ আইডি বা ব্যাচ জেনারেট করতে ব্যর্থ', 'error');
+                return;
+            }
+            const modal = document.getElementById('itemEditModal');
+            const title = document.getElementById('itemEditTitle');
+            const body = document.getElementById('itemEditModalBody');
+            title.textContent = '➕ নতুন আইটেম যুক্ত করুন';
+            body.innerHTML = buildItemFormHTML({}, false);
+            modal.classList.add('open');
+            lockBodyScroll();
+        }
+
+        function closeItemEditModal() {
+            document.getElementById('itemEditModal').classList.remove('open');
+            unlockBodyScroll();
+        }
+
+        // ===== ITEM EDIT MODAL =====
+        async function openEditItemModal(itemId) {
+            const item = allItems.find(i => String(i.id) === String(itemId));
+            if (!item) { showToast('❌ আইটেম পাওয়া যায়নি', 'error'); return; }
+            const modal = document.getElementById('itemEditModal');
+            const title = document.getElementById('itemEditTitle');
+            const body = document.getElementById('itemEditModalBody');
+            title.textContent = '✏️ আইটেম এডিট — ' + item.name;
+            body.innerHTML = buildItemFormHTML(item, true);
+            modal.classList.add('open');
+            lockBodyScroll();
+        }
+
+        function buildItemFormHTML(item, isEdit) {
+            const idVal = isEdit ? item.id : (nextItemId || '');
+            const batchVal = isEdit ? (item.batch || '') : (nextBatchNumber || '');
+            const nameVal = item.name || '';
+            const nameEnVal = item.nameEn || '';
+            const priceVal = item.price || '';
+            const originalPriceVal = item.originalPrice || '';
+            const categoryVal = item.category || '';
+            const imageVal = item.image || '';
+            const descVal = item.desc || '';
+            const tagsVal = Array.isArray(item.tags) ? item.tags.join(', ') : (item.tags || '');
+            const badgeVal = item.badge || '';
+            const inStockVal = (item.inStock === true || item.inStock === 'true' || item.inStock === 'TRUE' || item
+                .inStock === 1);
+            const descriptionVal = item.description || '';
+            const specsVal = Array.isArray(item.specs) ? item.specs.join(' | ') : (item.specs || '');
+            const companyVal = item.company || '';
+            const qualityVal = item.quality || '';
+            const usageVal = item.usage || '';
+            const trendingVal = (item.trending === true || item.trending === 'true' || item.trending === 'TRUE' || item
+                .trending === 1);
+            const newArrivalVal = (item.newArrival === true || item.newArrival === 'true' || item.newArrival === 'TRUE' ||
+                item.newArrival === 1);
+            const dealVal = (item.deal === true || item.deal === 'true' || item.deal === 'TRUE' || item.deal === 1);
+            const bestsellerVal = (item.bestseller === true || item.bestseller === 'true' || item.bestseller === 'TRUE' ||
+                item.bestseller === 1);
+
+            const catOptions = CATEGORIES.map(c =>
+                `<option ${c === categoryVal ? 'selected' : ''}>${c}</option>`).join('');
+
+            return `
+            <div class="form-grid">
+                <div class="form-group">
+                    <label class="form-label">আইডি (অটো)</label>
+                    <input type="text" class="form-input" id="itemFormId" value="${idVal}" readonly style="background:#f5f2f4;">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">ব্যাচ (অটো)</label>
+                    <input type="text" class="form-input" id="itemFormBatch" value="${batchVal}" readonly style="background:#f5f2f4;">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">বাংলা নাম *</label>
+                    <input type="text" class="form-input" id="itemFormName" value="${nameVal}" placeholder="পণ্যের বাংলা নাম">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">ইংরেজি নাম</label>
+                    <input type="text" class="form-input" id="itemFormNameEn" value="${nameEnVal}" placeholder="Product Name (English)">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">বর্তমান দাম * (৳)</label>
+                    <input type="number" class="form-input" id="itemFormPrice" value="${priceVal}" placeholder="যেমন: 450">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">আগের দাম (৳) (ঐচ্ছিক)</label>
+                    <input type="number" class="form-input" id="itemFormOriginalPrice" value="${originalPriceVal}" placeholder="যেমন: 550">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">ক্যাটাগরি *</label>
+                    <select class="form-select" id="itemFormCategory">${catOptions}</select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">ছবির URL</label>
+                    <input type="text" class="form-input" id="itemFormImage" value="${imageVal}" placeholder="https://example.com/image.jpg">
+                </div>
+                <div class="form-group full-width">
+                    <label class="form-label">সংক্ষিপ্ত বিবরণ</label>
+                    <input type="text" class="form-input" id="itemFormDesc" value="${descVal}" placeholder="পণ্যের সংক্ষিপ্ত বিবরণ">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">ট্যাগ <span class="tags-hint">কমা দিয়ে আলাদা করুন</span></label>
+                    <input type="text" class="form-input" id="itemFormTags" value="${tagsVal}" placeholder="face, skin, herbal">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">ব্যাজ</label>
+                    <input type="text" class="form-input" id="itemFormBadge" value="${badgeVal}" placeholder="Hot, Sale, Best">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">স্টক</label>
+                    <div class="inline-check">
+                        <input type="checkbox" id="itemFormInStock" ${inStockVal ? 'checked' : ''}>
+                        <span>স্টকে আছে</span>
+                    </div>
+                </div>
+                <div class="form-group full-width">
+                    <label class="form-label">বিস্তারিত বিবরণ</label>
+                    <textarea class="form-textarea" id="itemFormDescription" placeholder="পণ্যের বিস্তারিত বিবরণ">${descriptionVal}</textarea>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">স্পেসিফিকেশন <span class="specs-hint">| দিয়ে আলাদা করুন</span></label>
+                    <input type="text" class="form-input" id="itemFormSpecs" value="${specsVal}" placeholder="সাইজ: M | কালার: লাল | ওজন: 100g">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">কোম্পানি</label>
+                    <input type="text" class="form-input" id="itemFormCompany" value="${companyVal}" placeholder="কোম্পানির নাম">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">কোয়ালিটি</label>
+                    <input type="text" class="form-input" id="itemFormQuality" value="${qualityVal}" placeholder="Premium, Standard">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">ব্যবহারের নিয়ম</label>
+                    <input type="text" class="form-input" id="itemFormUsage" value="${usageVal}" placeholder="ব্যবহারের নিয়ম">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">ট্রেন্ডিং</label>
+                    <div class="inline-check">
+                        <input type="checkbox" id="itemFormTrending" ${trendingVal ? 'checked' : ''}>
+                        <span>ট্রেন্ডিং হিসেবে দেখান</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">নতুন আগমন</label>
+                    <div class="inline-check">
+                        <input type="checkbox" id="itemFormNewArrival" ${newArrivalVal ? 'checked' : ''}>
+                        <span>নতুন পণ্য হিসেবে দেখান</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">ডিল</label>
+                    <div class="inline-check">
+                        <input type="checkbox" id="itemFormDeal" ${dealVal ? 'checked' : ''}>
+                        <span>ডিল পণ্য হিসেবে দেখান</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">বেস্ট সেলার</label>
+                    <div class="inline-check">
+                        <input type="checkbox" id="itemFormBestseller" ${bestsellerVal ? 'checked' : ''}>
+                        <span>বেস্ট সেলার হিসেবে দেখান</span>
+                    </div>
+                </div>
+            </div>
+            <div style="margin-top:0.8rem;display:flex;gap:0.5rem;">
+                <button class="btn-primary" style="flex:1;" id="itemFormSubmitBtn" onclick="submitItemForm(${isEdit ? `'${item.id}'` : 'null'})">
+                    <span class="btn-spinner"></span>
+                    <span class="btn-text">${isEdit ? 'আপডেট করুন' : 'যুক্ত করুন'}</span>
+                </button>
+                <button class="btn-primary" style="flex:0.5;background:var(--muted);color:var(--foreground);box-shadow:none;" onclick="closeItemEditModal()">বাতিল</button>
+            </div>
+            `;
+        }
+
+        async function submitItemForm(itemId) {
+            const btn = document.getElementById('itemFormSubmitBtn');
+            setBtnLoading(btn, true);
+
+            const name = document.getElementById('itemFormName').value.trim();
+            if (!name) { showToast('❌ পণ্যের নাম দিন', 'error');
+                setBtnLoading(btn, false); return; }
+
+            const data = {
+                name: name,
+                nameEn: document.getElementById('itemFormNameEn').value.trim(),
+                price: document.getElementById('itemFormPrice').value.trim() || '0',
+                originalPrice: document.getElementById('itemFormOriginalPrice').value.trim() || '',
+                category: document.getElementById('itemFormCategory').value,
+                image: document.getElementById('itemFormImage').value.trim(),
+                desc: document.getElementById('itemFormDesc').value.trim(),
+                tags: document.getElementById('itemFormTags').value.trim(),
+                badge: document.getElementById('itemFormBadge').value.trim(),
+                inStock: document.getElementById('itemFormInStock').checked ? 'TRUE' : 'FALSE',
+                description: document.getElementById('itemFormDescription').value.trim(),
+                specs: document.getElementById('itemFormSpecs').value.trim(),
+                company: document.getElementById('itemFormCompany').value.trim(),
+                quality: document.getElementById('itemFormQuality').value.trim(),
+                usage: document.getElementById('itemFormUsage').value.trim(),
+                trending: document.getElementById('itemFormTrending').checked ? 'TRUE' : 'FALSE',
+                newArrival: document.getElementById('itemFormNewArrival').checked ? 'TRUE' : 'FALSE',
+                deal: document.getElementById('itemFormDeal').checked ? 'TRUE' : 'FALSE',
+                bestseller: document.getElementById('itemFormBestseller').checked ? 'TRUE' : 'FALSE',
+                batch: document.getElementById('itemFormBatch').value.trim()
+            };
+
+            try {
+                if (itemId) {
+                    await editItemInSheet(itemId, data);
+                    showToast('✅ আইটেম আপডেট সফল!', 'success');
+                } else {
+                    await addItemToSheet(data);
+                    showToast('✅ নতুন আইটেম যুক্ত সফল!', 'success');
+                }
+                closeItemEditModal();
+                await loadItemControlPanel();
+                await fetchProductsFromSheet();
+                renderHomeProducts();
+            } catch (err) {
+                showToast('❌ ব্যর্থ: ' + err.message, 'error');
+            }
+            setBtnLoading(btn, false);
+        }
+
+        // ===== ITEM DELETE MODAL =====
+        let deleteItemId = null;
+
+        async function openDeleteItemModal(itemId) {
+            const item = allItems.find(i => String(i.id) === String(itemId));
+            if (!item) { showToast('❌ আইটেম পাওয়া যায়নি', 'error'); return; }
+            deleteItemId = itemId;
+            const modal = document.getElementById('itemDeleteModal');
+            const body = document.getElementById('itemDeleteModalBody');
+
+            const hasImage = item.image && item.image.trim() !== '';
+            const shortName = item.nameEn || item.name || 'P';
+            const initials = shortName.split(' ').map(w => w.charAt(0)).join('').substring(0, 2).toUpperCase();
+
+            body.innerHTML = `
+            <div style="text-align:center;margin-bottom:0.5rem;">
+                <div style="font-size:2.5rem;margin-bottom:0.3rem;">⚠️</div>
+                <h3 style="font-size:0.8rem;font-weight:800;">আপনি কি সত্যিই এই আইটেমটি ডিলিট করতে চান?</h3>
+            </div>
+            <div class="delete-info">
+                <div style="display:flex;gap:0.4rem;align-items:center;margin-bottom:0.4rem;">
+                    ${hasImage ? `<img src="${item.image}" style="width:40px;height:50px;object-fit:cover;border-radius:4px;" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">` : ''}
+                    <span style="display:${hasImage ? 'none' : 'flex'};align-items:center;justify-content:center;width:40px;height:50px;background:var(--pink-light);border-radius:4px;font-size:0.5rem;">${initials}</span>
+                    <span style="font-weight:600;font-size:0.6rem;">${item.name}</span>
+                </div>
+                <div class="di-row"><span>আইডি:</span><span>${item.id}</span></div>
+                <div class="di-row"><span>ব্যাচ:</span><span style="color:var(--gold);font-weight:700;">${item.batch || ''}</span></div>
+                <div class="di-row"><span>দাম:</span><span>৳${item.price}</span></div>
+                <div class="di-row"><span>ক্যাটাগরি:</span><span>${item.category || ''}</span></div>
+                <div class="di-row"><span>স্টক:</span><span>${(item.inStock === true || item.inStock === 'true' || item.inStock === 'TRUE' || item.inStock === 1) ? '✅ স্টকে' : '❌ স্টক আউট'}</span></div>
+            </div>
+            <div class="delete-actions">
+                <button class="btn-yes" onclick="confirmDeleteItem()">হ্যাঁ, ডিলিট করুন</button>
+                <button class="btn-no" onclick="closeItemDeleteModal()">না, বাতিল</button>
+            </div>
+            `;
+            modal.classList.add('open');
+            lockBodyScroll();
+        }
+
+        function closeItemDeleteModal() {
+            document.getElementById('itemDeleteModal').classList.remove('open');
+            unlockBodyScroll();
+            deleteItemId = null;
+        }
+
+        async function confirmDeleteItem() {
+            if (!deleteItemId) { closeItemDeleteModal(); return; }
+            const btn = document.querySelector('.item-delete-modal .btn-yes');
+            if (btn) { btn.disabled = true;
+                btn.textContent = '⏳ ডিলিট করা হচ্ছে...'; }
+            try {
+                await deleteItemFromSheet(deleteItemId);
+                showToast('✅ আইটেম ডিলিট সফল!', 'success');
+                closeItemDeleteModal();
+                await loadItemControlPanel();
+                await fetchProductsFromSheet();
+                renderHomeProducts();
+            } catch (err) {
+                showToast('❌ ডিলিট ব্যর্থ: ' + err.message, 'error');
+                if (btn) { btn.disabled = false;
+                    btn.textContent = 'হ্যাঁ, ডিলিট করুন'; }
             }
         }
 
@@ -4303,6 +5712,10 @@
                     closeAdminPanel();
                 } else if (document.getElementById('adminActionModal').classList.contains('open')) {
                     closeAdminActionModal();
+                } else if (document.getElementById('itemEditModal').classList.contains('open')) {
+                    closeItemEditModal();
+                } else if (document.getElementById('itemDeleteModal').classList.contains('open')) {
+                    closeItemDeleteModal();
                 }
                 e.preventDefault();
                 return;
@@ -4349,23 +5762,40 @@
         };
 
         // ===== EVENT LISTENERS & INIT =====
-        document.getElementById('checkoutModal').addEventListener('click', e => { if (e.target === e.currentTarget) closeCheckoutModal(); });
-        document.getElementById('loginModal').addEventListener('click', e => { if (e.target === e.currentTarget) closeLoginModal(); });
-        document.getElementById('profileModal').addEventListener('click', e => { if (e.target === e.currentTarget) closeProfileModal(); });
-        document.getElementById('footerModal').addEventListener('click', e => { if (e.target === e.currentTarget) closeFooterModal(); });
-        document.getElementById('adminActionModal').addEventListener('click', e => { if (e.target === e.currentTarget) closeAdminActionModal(); });
-        document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeCheckoutModal();
+        document.getElementById('checkoutModal').addEventListener('click', e => { if (e.target === e.currentTarget)
+                closeCheckoutModal(); });
+        document.getElementById('loginModal').addEventListener('click', e => { if (e.target === e.currentTarget)
+                closeLoginModal(); });
+        document.getElementById('profileModal').addEventListener('click', e => { if (e.target === e.currentTarget)
+                closeProfileModal(); });
+        document.getElementById('footerModal').addEventListener('click', e => { if (e.target === e.currentTarget)
+                closeFooterModal(); });
+        document.getElementById('adminActionModal').addEventListener('click', e => { if (e.target === e.currentTarget)
+                closeAdminActionModal(); });
+        document.getElementById('adminAccessModal').addEventListener('click', e => { if (e.target === e.currentTarget)
+                closeAdminAccess(); });
+        document.getElementById('itemEditModal').addEventListener('click', e => { if (e.target === e.currentTarget)
+                closeItemEditModal(); });
+        document.getElementById('itemDeleteModal').addEventListener('click', e => { if (e.target === e.currentTarget)
+                closeItemDeleteModal(); });
+
+        document.addEventListener('keydown', e => {
+            if (e.key === 'Escape') {
+                closeCheckoutModal();
                 closeLoginModal();
                 closeProfileModal();
                 closeAdminAccess();
                 closeAdminPanel();
                 closeFooterModal();
                 closeAdminActionModal();
-                document.getElementById('mobileNav').classList.remove('open'); } });
+                closeItemEditModal();
+                closeItemDeleteModal();
+                document.getElementById('mobileNav').classList.remove('open');
+            }
+        });
 
         document.addEventListener('popstate', handleBackButton);
 
-        // Clear home scroll on page refresh/unload
         window.addEventListener('beforeunload', function() {
             delete pageScrollPositions['home'];
         });
@@ -4395,7 +5825,6 @@
             if (!navigationStack.includes('home')) {
                 navigationStack.push('home');
             }
-            // Ensure home starts at top on fresh load
             window.scrollTo(0, 0);
         }
 
@@ -4499,7 +5928,8 @@
             preventPinchZoom();
 
             setInterval(function() {
-                const anyOpenModal = document.querySelector('.modal-overlay.open, #adminPanelOverlay, #adminAccessModal.open');
+                const anyOpenModal = document.querySelector(
+                    '.modal-overlay.open, #adminPanelOverlay, #adminAccessModal.open');
                 if (!anyOpenModal) {
                     if (document.body.classList.contains('modal-open') ||
                         document.body.style.overflow === 'hidden') {
