@@ -3709,12 +3709,11 @@
 
     <script>
     // ============================================================
-    // 🔥 ইন্সট্যান্ট স্কেলেটন লোডিং (কোনো মূল কোড পরিবর্তন ছাড়া)
-    // ওয়েবসাইটের একেবারে শেষে যুক্ত করুন।
+    // 🔥 ইন্সট্যান্ট স্কেলেটন লোডিং (সব স্ক্রিপ্টের আগে বসানোর জন্য)
     // ============================================================
 
     (function() {
-        // ১. স্কেলেটন কার্ডের জন্য সিএসএস যুক্ত করুন (যদি আগে না থাকে)
+        // ১. স্কেলেটন কার্ডের জন্য সিএসএস যুক্ত করুন
         const skeletonCSS = `
             .skeleton-card {
                 border: 1px solid #eee;
@@ -3773,27 +3772,57 @@
             container.innerHTML = html;
         }
 
-        // ৪. পেজ লোড হওয়ার সাথে সাথে লোডার লুকান এবং স্কেলেটন বসান
-        document.addEventListener('DOMContentLoaded', function() {
+        // ৪. লোডার লুকান এবং স্কেলেটন বসান (তাত্ক্ষণিক)
+        hideLoader();
+        // যত দ্রুত সম্ভব স্কেলেটন বসানোর চেষ্টা করুন
+        function tryInjectSkeletons() {
+            const grids = [
+                { id: 'trendingGrid', count: 6 },
+                { id: 'newArrivalsGrid', count: 6 },
+                { id: 'dealsGrid', count: 2 },
+                { id: 'bestGrid', count: 4 }
+            ];
+            let allFound = true;
+            grids.forEach(grid => {
+                const el = document.getElementById(grid.id);
+                if (el) {
+                    insertSkeleton(grid.id, grid.count);
+                } else {
+                    allFound = false;
+                }
+            });
+            return allFound;
+        }
+
+        // যদি এখনই সব গ্রিড পাওয়া যায়, তাহলে স্কেলেটন বসিয়ে দিন
+        if (tryInjectSkeletons()) {
             hideLoader();
-            insertSkeleton('trendingGrid', 6);
-            insertSkeleton('newArrivalsGrid', 6);
-            insertSkeleton('dealsGrid', 2);
-            insertSkeleton('bestGrid', 4);
-        });
+        } else {
+            // যদি না পাওয়া যায়, তাহলে মিলিসেকেন্ডে পর পর চেক করুন
+            const interval = setInterval(() => {
+                if (tryInjectSkeletons()) {
+                    clearInterval(interval);
+                    hideLoader();
+                }
+            }, 50);
+        }
 
         // ৫. মূল `renderHomeProducts` ফাংশন ওভাররাইড করুন (ডেটা এলে স্কেলেটন প্রতিস্থাপন হবে)
-        const originalRenderHomeProducts = window.renderHomeProducts;
-        window.renderHomeProducts = function() {
-            // ডেটা লোড শেষে `originalRenderHomeProducts` কল করুন
-            setTimeout(function() {
-                if (typeof originalRenderHomeProducts === 'function') {
-                    originalRenderHomeProducts();
-                }
-            }, 100);
-        };
+        // অপেক্ষা করুন যতক্ষণ না মূল ফাংশনটি লোড হয়
+        const checkRender = setInterval(() => {
+            if (typeof window.renderHomeProducts === 'function') {
+                clearInterval(checkRender);
+                const originalRenderHomeProducts = window.renderHomeProducts;
+                window.renderHomeProducts = function() {
+                    // স্কেলেটনগুলো ইতিমধ্যেই আছে। এখন আসল পণ্য লোড করুন
+                    if (typeof originalRenderHomeProducts === 'function') {
+                        originalRenderHomeProducts();
+                    }
+                };
+            }
+        }, 50);
 
-        console.log('🚀 ইন্সট্যান্ট স্কেলেটন লোডিং সক্রিয় হয়েছে!');
+        console.log('🚀 ইন্সট্যান্ট স্কেলেটন লোডিং (সব স্ক্রিপ্টের আগে বসানো) সক্রিয় হয়েছে!');
     })();
     </script>
     <script>
