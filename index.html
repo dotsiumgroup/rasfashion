@@ -3417,6 +3417,26 @@
                 grid-template-columns: repeat(2, 1fr);
             }
         }
+
+        .btn-primary .btn-spinner {
+    display: none;
+    width: 18px;
+    height: 18px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: spin 0.6s linear infinite;
+    margin-right: 0.3rem;
+}
+.btn-primary.loading .btn-spinner {
+    display: inline-block;
+}
+.btn-primary.loading .btn-text {
+    display: inline;
+}
+@keyframes spin {
+    to { transform: rotate(360deg); }
+    }
     </style>
 </head>
 <body>
