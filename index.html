@@ -6493,74 +6493,92 @@
 
         // ===== COMMENT ACTION MODAL =====
         function openCommentActionModal(row) {
-            commentActionRow = row;
-            const modal = document.getElementById('commentActionModal');
-            const body = document.getElementById('commentActionModalBody');
-            const comment = allComments.find(c => c._row === row);
-            if (!comment) { showToast('❌ কমেন্ট পাওয়া যায়নি', 'error'); return; }
+    // row কে সংখ্যায় রূপান্তর করুন
+    const numericRow = Number(row);
+    if (isNaN(numericRow)) {
+        showToast('❌ কমেন্ট আইডি সঠিক নয়', 'error');
+        return;
+    }
 
-            const messageReadChecked = comment.messageRead === 'DONE' ? 'checked' : '';
-            const complaintReceivedChecked = comment.complaintReceived === 'DONE' ? 'checked' : '';
-            const complaintResolvedChecked = comment.complaintResolved === 'DONE' ? 'checked' : '';
-            const feedbackReceivedChecked = comment.feedbackReceived === 'DONE' ? 'checked' : '';
-            const replyGivenChecked = comment.replyGiven === 'DONE' ? 'checked' : '';
-            const replyMessage = comment.replyMessage || '';
+    // গ্লোবাল ভেরিয়েবলে সংখ্যা সংরক্ষণ করুন (পরবর্তী আপডেটের জন্য)
+    commentActionRow = numericRow;
 
-            const isComplaint = comment.category === 'অভিযোগ';
-            const isFeedback = comment.category === 'মতামত';
+    const modal = document.getElementById('commentActionModal');
+    const body = document.getElementById('commentActionModalBody');
+    
+    // এখন সঠিকভাবে কমেন্ট খুঁজুন
+    const comment = allComments.find(c => c._row === numericRow);
+    if (!comment) {
+        showToast('❌ কমেন্ট পাওয়া যায়নি', 'error');
+        return;
+    }
 
-            let optionsHTML = `
-            <div class="action-group">
-                <label><input type="checkbox" id="cmtMessageRead" ${messageReadChecked}> বার্তা পড়া</label>
-            </div>`;
+    const messageReadChecked = comment.messageRead === 'DONE' ? 'checked' : '';
+    const complaintReceivedChecked = comment.complaintReceived === 'DONE' ? 'checked' : '';
+    const complaintResolvedChecked = comment.complaintResolved === 'DONE' ? 'checked' : '';
+    const feedbackReceivedChecked = comment.feedbackReceived === 'DONE' ? 'checked' : '';
+    const replyGivenChecked = comment.replyGiven === 'DONE' ? 'checked' : '';
+    const replyMessage = comment.replyMessage || '';
 
-            if (isComplaint) {
-                optionsHTML += `
-                <div class="action-group">
-                    <label><input type="checkbox" id="cmtComplaintReceived" ${complaintReceivedChecked}> অভিযোগ গ্রহণ</label>
-                </div>`;
+    const isComplaint = comment.category === 'অভিযোগ';
+    const isFeedback = comment.category === 'মতামত';
+
+    let optionsHTML = `
+    <div class="action-group">
+        <label><input type="checkbox" id="cmtMessageRead" ${messageReadChecked}> বার্তা পড়া</label>
+    </div>`;
+
+    if (isComplaint) {
+        optionsHTML += `
+        <div class="action-group">
+            <label><input type="checkbox" id="cmtComplaintReceived" ${complaintReceivedChecked}> অভিযোগ গ্রহণ</label>
+        </div>`;
+    }
+    if (isFeedback) {
+        optionsHTML += `
+        <div class="action-group">
+            <label><input type="checkbox" id="cmtFeedbackReceived" ${feedbackReceivedChecked}> মতামত গ্রহণ</label>
+        </div>`;
+    }
+    if (isComplaint) {
+        optionsHTML += `
+        <div class="action-group">
+            <label><input type="checkbox" id="cmtComplaintResolved" ${complaintResolvedChecked}> অভিযোগ সমাধান</label>
+        </div>`;
+    }
+    optionsHTML += `
+    <div class="action-group">
+        <label><input type="checkbox" id="cmtReplyGiven" ${replyGivenChecked}> রিপ্লাই প্রদান</label>
+    </div>
+    <div class="reply-group" id="replyGroup" style="${replyGivenChecked ? 'display:block;' : 'display:none;'}">
+        <label class="form-label">রিপ্লাই বার্তা *</label>
+        <textarea id="cmtReplyMessage" placeholder="আপনার রিপ্লাই লিখুন...">${replyMessage}</textarea>
+        <div style="font-size:0.5rem;color:var(--muted-foreground);margin-top:0.1rem;">রিপ্লাই প্রদান চেক করলে রিপ্লাই বার্তা অবশ্যই দিতে হবে।</div>
+    </div>
+    <button class="btn-primary submit-btn" id="commentActionSubmitBtn" onclick="submitCommentAction()"><span class="btn-spinner"></span><span class="btn-text">আপডেট করুন</span></button>
+    `;
+
+    body.innerHTML = `
+    <div style="margin-bottom:0.5rem;">
+        <p style="font-size:0.7rem;font-weight:600;">কমেন্ট থেকে: <span style="color:var(--primary);">${comment.name}</span> (${comment.category})</p>
+    </div>
+    ${optionsHTML}
+    `;
+
+    // ইভেন্ট লিসেনার যোগ করুন যাতে রিপ্লাই চেক করলে বক্স দেখায়
+    setTimeout(() => {
+        document.getElementById('cmtReplyGiven')?.addEventListener('change', function() {
+            const rg = document.getElementById('replyGroup');
+            if (rg) {
+                rg.style.display = this.checked ? 'block' : 'none';
             }
-            if (isFeedback) {
-                optionsHTML += `
-                <div class="action-group">
-                    <label><input type="checkbox" id="cmtFeedbackReceived" ${feedbackReceivedChecked}> মতামত গ্রহণ</label>
-                </div>`;
-            }
-            if (isComplaint) {
-                optionsHTML += `
-                <div class="action-group">
-                    <label><input type="checkbox" id="cmtComplaintResolved" ${complaintResolvedChecked}> অভিযোগ সমাধান</label>
-                </div>`;
-            }
-            optionsHTML += `
-            <div class="action-group">
-                <label><input type="checkbox" id="cmtReplyGiven" ${replyGivenChecked}> রিপ্লাই প্রদান</label>
-            </div>
-            <div class="reply-group" id="replyGroup" style="${replyGivenChecked ? 'display:block;' : 'display:none;'}">
-                <label class="form-label">রিপ্লাই বার্তা *</label>
-                <textarea id="cmtReplyMessage" placeholder="আপনার রিপ্লাই লিখুন...">${replyMessage}</textarea>
-                <div style="font-size:0.5rem;color:var(--muted-foreground);margin-top:0.1rem;">রিপ্লাই প্রদান চেক করলে রিপ্লাই বার্তা অবশ্যই দিতে হবে।</div>
-            </div>
-            <button class="btn-primary submit-btn" id="commentActionSubmitBtn" onclick="submitCommentAction()"><span class="btn-spinner"></span><span class="btn-text">আপডেট করুন</span></button>
-            `;
+        });
+    }, 100);
 
-            body.innerHTML = `
-            <div style="margin-bottom:0.5rem;">
-                <p style="font-size:0.7rem;font-weight:600;">কমেন্ট থেকে: <span style="color:var(--primary);">${comment.name}</span> (${comment.category})</p>
-            </div>
-            ${optionsHTML}
-            `;
-
-            document.getElementById('cmtReplyGiven')?.addEventListener('change', function() {
-                const rg = document.getElementById('replyGroup');
-                if (rg) {
-                    rg.style.display = this.checked ? 'block' : 'none';
-                }
-            });
-
-            modal.classList.add('open');
-            lockBodyScroll();
+    modal.classList.add('open');
+    lockBodyScroll();
         }
+        
 
         function closeCommentActionModal() {
             document.getElementById('commentActionModal').classList.remove('open');
