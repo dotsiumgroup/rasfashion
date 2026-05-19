@@ -5582,61 +5582,75 @@
             updateWishCount();
         }
 
-        // ===== BACK BUTTON HANDLING =====
-        function handleBackButton(e) {
-            const anyModal = document.querySelector('.modal-overlay.open, #adminPanelOverlay');
-            if (anyModal) {
-                if (document.getElementById('checkoutModal').classList.contains('open')) {
-                    closeCheckoutModal();
-                } else if (document.getElementById('loginModal').classList.contains('open')) {
-                    closeLoginModal();
-                } else if (document.getElementById('profileModal').classList.contains('open')) {
-                    closeProfileModal();
-                } else if (document.getElementById('footerModal').classList.contains('open')) {
-                    closeFooterModal();
-                } else if (document.getElementById('adminAccessModal')?.classList.contains('open')) {
-                    closeAdminAccess();
-                } else if (document.getElementById('adminPanelOverlay')) {
-                    closeAdminPanel();
-                } else if (document.getElementById('adminActionModal').classList.contains('open')) {
-                    closeAdminActionModal();
-                } else if (document.getElementById('itemEditModal').classList.contains('open')) {
-                    closeItemEditModal();
-                } else if (document.getElementById('itemDeleteModal').classList.contains('open')) {
-                    closeItemDeleteModal();
-                } else if (document.getElementById('commentActionModal').classList.contains('open')) {
-                    closeCommentActionModal();
-                }
-                e.preventDefault();
-                return;
-            }
-            if (document.getElementById('mobileNav').classList.contains('open')) {
-                document.getElementById('mobileNav').classList.remove('open');
-                e.preventDefault();
-                return;
-            }
-            if (currentPage === 'home') {
-                if (backPressCount === 0) {
-                    backPressCount++;
-                    showToast('🔙 আবার চাপ দিলে ওয়েবসাইট থেকে বের হবে', '');
-                    if (backPressTimer) clearTimeout(backPressTimer);
-                    backPressTimer = setTimeout(() => { backPressCount = 0; }, 1500);
-                    e.preventDefault();
-                    return;
-                } else if (backPressCount >= 1) {
-                    if (backPressTimer) clearTimeout(backPressTimer);
-                    backPressCount = 0;
-                    return;
-                }
-            } else {
-                if (navigationStack.length > 0) {
-                    e.preventDefault();
-                    navigateBack();
-                } else {
-                    e.preventDefault();
-                    navigate('home');
-                }
-            }
+// ===== BACK BUTTON HANDLING =====
+function handleBackButton(e) {
+    // ১. প্রথমে যেকোনো মডাল বা প্যানেল খোলা আছে কিনা চেক করুন
+    const anyModal = document.querySelector('.modal-overlay.open, #adminPanelOverlay');
+    if (anyModal) {
+        if (document.getElementById('checkoutModal').classList.contains('open')) {
+            closeCheckoutModal();
+        } else if (document.getElementById('loginModal').classList.contains('open')) {
+            closeLoginModal();
+        } else if (document.getElementById('profileModal').classList.contains('open')) {
+            closeProfileModal();
+        } else if (document.getElementById('footerModal').classList.contains('open')) {
+            closeFooterModal();
+        } else if (document.getElementById('adminAccessModal')?.classList.contains('open')) {
+            closeAdminAccess();
+        } else if (document.getElementById('adminPanelOverlay')) {
+            closeAdminPanel();
+        } else if (document.getElementById('adminActionModal').classList.contains('open')) {
+            closeAdminActionModal();
+        } else if (document.getElementById('itemEditModal').classList.contains('open')) {
+            closeItemEditModal();
+        } else if (document.getElementById('itemDeleteModal').classList.contains('open')) {
+            closeItemDeleteModal();
+        } else if (document.getElementById('commentActionModal').classList.contains('open')) {
+            closeCommentActionModal();
+        }
+        // e.preventDefault() সরিয়ে দেওয়া হয়েছে, কারণ popstate ইভেন্টে এটি কাজ করে না
+        return;
+    }
+
+    // ২. মোবাইল মেনু খোলা থাকলে বন্ধ করুন
+    if (document.getElementById('mobileNav').classList.contains('open')) {
+        document.getElementById('mobileNav').classList.remove('open');
+        return;
+    }
+
+    // ৩. ব্রাউজারের ইতিহাস থেকে স্টেট পুনরুদ্ধার করুন (যেটা আমরা pushState দিয়ে রেখেছি)
+    const state = e.state;
+    
+    // যদি স্টেট থাকে এবং তা currentPage-এর সাথে মেলে না, তাহলে সরাসরি সেই পেজে যান
+    if (state && state.page && state.page !== currentPage) {
+        navigate(state.page, state.productId);
+        return;
+    }
+
+    // ৪. স্টেট না থাকলে বা স্টেট মিলে গেলে (মানে আমরা স্টেট ম্যানেজ করছি না)
+    if (currentPage === 'home') {
+        // হোম পেজে থাকলে ডবল ক্লিক এক্সিট সিস্টেম
+        if (backPressCount === 0) {
+            backPressCount++;
+            showToast('🔙 আবার চাপ দিলে ওয়েবসাইট থেকে বের হবে', '');
+            if (backPressTimer) clearTimeout(backPressTimer);
+            backPressTimer = setTimeout(() => { backPressCount = 0; }, 1500);
+            return;
+        } else if (backPressCount >= 1) {
+            if (backPressTimer) clearTimeout(backPressTimer);
+            backPressCount = 0;
+            // ব্রাউজারকে ডিফল্ট ব্যাক করতে দিন (ওয়েবসাইট থেকে বের হবে)
+            return;
+        }
+    } else {
+        // অন্যান্য পেজে থাকলে, navigationStack অনুযায়ী ব্যাক করুন
+        if (navigationStack.length > 0) {
+            navigateBack();
+        } else {
+            // যদি navigationStack খালি থাকে, তাহলে হোমে যান
+            navigate('home');
+        }
+    }
         }
 
         // ===== ADMIN PANEL FUNCTIONS =====
