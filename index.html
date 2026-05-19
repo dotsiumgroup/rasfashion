@@ -704,7 +704,7 @@
             left: 0;
             background: var(--gold);
             color: #fff;
-            font-size: 0.4rem;
+            font-size: 0.5rem;
             font-weight: 700;
             padding: 0.12rem 0.45rem 0.1rem 0.6rem;
             border-radius: 0 12px 0 0;
@@ -741,8 +741,8 @@
             top: 6px;
             right: 6px;
             z-index: 3;
-            width: 28px;
-            height: 28px;
+            width: 25px;
+            height: 25px;
             border-radius: 50%;
             background: rgba(255, 255, 255, 0.9);
             border: none;
@@ -752,7 +752,7 @@
             box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
             transition: transform 0.2s;
             cursor: pointer;
-            font-size: 0.75rem;
+            font-size: 0.70rem;
             color: var(--muted-foreground);
         }
         .wish-btn:hover {
@@ -3419,11 +3419,6 @@
     </style>
 </head>
 <body>
-    <!-- Global Loader -->
-    <div class="global-loader" id="globalLoader">
-        <div class="spinner"></div>
-        <div class="loader-text">✨ RAS Fashion লোড হচ্ছে...</div>
-    </div>
 
     <!-- Error Banner -->
     <div class="error-banner-overlay" id="errorBannerOverlay">
@@ -6197,22 +6192,38 @@
         let nextBatchNumber = null;
 
         async function openAddItemModal() {
-            try {
-                nextItemId = await getNextItemId();
-                nextBatchNumber = await getNextBatchNumber();
-            } catch (err) {
-                console.error('Failed to get next ID/batch:', err);
-                showToast('❌ আইডি বা ব্যাচ জেনারেট করতে ব্যর্থ', 'error');
-                return;
-            }
-            const modal = document.getElementById('itemEditModal');
-            const title = document.getElementById('itemEditTitle');
-            const body = document.getElementById('itemEditModalBody');
-            title.textContent = '➕ নতুন আইটেম যুক্ত করুন';
-            body.innerHTML = buildItemFormHTML({}, false);
-            modal.classList.add('open');
-            lockBodyScroll();
+    const btn = document.querySelector('.item-add-btn'); // বাটনটি সিলেক্ট করুন
+    if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = '<span class="btn-spinner"></span> লোডিং...';
+    }
+
+    try {
+        nextItemId = await getNextItemId();
+        nextBatchNumber = await getNextBatchNumber();
+    } catch (err) {
+        console.error('Failed to get next ID/batch:', err);
+        showToast('❌ আইডি বা ব্যাচ জেনারেট করতে ব্যর্থ', 'error');
+        if (btn) {
+            btn.disabled = false;
+            btn.innerHTML = '➕ নতুন আইটেম যুক্ত করুন';
         }
+        return;
+    }
+
+    const modal = document.getElementById('itemEditModal');
+    const title = document.getElementById('itemEditTitle');
+    const body = document.getElementById('itemEditModalBody');
+    title.textContent = '➕ নতুন আইটেম যুক্ত করুন';
+    body.innerHTML = buildItemFormHTML({}, false);
+    modal.classList.add('open');
+    lockBodyScroll();
+
+    if (btn) {
+        btn.disabled = false;
+        btn.innerHTML = '➕ নতুন আইটেম যুক্ত করুন';
+    }
+    }
 
         function closeItemEditModal() {
             document.getElementById('itemEditModal').classList.remove('open');
