@@ -3425,6 +3425,88 @@
         <div class="loader-text">✨ RAS Fashion লোড হচ্ছে...</div>
     </div>
 
+    <script>
+        // ============================================================
+        // 🔥 ইন্সট্যান্ট স্কেলেটন লোডিং সিস্টেম (সঠিক প্লেসমেন্ট)
+        // ============================================================
+        (function() {
+            // ১. লোডার লুকান (ডম তৈরি হওয়ার আগেই কাজ করবে)
+            var loader = document.getElementById('globalLoader');
+            if (loader) {
+                loader.style.display = 'none';
+            }
+
+            // ২. স্কেলেটন কার্ডের সিএসএস যুক্ত করুন
+            var skeletonCSS = `
+                .skeleton-card {
+                    border: 1px solid #eee;
+                    border-radius: 10px;
+                    overflow: hidden;
+                    background: #fff;
+                    box-shadow: 0 1px 4px rgba(0,0,0,0.02);
+                    animation: skeletonPulse 1.5s ease-in-out infinite;
+                }
+                .skeleton-img {
+                    width: 100%;
+                    aspect-ratio: 3/4;
+                    background: #e0e0e0;
+                }
+                .skeleton-text {
+                    height: 10px;
+                    margin: 8px 12px;
+                    background: #e0e0e0;
+                    border-radius: 4px;
+                }
+                .skeleton-text.short {
+                    width: 60%;
+                }
+                @keyframes skeletonPulse {
+                    0% { opacity: 0.6; }
+                    50% { opacity: 0.3; }
+                    100% { opacity: 0.6; }
+                }
+            `;
+            var style = document.createElement('style');
+            style.textContent = skeletonCSS;
+            document.head.appendChild(style);
+
+            // ৩. স্কেলেটন কার্ড বসানোর ফাংশন
+            function insertSkeleton(containerId, count) {
+                var container = document.getElementById(containerId);
+                if (!container) return;
+                var html = '';
+                for (var i = 0; i < count; i++) {
+                    html += `
+                        <div class="skeleton-card">
+                            <div class="skeleton-img"></div>
+                            <div class="skeleton-text"></div>
+                            <div class="skeleton-text short"></div>
+                        </div>
+                    `;
+                }
+                container.innerHTML = html;
+            }
+
+            // ৪. এখনই স্কেলেটন বসান (DOMContentLoaded অপেক্ষা না করে)
+            insertSkeleton('trendingGrid', 6);
+            insertSkeleton('newArrivalsGrid', 6);
+            insertSkeleton('dealsGrid', 2);
+            insertSkeleton('bestGrid', 4);
+
+            // ৫. মূল `renderHomeProducts` ফাংশন ওভাররাইড (ডেটা এলে স্কেলেটন প্রতিস্থাপন হবে)
+            var originalRenderHomeProducts = window.renderHomeProducts;
+            window.renderHomeProducts = function() {
+                setTimeout(function() {
+                    if (typeof originalRenderHomeProducts === 'function') {
+                        originalRenderHomeProducts();
+                    }
+                }, 100);
+            };
+
+            console.log('🚀 ইন্সট্যান্ট স্কেলেটন লোডিং সক্রিয় হয়েছে!');
+        })();
+    </script>
+
     <!-- Error Banner -->
     <div class="error-banner-overlay" id="errorBannerOverlay">
         <div class="error-banner">
