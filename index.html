@@ -6806,34 +6806,40 @@
         });
 
         async function init() {
-            const savedExpiry = localStorage.getItem('ras_admin_expiry');
-            if (savedExpiry && Date.now() < parseInt(savedExpiry)) {
-                adminAccessGranted = true;
-                adminAccessExpiry = parseInt(savedExpiry);
-            }
-            await fetchProductsFromSheet();
-            fetchOrdersFromSheet().catch(() => {});
-            if (productsLoaded) {
-                updateCartBadge();
-                updateNavProfile();
-                updateWishCount();
-                renderHomeProducts();
-                renderContactInfo();
-                initSlideshow();
-            } else {
-                updateCartBadge();
-                updateNavProfile();
-                updateWishCount();
-                renderContactInfo();
-                initSlideshow();
-            }
-            if (!navigationStack.includes('home')) {
-                navigationStack.push('home');
-            }
-            window.scrollTo(0, 0);
-        }
+    const savedExpiry = localStorage.getItem('ras_admin_expiry');
+    if (savedExpiry && Date.now() < parseInt(savedExpiry)) {
+        adminAccessGranted = true;
+        adminAccessExpiry = parseInt(savedExpiry);
+    }
+    
+    // ১. শুধুমাত্র লগইন তথ্য তাৎক্ষণিক দেখান (পণ্য লোডের আগেই)
+    updateNavProfile();
 
-        init();
+    // ২. পণ্যের তথ্য লোড শুরু করুন
+    await fetchProductsFromSheet();
+
+    // ৩. Cart এবং Wishlist আপডেট করুন (পণ্য লোডের পরে)
+    updateCartBadge();
+    updateWishCount();
+
+    // ৪. বাকি কাজগুলো (যা পণ্যের তথ্যের উপর নির্ভরশীল)
+    fetchOrdersFromSheet().catch(() => {});
+    if (productsLoaded) {
+        renderHomeProducts();
+        renderContactInfo();
+        initSlideshow();
+    } else {
+        renderContactInfo();
+        initSlideshow();
+    }
+
+    if (!navigationStack.includes('home')) {
+        navigationStack.push('home');
+    }
+    window.scrollTo(0, 0);
+}
+
+init();
     </script>
     <script>
         (function() {
